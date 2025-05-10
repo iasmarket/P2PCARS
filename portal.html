@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>P2P-CARS</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #024385;
+      padding: 100px;
+    }
+    header {
+      background-color: #f0f0f5;
+      color: #030303;
+      padding: 15px 20px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      height: 150px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .filters {
+      margin-top: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .filters input, .filters select {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .car-list {
+      margin-top: 30px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .car {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .car img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .car h3 {
+      margin: 10px 0 5px;
+      color: #0d6efd;
+    }
+    .car button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #080808;
+      color: #dffc04;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo1.png" alt="Logo société mère">
+  <h1>Plateforme de Voitures d'Occasion</h1>
+  <img src="logo4.png" alt="Logo plateforme">
+</header>
+
+<div class="filters">
+  <input type="text" id="search" placeholder="Rechercher...">
+  <select id="marque">
+    <option value="">Choisir une marque</option>
+    <option value="Renault">Renault</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Toyota">Toyota</option>
+  </select>
+  <select id="modele">
+    <option value="">Choisir un modèle</option>
+  </select>
+  <select id="annee">
+    <option value="">Année</option>
+    <script>
+      for (let year = 2025; year >= 2000; year--) {
+        document.write(`<option value="${year}">${year}</option>`);
+      }
+    </script>
+  </select>
+  <input type="number" id="kilometrage" placeholder="Kilométrage max">
+  <select id="carburant">
+    <option value="">Carburant</option>
+    <option value="Essence">Essence</option>
+    <option value="Diesel">Diesel</option>
+    <option value="Hybride">Hybride</option>
+    <option value="Électrique">Électrique</option>
+  </select>
+  <input type="number" id="puissance" placeholder="Puissance max (CV)">
+</div>
+
+<div class="car-list" id="carList"></div>
+
+<script>
+  const modeleOptions = {
+    Renault: ["Clio", "Mégane", "Captur"],
+    Peugeot: ["208", "308", "2008"],
+    Toyota: ["Yaris", "Corolla", "C-HR"]
+  };
+
+  const cars = [
+    {
+      marque: "Renault",
+      modele: "Clio",
+      annee: "2015",
+      kilometrage: 120000,
+      carburant: "Essence",
+      puissance: 5,
+      image: "images/clio.jpg",
+      description: "Petite citadine fiable et économique."
+    },
+    {
+      marque: "Peugeot",
+      modele: "208",
+      annee: "2019",
+      kilometrage: 90000,
+      carburant: "Diesel",
+      puissance: 4,
+      image: "images/peugeot208.jpg",
+      description: "Compacte, confortable et bien entretenue."
+    },
+    {
+      marque: "Toyota",
+      modele: "Yaris",
+      annee: "2021",
+      kilometrage: 60000,
+      carburant: "Hybride",
+      puissance: 4,
+      image: "images/yaris.jpg",
+      description: "Hybride très économique, faible kilométrage."
+    }
+  ];
+
+  function populateModeles() {
+    const marque = document.getElementById("marque").value;
+    const modeleSelect = document.getElementById("modele");
+    modeleSelect.innerHTML = `<option value="">Choisir un modèle</option>`;
+    if (modeleOptions[marque]) {
+      modeleOptions[marque].forEach(m => {
+        const option = document.createElement("option");
+        option.value = m;
+        option.textContent = m;
+        modeleSelect.appendChild(option);
+      });
+    }
+  }
+
+  function displayCars() {
+    const list = document.getElementById("carList");
+    const search = document.getElementById("search").value.toLowerCase();
+    const marque = document.getElementById("marque").value;
+    const modele = document.getElementById("modele").value;
+    const annee = document.getElementById("annee").value;
+    const kilometrage = document.getElementById("kilometrage").value;
+    const carburant = document.getElementById("carburant").value;
+    const puissance = document.getElementById("puissance").value;
+
+    const filtered = cars.filter(c => {
+      return (
+        (search === "" || c.marque.toLowerCase().includes(search) || c.modele.toLowerCase().includes(search)) &&
+        (marque === "" || c.marque === marque) &&
+        (modele === "" || c.modele === modele) &&
+        (annee === "" || c.annee === annee) &&
+        (kilometrage === "" || c.kilometrage <= parseInt(kilometrage)) &&
+        (carburant === "" || c.carburant === carburant) &&
+        (puissance === "" || c.puissance <= parseInt(puissance))
+      );
+    });
+
+    list.innerHTML = "";
+    filtered.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "car";
+      div.innerHTML = `
+        <img src="${c.image}" alt="${c.marque} ${c.modele}">
+        <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+        <p><strong>Kilométrage :</strong> ${c.kilometrage} km</p>
+        <p><strong>Carburant :</strong> ${c.carburant}</p>
+        <p><strong>Puissance :</strong> ${c.puissance} CV</p>
+        <p>${c.description}</p>
+        <button>Plus de détails</button>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  document.getElementById("marque").addEventListener("change", () => {
+    populateModeles();
+    displayCars();
+  });
+
+  document.querySelectorAll(".filters input, .filters select").forEach(el => {
+    el.addEventListener("input", displayCars);
+  });
+
+  populateModeles();
+  displayCars();
+
+</script>
+  <!-- 👇 Footer ici -->
+  <footer style="margin-top: 50px; background-color: #343a40; color: #fff; text-align: center; padding: 20px 10px; border-radius: 10px;">
+    &copy; 2025 Plateforme de Voitures d'Occasion. Tous droits réservés.
+  </footer>
+</body>
+</html>
