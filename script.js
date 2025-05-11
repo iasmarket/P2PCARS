@@ -156,10 +156,10 @@ details += "- Petite réparation : -2 000 MAD\n";
 
     const ageVoiture = anneeRevente - anneeModele;
     const tauxDepreciation = Math.exp(-0.15 * ageVoiture);
-    const valeurMP = prixInitial * tauxDepreciation * (indiceRevente / indiceModele);
+    const valeurMP = (prixInitial * tauxDepreciation) +(prixInitial*(indiceRevente / indiceModele)/100);
 
     // 2. Calcul avec uniquement l'or
-    const valeurOr = prixInitial * tauxDepreciation * (prixRef.or / prixRefModel.or);
+    const valeurOr = (valeurMP * (prixRef.or / prixRefModel.or));
 
     // 3. Moyenne
     const moyenneOccasion = (valeurMP + valeurOr) / 2;
