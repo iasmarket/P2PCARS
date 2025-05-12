@@ -158,7 +158,7 @@ details += "- Petite réparation : -2 000 MAD\n";
     let depreciate = prixInitial;
 
     for (let i = 0; i <= ageVoiture; i++) {
-        const tauxDepreciation = Math.exp((-0.10 ) );
+        const tauxDepreciation = Math.exp((-0.13 ) );
         depreciate = depreciate * tauxDepreciation;
       
     }
