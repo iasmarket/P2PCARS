@@ -155,14 +155,20 @@ details += "- Petite réparation : -2 000 MAD\n";
     ) / 1000;
 
     const ageVoiture = anneeRevente - anneeModele;
-    const tauxDepreciation = Math.exp(-0.15 * ageVoiture);
-    const valeurMP = (prixInitial * tauxDepreciation) +(prixInitial*(indiceRevente / indiceModele)/100);
+    let depreciate = prixInitial;
+
+    for (let i = 0; i <= ageVoiture; i++) {
+        const tauxDepreciation = Math.exp((-0.10 ) );
+        depreciate = depreciate * tauxDepreciation;
+      
+    }
+    const valeurMP = depreciate * (indiceRevente / indiceModele);
 
     // 2. Calcul avec uniquement l'or
-    const valeurOr = (valeurMP * (prixRef.or / prixRefModel.or));
+    const valeurOr = valeurMP  * (prixRef.or / (prixRefModel.or));
 
     // 3. Moyenne
-    const moyenneOccasion = (valeurMP + valeurOr) / 2;
+    const moyenneOccasion = valeurMP ;
 
                 // Récupère le kilométrage
     const kilometrage = parseFloat(document.getElementById("kilometrage").value);
@@ -174,14 +180,12 @@ details += "- Petite réparation : -2 000 MAD\n";
     }
 
     // Calcul du bonus kilométrage
-    const bonusKilometrage = 10000 - ((10000 / 300000) * kilometrage);
+    const bonusKilometrage = 20000 - ((20000 / 300000) * kilometrage);
     const montantFinal = moyenneOccasion + bonusKilometrage + ajustement ;
 
 
     document.getElementById("result").innerHTML = 
     `<strong>✔ Valeur estimée avec matières premières :</strong> ${valeurMP.toFixed(2)} MAD<br>
-    <strong>✔ Valeur estimée selon le prix de l'or :</strong> ${valeurOr.toFixed(2)} MAD<br>
-    <strong>💰 Moyenne estimée (valeur d'occasion) :</strong> <span style="color:darkgreen;">${moyenneOccasion.toFixed(2)} MAD</span><br>
     <strong>🚗 Bonus kilométrage :</strong> ${bonusKilometrage.toFixed(2)} MAD<br>
     <strong>✅ Montant final estimé :</strong> <span style="color:blue;">${montantFinal.toFixed(2)} MAD</span>`;
 
