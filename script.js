@@ -165,7 +165,7 @@ details += "- Petite réparation : -2 000 MAD\n";
     const valeurMP = depreciate * (indiceRevente / indiceModele);
 
     // 2. Calcul avec uniquement l'or
-    const valeurOr = valeurMP  * (prixRef.or / (prixRefModel.or));
+    const valeurOr = valeurMP  * (prixRef.or / (prixRefModel.or*1.618));
 
     // 3. Moyenne
     const moyenneOccasion = valeurMP ;
@@ -180,12 +180,13 @@ details += "- Petite réparation : -2 000 MAD\n";
     }
 
     // Calcul du bonus kilométrage
-    const bonusKilometrage = 20000 - ((20000 / 300000) * kilometrage);
+    const bonusKilometrage = 10000 - ((10000 / 300000) * kilometrage);
     const montantFinal = moyenneOccasion + bonusKilometrage + ajustement ;
 
 
     document.getElementById("result").innerHTML = 
     `<strong>✔ Valeur estimée avec matières premières :</strong> ${valeurMP.toFixed(2)} MAD<br>
+    
     <strong>🚗 Bonus kilométrage :</strong> ${bonusKilometrage.toFixed(2)} MAD<br>
     <strong>✅ Montant final estimé :</strong> <span style="color:blue;">${montantFinal.toFixed(2)} MAD</span>`;
 
