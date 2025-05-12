@@ -185,7 +185,7 @@ details += "- Petite réparation : -2 000 MAD\n";
 
 
     document.getElementById("result").innerHTML = 
-    `<strong>✔ Valeur estimée avec matières premières :</strong> ${valeurMP.toFixed(2)} MAD<br>
+    `<strong>✔ Valeur estimée :</strong> ${valeurMP.toFixed(2)} MAD<br>
     
     <strong>🚗 Bonus kilométrage :</strong> ${bonusKilometrage.toFixed(2)} MAD<br>
     <strong>✅ Montant final estimé :</strong> <span style="color:blue;">${montantFinal.toFixed(2)} MAD</span>`;
