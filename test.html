@@ -42,12 +42,12 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            margin-bottom: 0px;
         }
 
         header img {
-            height: 90px; /* Slightly reduced logo height */
-            max-width: 35%; /* Adjusted max-width for logos */
+            height: 70px; /* Slightly reduced logo height */
+            max-width: 20%; /* Adjusted max-width for logos */
             object-fit: contain;
             transition: transform 0.3s ease-in-out; /* Smooth hover effect */
         }
@@ -72,13 +72,20 @@
         }
 
         /* Navigation Links */
-        header nav {
+        .header-nav {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            backdrop-filter: blur(5px); /* Apply a blur effect */
             display: flex;
+            justify-content: center; /* Center the links horizontally */
             gap: 20px; /* Spacing between the links */
             align-items: center;
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        header nav a {
+        .header-nav a {
             color: #4c51bf; /* Link color */
             text-decoration: none; /* Remove underlines */
             font-weight: 600; /* Make the links stand out */
@@ -88,7 +95,7 @@
             border: 1px solid transparent; /* Add a transparent border */
         }
 
-        header nav a:hover {
+        .header-nav a:hover {
             color: #3f46a4; /* Darker color on hover */
             border-color: #4c51bf; /* Show the border on hover */
         }
@@ -304,21 +311,17 @@
                 font-size: 1rem; /* Adjust header paragraph size */
             }
 
-             header nav {
-                display: flex; /* Display nav items horizontally */
-                flex-direction: row; /* Ensure items are in a row */
-                justify-content: space-around; /* Distribute items evenly */
-                width: 100%; /* Take full width */
-                padding: 5px 0; /* Add some padding */
+            .header-nav {
+                flex-direction: column; /* Stack navigation links */
+                align-items: stretch; /* Make links full width */
+                width: 100%;
             }
 
-            header nav a {
+            .header-nav a {
                 padding: 8px;
                 text-align: center;
                 border: 1px solid #4c51bf; /* Add borders for better separation */
                 margin-bottom: 5px;
-                 width: 45%; /* Ensure each button takes half the width */
-                 box-sizing: border-box; /* Include padding and border in the element's total width and height */
             }
 
             .welcome-section {
@@ -380,21 +383,6 @@
                 font-size: 0.8rem;
             }
         }
-
-         /* Move the nav menu into welcome section */
-        .welcome-section nav {
-            display: flex;
-            justify-content: space-around; /* Distribute items evenly */
-            margin-top: 10px; /* Add some space above the nav */
-        }
-
-        .welcome-section nav a {
-            padding: 10px 15px; /* Adjust padding for buttons */
-            background-color: #4c51bf; /* Match button color */
-            color: white;
-            border-radius: 8px; /* Match button border-radius */
-            text-decoration: none;
-        }
     </style>
 </head>
 
@@ -403,6 +391,7 @@
 <header>
     <img src="logo1.png" alt="Logo société mère">
     <div>
+
         <h1>P2P-CARS</h1>
         <p class="text-h">Plateforme de Voitures d'Occasion</p>
     </div>
@@ -410,14 +399,16 @@
     <img src="logo4.png" alt="Logo plateforme">
 </header>
 
+<nav class="header-nav">
+    <a href="#">Examiner par IASMARKET</a>
+    <a href="#">Vendre sa voiture</a>
+</nav>
+
 <section class="welcome-section" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
     <h2 class="text-3xl">Bienvenue sur P2P-CARS</h2>
     <p class="text-lg">Découvrez les meilleures offres de vente de voitures d'occasion de particulier à particulier.</p>
     <button id="btn">Explorer maintenant</button>
-    <nav>
-        <a href="#">Examiner par IASMARKET</a>
-        <a href="#">Vendre sa voiture</a>
-    </nav>
+  
 </section>
 
 <section class="filters">
