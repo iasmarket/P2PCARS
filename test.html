@@ -8,382 +8,258 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <style>
-        /* CSS Reset */
-        body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    /* Reset */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-image: url('arier.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-color: #f0f4f8; /* Light background for better readability */
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to bottom, #0f172a, #1e293b);
+        background-attachment: fixed;
+        color: #e2e8f0;
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
 
-        /* Header Styles */
+    header {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+    }
+
+    header img {
+        max-height: 80px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    header img:hover {
+        transform: scale(1.05);
+    }
+
+    header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3b82f6;
+        text-align: center;
+    }
+
+    header p.text-h {
+        font-size: 1rem;
+        color: #cbd5e1;
+        text-align: center;
+    }
+
+    .header-nav {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 12px 20px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .header-nav a {
+        color: #3b82f6;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .header-nav a:hover {
+        background: rgba(59, 130, 246, 0.15);
+    }
+
+    .welcome-section {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        padding: 40px 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+
+    .welcome-section:hover {
+        transform: translateY(-5px);
+    }
+
+    .welcome-section h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 15px;
+    }
+
+    .welcome-section p {
+        font-size: 1.2rem;
+        color: #cbd5e1;
+        margin-bottom: 25px;
+    }
+
+    .welcome-section button {
+        background: #3b82f6;
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 12px 28px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .welcome-section button:hover {
+        background: #2563eb;
+        transform: scale(1.05);
+    }
+
+    .filters {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 12px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+        color: #e2e8f0;
+    }
+
+    .filters label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .filters input,
+    .filters select {
+        padding: 10px;
+        background: #1e293b;
+        color: #e2e8f0;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+
+    .filters input:focus,
+    .filters select:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
+    .car-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .car {
+        background: #1e293b;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .car:hover {
+        transform: scale(1.02);
+    }
+
+    .car img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .car-details {
+        padding: 20px;
+    }
+
+    .car h3 {
+        font-size: 1.4rem;
+        color: #ffffff;
+        margin-bottom: 10px;
+    }
+
+    .car p {
+        font-size: 0.95rem;
+        color: #cbd5e1;
+        margin-bottom: 6px;
+    }
+
+    .car button {
+        background: #3b82f6;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .car button:hover {
+        background: #2563eb;
+    }
+
+    footer {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin-top: auto;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.25);
+    }
+
+    @media (max-width: 768px) {
         header {
-            background-color: rgba(255, 255, 255, 0.198); /* Semi-transparent white */
-            backdrop-filter: blur(5px); /* Apply a blur effect */
-            color: #2d3748;
-            padding: 10px 20px; /* Reduced vertical padding */
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0px;
+            flex-direction: column;
+            text-align: center;
         }
 
         header img {
-            height: 90px; /* Slightly reduced logo height */
-            max-width: 35%; /* Adjusted max-width for logos */
-            object-fit: contain;
-            transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+            max-width: 60%;
         }
 
-        header img:hover {
-            transform: scale(1.1);
-        }
-
-        header h1 {
-            font-size: 28px; /* Increased main title size */
-            text-align: center;
-            font-weight: 700; /* Bold main title */
-            margin: 0 10px; /* Add some horizontal spacing */
-        }
-
-        header p.text-h {
-            font-size: 1.1rem; /* Size for the header paragraph */
-            font-weight: 500;
-            color: #555; /* A slightly muted color */
-            text-align: center; /* Center the text */
-            margin: 0; /* Reset default margins */
-        }
-
-        /* Navigation Links */
         .header-nav {
-            background-color: rgba(255, 255, 255, 0); /* Semi-transparent white */
-            backdrop-filter: blur(5px); /* Apply a blur effect */
-            display: flex;
-            justify-content: center; /* Center the links horizontally */
-            gap: 20px; /* Spacing between the links */
-            align-items: center;
-            padding: 10px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .header-nav a {
-            color: #4c51bf; /* Link color */
-            text-decoration: none; /* Remove underlines */
-            font-weight: 600; /* Make the links stand out */
-            transition: color 0.3s ease; /* Smooth transition for hover effect */
-            padding: 8px 12px; /* Add some padding for a better click area */
-            border-radius: 6px; /* Rounded corners */
-            border: 1px solid transparent; /* Add a transparent border */
-        }
-
-        .header-nav a:hover {
-            color: #3f46a4; /* Darker color on hover */
-            border-color: #4c51bf; /* Show the border on hover */
-        }
-
-        /* Welcome Section */
-        .welcome-section {
-            background-color: rgba(255, 255, 255, 0);
-            backdrop-filter: blur(5px);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            margin-bottom: 30px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .welcome-section:hover {
-            transform: translateY(-5px);
-        }
-
-        .welcome-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #4c51bf;
-            margin-bottom: 15px;
-        }
-
-        .welcome-section p {
-            font-size: 1.2rem;
-            color: #5a6268;
-            margin-bottom: 25px;
-        }
-
-        .welcome-section button {
-            background-color: #4c51bf;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .welcome-section button:hover {
-            background-color: #3f46a4;
-        }
-
-        /* Filters Section */
         .filters {
-            background-color: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(5px);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            align-items: center;
-        }
-
-        .filters label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .filters input,
-        .filters select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-
-        .filters input:focus,
-        .filters select:focus {
-            border-color: #4c51bf;
-            outline: none;
-        }
-
-        /* Car List Section */
-        .car-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .car {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .car:hover {
-            transform: scale(1.03);
+            grid-template-columns: 1fr;
         }
 
         .car img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #eee;
+            height: 160px;
         }
+    }
+</style>
 
-        .car-details {
-            padding: 20px;
-        }
 
-        .car h3 {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .car p {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .car button {
-            background-color: #4c51bf;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .car button:hover {
-            background-color: #3f46a4;
-        }
-
-        /* Footer Styles */
-        footer {
-            margin-top: auto;
-            text-align: center;
-            padding: 20px;
-            background-color: #343a40;
-            color: #fff;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            header img {
-                margin-bottom: 10px;
-                max-width: 50%;
-            }
-
-            header h1 {
-                font-size: 24px;
-            }
-
-            .filters {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            }
-
-            .car-list {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Utility Classes */
-        .mt-20 {
-            margin-top: 20px;
-        }
-        .bg-animation {
-            /* You might want to adjust or remove this based on the new design */
-            display: none; /* Hide it for now */
-        }
-
-        /* Mobile-Specific Styles */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px; /* Reduce padding on small screens */
-            }
-
-            header {
-                flex-direction: column;
-                align-items: center;
-                padding: 10px;
-            }
-
-            header img {
-                max-width: 75%; /* Make the logo larger on small screens */
-                margin-bottom: 5px;
-            }
-
-            header h1 {
-                font-size: 20px; /* Further reduce the title size */
-                margin: 5px 0;
-            }
-
-            header p.text-h {
-                font-size: 1rem; /* Adjust header paragraph size */
-            }
-
-            .header-nav {
-                flex-direction: column; /* Stack navigation links */
-                align-items: stretch; /* Make links full width */
-                width: 100%;
-            }
-
-            .header-nav a {
-                padding: 8px;
-                text-align: center;
-                border: 1px solid #4c51bf; /* Add borders for better separation */
-                margin-bottom: 5px;
-            }
-
-            .welcome-section {
-                padding: 20px;
-            }
-
-            .welcome-section h2 {
-                font-size: 1.8rem;
-            }
-
-            .welcome-section p {
-                font-size: 1rem;
-            }
-
-            .filters {
-                grid-template-columns: 1fr; /* Stack filters vertically */
-                padding: 10px;
-            }
-
-            .filters label {
-                margin-bottom: 2px;
-                font-size: 0.8rem;
-            }
-
-            .filters input,
-            .filters select {
-                padding: 8px;
-                font-size: 0.9rem;
-            }
-
-            .car-list {
-                grid-template-columns: 1fr; /* Single column for car listings */
-                gap: 15px;
-            }
-
-            .car img {
-                height: 150px; /* Reduce image height */
-            }
-
-            .car-details {
-                padding: 15px;
-            }
-
-            .car h3 {
-                font-size: 1.2rem;
-            }
-
-            .car p {
-                font-size: 0.9rem;
-            }
-
-            .car button {
-                font-size: 0.9rem;
-                padding: 8px 16px;
-            }
-
-            footer {
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-        }
-    </style>
 </head>
 
 <body>
