@@ -273,7 +273,7 @@
 <body>
 
 <header>
-    <img src="logo1D.png" alt="Logo société mère">
+    <img src="logo1.png" alt="Logo société mère">
     <div>
 
         <h1>P2P-CARS</h1>
@@ -284,11 +284,11 @@
 </header>
 
 <nav class="header-nav">
-    <a href="#">Marché AUto</a>
+    <a href="#">Accueil</a>
     <a href="#">Estimer le prix</a>
-    <a href="#">Demander d'acheter</a>
+    <a href="#">Demande d'achat</a>
     <a href="https://p2p-cars.com/vendre">Vendre </a>
-    <a href="#">Examinées</a>
+    <a href="#">verrifier</a>
     
     
 </nav>
@@ -445,7 +445,43 @@
             list.appendChild(div);
         });
     }
+async function fetchAnnonces() {
+    try {
+        const res = await fetch('https://apicars.p2p-cars.com/api/annonces'); // Mets ton domaine si en prod
+        const data = await res.json();
+        console.log("Annonces chargées:", data);
 
+        const carList = document.getElementById("carList");
+        carList.innerHTML = ""; // Vide la liste actuelle
+
+        data.forEach(c => {
+            const div = document.createElement("div");
+            div.className = "car";
+            const images = c.images ? c.images.split(";") : [];
+            const imgFilename = images.length ? images[0].split(/[/\\]/).pop() : "default.jpg";
+            const imgSrc = `/images/${imgFilename}`;
+
+
+            div.innerHTML = `
+                <img src="${imgSrc}" alt="${c.marque} ${c.modele}">
+                <div class="car-details">
+                    <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+                    <p><strong>Prix :</strong> ${c.prix} €</p>
+                    <p><strong>Kilométrage :</strong> ${c.kilometrage} km</p>
+                    <p><strong>Carburant :</strong> ${c.carburant}</p>
+                    <p><strong>Transmission :</strong> ${c.transmission}</p>
+                    <p>${c.description}</p>
+                    <button>Plus de détails</button>
+                </div>
+            `;
+            carList.appendChild(div);
+        });
+    } catch (err) {
+        console.error("Erreur lors du chargement des annonces :", err);
+    }
+}
+
+fetchAnnonces(); // Appel initial pour charger les annonces Excel
     document.getElementById("marque").addEventListener("change", () => {
         populateModeles();
         displayCars();
