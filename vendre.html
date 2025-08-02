@@ -244,7 +244,39 @@
         else { document.body.style.direction = "ltr";}
     }
 
-    document.getElementById('annonceForm').addEventListener('submit', async function(e) {
+document.getElementById('annonceForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new FormData(form);
+
+    if (data.getAll('images').length > 10) {
+        document.getElementById('result').textContent = "Maximum 10 images autorisées.";
+        return;
+    }
+
+    try {
+        const response = await fetch('https://apicars.p2p-cars.com/api/annonce', {
+            method: 'POST',
+            body: data, // ✅ Utiliser la bonne variable
+        });
+
+        if (response.ok) {
+            document.getElementById('result').textContent = "Annonce envoyée !";
+            form.reset();
+        } else {
+            document.getElementById('result').textContent =
+              "Erreur lors de l’envoi (" + response.status + "). " +
+              (response.status === 404
+                ? "API introuvable (404). Vérifiez l'URL."
+                : "Problème serveur ou CORS. Voir console.");
+        }
+    } catch (err) {
+        document.getElementById('result').textContent =
+          "Erreur réseau/CORS : impossible de contacter l’API. Vérifiez le serveur.";
+        console.error('Erreur requête API:', err);
+    }
+});
+
         e.preventDefault();
         const form = e.target;
         const data = new FormData(form);
@@ -255,10 +287,10 @@
         }
         // Changez ici l’URL pour pointer vers votre serveur derrière Cloudflare Tunnel
         try {
-        const response = await fetch('https://apicars.p2p-cars.com/api/annonce', {
-          method: 'POST',
-          body: formData,
-        });
+            const response = await fetch('https://apicars.p2p-cars.com/api/annonce', {
+                method: 'POST',
+                body: formData,
+            });
             if (response.ok) {
                 document.getElementById('result').textContent = "Annonce envoyée !";
                 form.reset();
@@ -281,4 +313,3 @@
 
 </body>
 </html>
-
