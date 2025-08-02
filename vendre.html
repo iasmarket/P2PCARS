@@ -6,7 +6,9 @@
     <title>P2P-CARS - Déposer une annonce de vente</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Remplacez ci-dessous par le chemin vers votre CSS généré par Tailwind -->
+    <!-- Compilez avec: npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify -->
+    <link rel="stylesheet" href="dist/output.css">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0;}
         body {
@@ -251,16 +253,28 @@
             document.getElementById('result').textContent = "Maximum 10 images autorisées.";
             return;
         }
-        // Change ici l’URL pour pointer vers ton serveur derrière Cloudflare Tunnel
-        const response = await fetch('https://api.p2p-cars.com/api/annonce', {
-            method: 'POST',
-            body: data
-        });
-        if (response.ok) {
-            document.getElementById('result').textContent = "Annonce envoyée !";
-            form.reset();
-        } else {
-            document.getElementById('result').textContent = "Erreur lors de l’envoi.";
+        // Changez ici l’URL pour pointer vers votre serveur derrière Cloudflare Tunnel
+        try {
+            const response = await fetch('https://api.p2p-cars.com', {
+                method: 'POST',
+                body: data
+            });
+            if (response.ok) {
+                document.getElementById('result').textContent = "Annonce envoyée !";
+                form.reset();
+            } else {
+                // Affiche le code erreur et un message explicite
+                document.getElementById('result').textContent =
+                  "Erreur lors de l’envoi ("+response.status+"). " +
+                  (response.status === 404
+                    ? "API introuvable (404). Vérifiez l'URL."
+                    : "Problème serveur ou CORS. Voir console.");
+            }
+        } catch (err) {
+            // Gère les erreurs réseau/CORS
+            document.getElementById('result').textContent =
+              "Erreur réseau/CORS : impossible de contacter l’API. Vérifiez le serveur.";
+            console.error('Erreur requête API:', err);
         }
     });
 </script>
