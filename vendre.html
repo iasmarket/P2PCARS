@@ -22,14 +22,40 @@
       border-radius: 15px;
       padding: 18px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;       /* centrer horizontalement */
       align-items: center;
       margin: 14px 10px 20px 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      gap: 40px;                     /* espace entre logos et centre */
     }
-    header img { max-height: 62px; transition: transform 0.3s;}
+    header img {
+      max-height: 110px;             /* agrandir les logos */
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.3s;
+    }
     header img:hover { transform: scale(1.05);}
-    header h1 { font-size: 2rem; font-weight: 700; color: #3b82f6;}
+    header .header-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;           /* centrer titre + texte */
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 0.3em;
+    }
+    header .text-h {
+      font-size: 1.1rem;
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%;}
+    }
     .navbar {
       display: flex;
       align-items: center;
@@ -134,7 +160,7 @@
 <body>
 <header>
   <img src="logo1.png" alt="Logo société mère">
-  <div>
+  <div class="header-center">
     <h1>P2P-CARS</h1>
     <p class="text-h">Plateforme de Voitures d'Occasion</p>
   </div>
@@ -337,7 +363,7 @@ const translations = {
     'lbl-marque-v': "Marque :",
     'lbl-modele-v': "Modèle :",
     'lbl-annee-v': "Année :",
-    'lbl-prix-v': "Prix (€) :",
+    'lbl-prix-v': "Prix (MAD) :",
     'lbl-kilometrage-v': "Kilométrage :",
     'lbl-carburant-v': "Carburant :",
     'lbl-transmission-v': "Transmission :",
