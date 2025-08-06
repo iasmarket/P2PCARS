@@ -208,19 +208,35 @@
     <input name="telephone" type="tel" required>
     <label id="lbl-cin-v"></label>
     <input name="cin" type="text" required>
-    <label id="lbl-cin-img-v"></label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <div id="div-cartegrise">
-      <label id="lbl-cartegrise-recto-v">Carte grise (recto) :</label>
-      <input name="cartegrise" type="file" accept="image/*" required>
-      <label id="lbl-cartegrise-verso-v">Carte grise (verso) :</label>
-      <input name="cartegrise" type="file" accept="image/*" required>
-    </div>
-    <label id="lbl-procuration-v" style="display:none;"></label>
-    <input name="procuration" type="file" accept="image/*" id="input-procuration-v" style="display:none;">
-    <label id="lbl-images-v"></label>
-    <input name="images" type="file" accept="image/*" multiple required>
-    <button type="submit" id="btn-submit-v"></button>
+   <!-- Photo recto/verso CIN -->
+  <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+  <input name="cin_img" type="file" accept="image/*" multiple required>
+
+  <!-- Carte grise recto / verso -->
+  <div id="div-cartegrise">
+    <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
+    <input name="cartegrise" type="file" accept="image/*" multiple required>
+  </div>
+
+  <!-- Procuration (facultatif) -->
+  <label id="lbl-checkbox-procuration">
+  <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
+  <input type="checkbox" id="checkbox-procuration">
+</label>
+
+  <div id="div-procuration" style="display:none;">
+    <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
+    <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
+
+  </div>
+
+  <!-- Images voiture -->
+  <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
+  <input name="images" type="file" accept="image/*" multiple required>
+
+  <!-- Bouton envoyer -->
+  <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
+
   </form>
   <div id="result-vendre"></div>
 </section>
@@ -253,6 +269,9 @@
     <input name="cin" type="text" required>
     <label id="lbl-cin-img-a"></label>
     <input name="cin_img" type="file" accept="image/*" multiple required>
+    
+    
+
     <button type="submit" id="btn-submit-a"></button>
   </form>
   <div id="result-achat"></div>
@@ -297,7 +316,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // ... tout ton code JS existant ...
- 
+ document.getElementById("checkbox-procuration").addEventListener("change", function () {
+  const blocProcuration = document.getElementById("div-procuration");
+  blocProcuration.style.display = this.checked ? "block" : "none";
+});
+
 const allCarModels = {
   "Renault": ["Clio", "Captur", "Mégane", "Talisman", "Espace", "Kadjar"],
   "Peugeot": ["208", "2008", "308", "3008", "508", "5008"],
@@ -379,7 +402,7 @@ const translations = {
     'lbl-cin-v': "Numéro de CIN :",
     'lbl-cin-img-v': "Photo recto/verso CIN :",
     'lbl-cartegrise-v': "Carte grise :",
-    'lbl-procuration-v': "Procuration (si non propriétaire) :",
+    
     'lbl-images-v': "Images voiture (max 10) :",
     'btn-submit-v': "Envoyer",
     'lbl-marque-a': "Marque :",
@@ -414,6 +437,10 @@ const translations = {
     'home': "Accueil",
     'carburants': ["Essence", "Diesel", "Electrique", "Hybride", "GPL", "GNV", "Hydrogène"],
     'transmissions': ["Manuelle", "Automatique", "Robotisée", "CVT"],
+    'lbl-cartegrise-recto-v': "Carte grise (recto/verso) :",
+    'lbl-procuration-v': "Procuration (si non propriétaire) :",
+    'label_checkbox_procuration': "Procuration",
+
     'choisir': "--Choisir--"
   },
   en: {
@@ -436,7 +463,7 @@ const translations = {
     'lbl-cin-v': "CIN number:",
     'lbl-cin-img-v': "CIN photo (front/back):",
     'lbl-cartegrise-v': "Registration card:",
-    'lbl-procuration-v': "Proxy (if not owner):",
+  
     'lbl-images-v': "Car images (max 10):",
     'btn-submit-v': "Send",
     'lbl-marque-a': "Brand:",
@@ -471,6 +498,10 @@ const translations = {
     'home': "Home",
     'carburants': ["Petrol", "Diesel", "Electric", "Hybrid", "LPG", "CNG", "Hydrogen"],
     'transmissions': ["Manual", "Automatic", "Robotized", "CVT"],
+    'lbl-cartegrise-recto-v': "Registration certificate (front/back):",
+    'lbl-procuration-v': "Authorization letter (if not owner):" ,
+    'label_checkbox_procuration': "Authorization letter",
+
     'choisir': "--Choose--"
   },
   ar: {
@@ -493,7 +524,7 @@ const translations = {
     'lbl-cin-v': "رقم التعريف:",
     'lbl-cin-img-v': "صورة التعريف (أمامية/خلفية):",
     'lbl-cartegrise-v': "بطاقة التسجيل:",
-    'lbl-procuration-v': "تفويض (إذا لم تكن المالك):",
+   
     'lbl-images-v': "صور السيارة (10 كحد أقصى):",
     'btn-submit-v': "إرسال",
     'lbl-marque-a': "الماركة:",
@@ -528,6 +559,10 @@ const translations = {
     'home': "الرئيسية",
     'carburants': ["بنزين", "ديزل", "كهرباء", "هايبرد", "غاز", "غاز طبيعي", "هيدروجين"],
     'transmissions': ["يدوي", "أوتوماتيكي", "روبوتي", "CVT"],
+    'lbl-cartegrise-recto-v': "رخصة السير (أمامية/خلفية):",
+    'lbl-procuration-v': "تفويض (إذا لم تكن المالك):",
+    'label_checkbox_procuration': "تفويض/وكالة",
+
     'choisir': "--اختر--"
   }
 };
