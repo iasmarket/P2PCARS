@@ -609,11 +609,15 @@ function fillModelSelect(modelId, marque) {
   });
 });
 
-// Gestion formulaire procuration (affiche toujours pour la démo)
-document.getElementById('cartegrise-v').addEventListener('change', function(){
-  document.getElementById('lbl-procuration-v').style.display = '';
-  document.getElementById('input-procuration-v').style.display = '';
-});
+const cartegriseInput = document.getElementById('cartegrise-v');
+if (cartegriseInput) {
+  cartegriseInput.addEventListener('change', function(){
+    const lblProc = document.getElementById('lbl-procuration-v');
+    const inputProc = document.getElementById('input-procuration-v');
+    if (lblProc) lblProc.style.display = '';
+    if (inputProc) inputProc.style.display = '';
+  });
+}
 
 // Formulaires visibles
 function showForm(form) {
