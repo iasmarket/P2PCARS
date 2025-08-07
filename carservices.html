@@ -192,6 +192,8 @@
     <select name="modele" id="modele-v" required><option value="">--</option></select>
     <label id="lbl-annee-v"></label>
     <select name="annee" id="annee-v" required></select>
+    <label id="lbl-puissancefiscal-v"></label>
+    <input name="puissancefiscal" type="number" required min="0">
     <label id="lbl-prix-v"></label>
     <input name="prix" type="number" required min="0">
     <label id="lbl-kilometrage-v"></label>
@@ -251,6 +253,8 @@
     <select name="modele" id="modele-a" required><option value="">--</option></select>
     <label id="lbl-annee-a"></label>
     <select name="annee" id="annee-a" required></select>
+    <label id="lbl-puissancefiscal-a"></label>
+    <input name="puissancefiscal" type="number" required min="0">
     <label id="lbl-prix-a"></label>
     <input name="prix" type="number" required min="0">
     <label id="lbl-kilometrage-a"></label>
@@ -287,6 +291,8 @@
     <select name="modele" id="modele-c" required><option value="">--</option></select>
     <label id="lbl-annee-c"></label>
     <select name="annee" id="annee-c" required></select>
+    <label id="lbl-puissancefiscal-c"></label>
+    <input name="puissancefiscal" type="number" required min="0">
     <label id="lbl-prix-c"></label>
     <input name="prix" type="number" required min="0">
     <label id="lbl-kilometrage-c"></label>
@@ -392,6 +398,7 @@ const translations = {
     'lbl-marque-v': "Marque :",
     'lbl-modele-v': "Modèle :",
     'lbl-annee-v': "Année :",
+    'lbl-puissancefiscal-v':"Puissance fiscale :",
     'lbl-prix-v': "Prix (MAD) :",
     'lbl-kilometrage-v': "Kilométrage :",
     'lbl-carburant-v': "Carburant :",
@@ -408,6 +415,7 @@ const translations = {
     'lbl-marque-a': "Marque :",
     'lbl-modele-a': "Modèle :",
     'lbl-annee-a': "Année :",
+    'lbl-puissancefiscal-a':"Puissance fiscale :",
     'lbl-prix-a': "Prix (MAD) :",
     'lbl-kilometrage-a': "Kilométrage :",
     'lbl-carburant-a': "Carburant :",
@@ -421,6 +429,7 @@ const translations = {
     'lbl-marque-c': "Marque :",
     'lbl-modele-c': "Modèle :",
     'lbl-annee-c': "Année :",
+    'lbl-puissancefiscal-c':"Puissance fiscale :",
     'lbl-prix-c': "Prix (MAD) :",
     'lbl-kilometrage-c': "Kilométrage :",
     'lbl-carburant-c': "Carburant :",
@@ -453,6 +462,7 @@ const translations = {
     'lbl-marque-v': "Brand:",
     'lbl-modele-v': "Model:",
     'lbl-annee-v': "Year:",
+    'lbl-puissancefiscal-v':"Fiscal horsepower :",
     'lbl-prix-v': "Price (MAD):",
     'lbl-kilometrage-v': "Mileage:",
     'lbl-carburant-v': "Fuel:",
@@ -469,6 +479,7 @@ const translations = {
     'lbl-marque-a': "Brand:",
     'lbl-modele-a': "Model:",
     'lbl-annee-a': "Year:",
+    'lbl-puissancefiscal-a':"Fiscal horsepower :",
     'lbl-prix-a': "Price (MAD):",
     'lbl-kilometrage-a': "Mileage:",
     'lbl-carburant-a': "Fuel:",
@@ -482,6 +493,7 @@ const translations = {
     'lbl-marque-c': "Brand:",
     'lbl-modele-c': "Model:",
     'lbl-annee-c': "Year:",
+    'lbl-puissancefiscal-v':"Fiscal horsepower :",
     'lbl-prix-c': "Price (MAD):",
     'lbl-kilometrage-c': "Mileage:",
     'lbl-carburant-c': "Fuel:",
@@ -514,6 +526,7 @@ const translations = {
     'lbl-marque-v': "الماركة:",
     'lbl-modele-v': "الموديل:",
     'lbl-annee-v': "السنة:",
+    'lbl-puissancefiscal-v':"القوة الجبائية:",
     'lbl-prix-v': "السعر (MAD):",
     'lbl-kilometrage-v': "الكيلومترات:",
     'lbl-carburant-v': "الوقود:",
@@ -530,6 +543,7 @@ const translations = {
     'lbl-marque-a': "الماركة:",
     'lbl-modele-a': "الموديل:",
     'lbl-annee-a': "السنة:",
+     'lbl-puissancefiscal-a':"القوة الجبائية:",
     'lbl-prix-a': "السعر (MAD):",
     'lbl-kilometrage-a': "الكيلومترات:",
     'lbl-carburant-a': "الوقود:",
@@ -543,6 +557,7 @@ const translations = {
     'lbl-marque-c': "الماركة:",
     'lbl-modele-c': "الموديل:",
     'lbl-annee-c': "السنة:",
+     'lbl-puissancefiscal-c':"القوة الجبائية:",
     'lbl-prix-c': "السعر (MAD):",
     'lbl-kilometrage-c': "الكيلومترات:",
     'lbl-carburant-c': "الوقود:",
@@ -576,9 +591,9 @@ function setLang(lang) {
   // Titre, intro, labels, boutons
   [
     'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
-    'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
-    'lbl-marque-a','lbl-modele-a','lbl-annee-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','btn-submit-a',
-    'lbl-marque-c','lbl-modele-c','lbl-annee-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-cin-img-c','btn-submit-c',
+    'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
+    'lbl-marque-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','btn-submit-a',
+    'lbl-marque-c','lbl-modele-c','lbl-annee-c','lbl-puissancefiscal-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-cin-img-c','btn-submit-c',
     't-vendre','t-achat','t-chercher','lbl-cartegrise-recto-v', 'lbl-cartegrise-verso-v'
   ].forEach(id=>{
     let el = document.getElementById(id);
