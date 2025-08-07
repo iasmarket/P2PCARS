@@ -217,7 +217,7 @@
   <!-- Carte grise recto / verso -->
   <div id="div-cartegrise">
     <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
-    <input name="cartegrise" type="file" accept="image/*" multiple required>
+    <input name="cartegrise" type="file" accept="image/*" multiple >
   </div>
 
   <!-- Procuration (facultatif) -->
@@ -322,10 +322,19 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // ... tout ton code JS existant ...
- document.getElementById("checkbox-procuration").addEventListener("change", function () {
+document.getElementById("checkbox-procuration").addEventListener("change", function () {
   const blocProcuration = document.getElementById("div-procuration");
-  blocProcuration.style.display = this.checked ? "block" : "none";
+  const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
+
+  if (this.checked) {
+    blocProcuration.style.display = "block";
+    inputsProcuration.forEach(input => input.disabled = false);
+  } else {
+    blocProcuration.style.display = "none";
+    inputsProcuration.forEach(input => input.disabled = true);
+  }
 });
+
 
 const allCarModels = {
   "Renault": ["Clio", "Captur", "Mégane", "Talisman", "Espace", "Kadjar"],
