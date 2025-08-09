@@ -152,6 +152,16 @@
       <button type="submit" id="submitBtn" aria-live="polite">
         <span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span>
       </button>
+      <!-- Bouton Déconnexion -->
+      <button id="logoutBtn" style="display:none; background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:7px; cursor:pointer; margin:10px auto; display:block;">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </button>
+
+      <!-- Lien mot de passe oublié -->
+      <p style="text-align:center; margin-top:10px;">
+        <a href="#" id="forgotPassword" style="color:#3b82f6; font-size:0.9rem;">Mot de passe oublié ?</a>
+      </p>
+
     </form>
 
     <!-- message global (erreur / succès) -->
@@ -178,242 +188,268 @@
     &copy; 2025 IASMarket Services. Tous droits réservés.
   </footer>
 
-  <script>
-    (function () {
-      const API_URL = 'https://apicars.p2p-cars.com/api/login'; // ton endpoint
-      const form = document.getElementById('loginForm');
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const rememberInput = document.getElementById('rememberMe');
-      const submitBtn = document.getElementById('submitBtn');
-      const btnContent = document.getElementById('btnContent');
-      const messageBox = document.getElementById('message');
-      const emailError = document.getElementById('emailError');
-      const passwordError = document.getElementById('passwordError');
+<script>
+(function () {
+  const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
+  const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
+  const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
 
-      // helper pour échapper texte (sécurité XSS)
-      function escapeHtml(str = '') {
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      }
+  const form = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const rememberInput = document.getElementById('rememberMe');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnContent = document.getElementById('btnContent');
+  const messageBox = document.getElementById('message');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const resultsDiv = document.getElementById('results');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const forgotLink = document.getElementById('forgotPassword');
 
-      function showMessage(type, text) {
-        // type: 'error' | 'success' | 'info'
-        messageBox.innerHTML = '';
-        const el = document.createElement('div');
-        el.className = 'text';
-        if (type === 'error') {
-          el.style.background = 'rgba(255,107,107,0.12)';
-          el.style.color = 'var(--error)';
-          el.style.border = '1px solid rgba(255,107,107,0.18)';
-        } else if (type === 'success') {
-          el.style.background = 'rgba(52,211,153,0.12)';
-          el.style.color = 'var(--success)';
-          el.style.border = '1px solid rgba(52,211,153,0.18)';
-        } else {
-          el.style.background = 'rgba(255,255,255,0.03)';
-          el.style.color = 'var(--muted)';
-        }
-        el.textContent = text;
-        messageBox.appendChild(el);
-      }
+  function escapeHtml(str = '') {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-      function clearFieldErrors() {
-        emailError.textContent = '';
-        passwordError.textContent = '';
-        emailInput.classList.remove('input-error');
-        passwordInput.classList.remove('input-error');
-      }
+  function showMessage(type, text) {
+    messageBox.innerHTML = '';
+    const el = document.createElement('div');
+    if (type === 'error') {
+      el.style.background = 'rgba(255,107,107,0.12)';
+      el.style.color = 'var(--error)';
+      el.style.border = '1px solid rgba(255,107,107,0.18)';
+    } else if (type === 'success') {
+      el.style.background = 'rgba(52,211,153,0.12)';
+      el.style.color = 'var(--success)';
+      el.style.border = '1px solid rgba(52,211,153,0.18)';
+    } else {
+      el.style.background = 'rgba(255,255,255,0.03)';
+      el.style.color = 'var(--muted)';
+    }
+    el.textContent = text;
+    messageBox.appendChild(el);
+  }
 
-      function setFieldError(inputEl, errorEl, message) {
-        inputEl.classList.add('input-error');
-        errorEl.textContent = message;
-      }
+  function clearFieldErrors() {
+    emailError.textContent = '';
+    passwordError.textContent = '';
+    emailInput.classList.remove('input-error');
+    passwordInput.classList.remove('input-error');
+  }
 
-      function setLoading(loading) {
-        if (loading) {
-          submitBtn.disabled = true;
-          btnContent.innerHTML = '<span class="spinner" aria-hidden="true"></span> Connexion…';
-        } else {
-          submitBtn.disabled = false;
-          btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
-        }
-      }
+  function setFieldError(inputEl, errorEl, message) {
+    inputEl.classList.add('input-error');
+    errorEl.textContent = message;
+  }
 
-      // Remplir un tableau (en échappant le contenu)
-      function remplirTableau(idTable, data) {
-        const table = document.getElementById(idTable);
-        table.innerHTML = '';
+  function setLoading(loading) {
+    if (loading) {
+      submitBtn.disabled = true;
+      btnContent.innerHTML = '<span class="spinner"></span> Connexion…';
+    } else {
+      submitBtn.disabled = false;
+      btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+    }
+  }
 
-        if (!Array.isArray(data) || data.length === 0) {
-          table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
-          return;
-        }
+  function remplirTableau(idTable, data, tableType) {
+    const table = document.getElementById(idTable);
+    table.innerHTML = '';
 
-        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valide"];
-        const thead = document.createElement('thead');
-        const htr = document.createElement('tr');
-        headers.forEach(h => {
-          const th = document.createElement('th');
-          th.textContent = h;
-          htr.appendChild(th);
-        });
-        thead.appendChild(htr);
-        table.appendChild(thead);
+    if (!Array.isArray(data) || data.length === 0) {
+      table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
+      return;
+    }
 
-        const tbody = document.createElement('tbody');
-        data.forEach(item => {
-          const tr = document.createElement('tr');
+    const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
+    const thead = document.createElement('thead');
+    const htr = document.createElement('tr');
+    headers.forEach(h => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
 
-          const cells = [
-            item.ref || '',
-            item.date || '',
-            item.marque || '',
-            item.modele || '',
-            item.annee || '',
-            item.cv || '',
-            item.kilometrage || '',
-            item.carburant || '',
-            item.transmission || '',
-            item.description || '',
-            item.prix || '',
-            item.valide ? 'Oui' : 'Non'
-          ];
+    const tbody = document.createElement('tbody');
+    data.forEach(item => {
+      const tr = document.createElement('tr');
 
-          cells.forEach(c => {
-            const td = document.createElement('td');
-            td.textContent = c;
-            tr.appendChild(td);
-          });
+      const cells = [
+        item.ref || '',
+        item.date || '',
+        item.marque || '',
+        item.modele || '',
+        item.annee || '',
+        item.cv || '',
+        item.kilometrage || '',
+        item.carburant || '',
+        item.transmission || '',
+        item.description || '',
+        item.prix || ''
+      ];
 
-          tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-      }
-
-      // initialisation au chargement
-      window.addEventListener('DOMContentLoaded', () => {
-        // garder password vide
-        passwordInput.value = '';
-        // checkbox cochée par défaut
-        rememberInput.checked = true;
-        // charger email si sauvegardé
-        const savedEmail = localStorage.getItem('p2p_email');
-        if (savedEmail) emailInput.value = savedEmail;
-        clearFieldErrors();
+      cells.forEach(c => {
+        const td = document.createElement('td');
+        td.textContent = c;
+        tr.appendChild(td);
       });
 
-      // Timeout fetch helper
-      async function fetchWithTimeout(resource, options = {}) {
-        const { timeout = 15000 } = options;
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
+      // Checkbox Valider
+      const tdValide = document.createElement('td');
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.checked = item.valide === true || item.valide === 'Oui';
+      chk.addEventListener('change', async () => {
         try {
-          const resp = await fetch(resource, { ...options, signal: controller.signal });
-          clearTimeout(id);
-          return resp;
-        } catch (err) {
-          clearTimeout(id);
-          throw err;
-        }
-      }
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearFieldErrors();
-        showMessage('info', ''); // vider message global
-
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-
-        // validation client
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        let hasError = false;
-        if (!emailRegex.test(email)) {
-          setFieldError(emailInput, emailError, 'Adresse email invalide');
-          hasError = true;
-        }
-        if (!password || password.length < 4) {
-          setFieldError(passwordInput, passwordError, 'Mot de passe trop court (min 4 caractères)');
-          hasError = true;
-        }
-        if (hasError) {
-          showMessage('error', 'Corrigez les erreurs ci-dessus avant d’envoyer.');
-          return;
-        }
-
-        setLoading(true);
-        showMessage('info', 'Connexion en cours...');
-
-        try {
-          const response = await fetchWithTimeout(API_URL, {
+          const res = await fetch(API_EDIT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-            timeout: 15000
+            body: JSON.stringify({
+              ref: item.ref,
+              table: tableType,
+              valide: chk.checked ? 'Oui' : 'Non'
+            })
           });
-
-          if (!response.ok) {
-            // essayer de lire message d'erreur renvoyé par le serveur
-            let errMsg = `Erreur serveur (${response.status})`;
-            try {
-              const errJson = await response.json();
-              if (errJson && (errJson.message || errJson.error)) {
-                errMsg = errJson.message || errJson.error;
-              } else { // si structure différente
-                errMsg = JSON.stringify(errJson);
-              }
-            } catch (parseErr) {
-              // si pas JSON
-              const text = await response.text().catch(() => '');
-              if (text) errMsg = text;
-            }
-
-            // message visible pour l'utilisateur
-            if (response.status === 401) {
-              showMessage('error', 'Identifiants incorrects — vérifiez votre email/mot de passe.');
-            } else {
-              showMessage('error', errMsg);
-            }
-            setLoading(false);
-            return;
-          }
-
-          // success
-          const data = await response.json();
-
-          // sauvegarder email si demandé
-          if (rememberInput.checked) {
-            localStorage.setItem('p2p_email', email);
-          } else {
-            localStorage.removeItem('p2p_email');
-          }
-
-          showMessage('success', 'Connexion réussie ✅');
-          setLoading(false);
-
-          // afficher résultats
-          document.getElementById('results').style.display = 'block';
-
-          // remplir tableaux (utiliser champs attendus)
-          remplirTableau('table-annonces', Array.isArray(data.annonces) ? data.annonces : []);
-          remplirTableau('table-achats', Array.isArray(data.achats) ? data.achats : []);
-          remplirTableau('table-recherches', Array.isArray(data.recherches) ? data.recherches : []);
+          if (!res.ok) throw new Error('Erreur maj Valider');
+          showMessage('success', `Mise à jour réussie pour ${item.ref}`);
         } catch (err) {
-          // erreurs réseau / timeout / abort
-          if (err.name === 'AbortError') {
-            showMessage('error', 'La requête a expiré (timeout). Réessayez.');
-          } else {
-            showMessage('error', 'Erreur réseau — impossible de contacter le serveur.');
-          }
-          setLoading(false);
+          showMessage('error', `Impossible de mettre à jour ${item.ref}`);
+          chk.checked = !chk.checked; // revert si erreur
         }
       });
-    })();
-  </script>
+      tdValide.appendChild(chk);
+      tr.appendChild(tdValide);
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  async function fetchWithTimeout(resource, options = {}) {
+    const { timeout = 15000 } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    try {
+      const resp = await fetch(resource, { ...options, signal: controller.signal });
+      clearTimeout(id);
+      return resp;
+    } catch (err) {
+      clearTimeout(id);
+      throw err;
+    }
+  }
+
+  async function login(email, password, remember) {
+    setLoading(true);
+    showMessage('info', 'Connexion en cours...');
+
+    try {
+      const response = await fetchWithTimeout(API_LOGIN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        timeout: 15000
+      });
+
+      if (!response.ok) {
+        showMessage('error', 'Identifiants incorrects ou erreur serveur.');
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      if (remember) localStorage.setItem('p2p_email', email);
+      localStorage.setItem('p2p_token', data.token || ''); // sauvegarder token
+
+      showMessage('success', 'Connexion réussie ✅');
+      setLoading(false);
+      resultsDiv.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+
+      remplirTableau('table-annonces', data.annonces, 'annonces');
+      remplirTableau('table-achats', data.achats, 'achats');
+      remplirTableau('table-recherches', data.recherches, 'recherches');
+    } catch (err) {
+      showMessage('error', 'Erreur réseau.');
+      setLoading(false);
+    }
+  }
+
+  // Connexion auto si token
+  window.addEventListener('DOMContentLoaded', () => {
+    passwordInput.value = '';
+    rememberInput.checked = true;
+    const savedEmail = localStorage.getItem('p2p_email');
+    if (savedEmail) emailInput.value = savedEmail;
+    const savedToken = localStorage.getItem('p2p_token');
+    if (savedToken) {
+      // Ici tu pourrais faire un appel API pour recharger les données
+      showMessage('info', 'Connexion restaurée.');
+      resultsDiv.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+    }
+  });
+
+  // Submit connexion
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearFieldErrors();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let hasError = false;
+    if (!emailRegex.test(email)) {
+      setFieldError(emailInput, emailError, 'Adresse email invalide');
+      hasError = true;
+    }
+    if (!password || password.length < 4) {
+      setFieldError(passwordInput, passwordError, 'Mot de passe trop court');
+      hasError = true;
+    }
+    if (hasError) {
+      showMessage('error', 'Corrigez les erreurs avant de continuer.');
+      return;
+    }
+    login(email, password, rememberInput.checked);
+  });
+
+  // Mot de passe oublié
+  forgotLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    if (!email) {
+      showMessage('error', 'Entrez votre email pour réinitialiser le mot de passe.');
+      return;
+    }
+    try {
+      const res = await fetch(API_FORGOT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!res.ok) throw new Error();
+      showMessage('success', 'Email de réinitialisation envoyé.');
+    } catch {
+      showMessage('error', 'Erreur lors de la demande de réinitialisation.');
+    }
+  });
+
+  // Déconnexion
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('p2p_token');
+    resultsDiv.style.display = 'none';
+    logoutBtn.style.display = 'none';
+    showMessage('info', 'Vous êtes déconnecté.');
+  });
+})();
+</script>
+
 </body>
 </html>
