@@ -160,6 +160,17 @@
       const passwordError = document.getElementById('passwordError');
       const forgotPasswordLink = document.getElementById('forgotPassword');
 
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedEmail = localStorage.getItem('p2p_email');
+        const savedPwd = localStorage.getItem('p2p_pwd');
+        if (savedEmail && savedPwd) {
+          // Session active, rediriger vers profile
+          window.location.href = 'profile.html';
+        } else {
+          if (savedEmail) emailInput.value = savedEmail;
+        }
+      });
+
       function showMessage(type, text) {
         messageBox.innerHTML = '';
         const el = document.createElement('div');
