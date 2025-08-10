@@ -123,324 +123,176 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo1.png" alt="Logo société mère">
-    <div class="header-center">
-      <h1>P2P-CARS</h1>
-      <p class="text-h">Connexion à votre compte</p>
-    </div>
-    <img src="logo4.png" alt="Logo plateforme">
-  </header>
+  <h1>Connexion</h1>
 
-  <section class="form-section" aria-labelledby="title-connexion">
-    <h2 id="title-connexion">Connexion</h2>
+  <form id="loginForm">
+    <label for="email">Email :</label><br>
+    <input type="email" id="email" name="email" required>
+    <div id="emailError" class="error"></div><br>
 
-    <form id="loginForm" novalidate>
-      <label for="email">Email :</label>
-      <input type="email" id="email" name="email" autocomplete="username" required aria-describedby="emailError">
-      <div id="emailError" class="error-text" aria-live="polite"></div>
+    <label for="password">Mot de passe :</label><br>
+    <input type="password" id="password" name="password" required minlength="4">
+    <div id="passwordError" class="error"></div><br>
 
-      <label for="password">Mot de passe :</label>
-      <input type="password" id="password" name="password" autocomplete="current-password" required aria-describedby="passwordError">
-      <div id="passwordError" class="error-text" aria-live="polite"></div>
+    <label><input type="checkbox" id="rememberMe" checked> Se souvenir de moi</label><br><br>
 
-      <label class="checkbox-container" for="rememberMe">
-        <input type="checkbox" id="rememberMe" name="rememberMe" checked>
-        Rester connecté
-      </label>
+    <button id="submitBtn" type="submit"><span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span></button>
+  </form>
 
-      <button type="submit" id="submitBtn" aria-live="polite">
-        <span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span>
-      </button>
-      <!-- Bouton Déconnexion -->
-      <button id="logoutBtn" style="display:none; background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:7px; cursor:pointer; margin:10px auto; display:block;">
-        <i class="fas fa-sign-out-alt"></i> Déconnexion
-      </button>
+  <div id="message"></div>
 
-      <!-- Lien mot de passe oublié -->
-      <p style="text-align:center; margin-top:10px;">
-        <a href="#" id="forgotPassword" style="color:#3b82f6; font-size:0.9rem;">Mot de passe oublié ?</a>
-      </p>
+  <p>
+    <a href="#" id="forgotPassword" style="cursor:pointer; color:blue; text-decoration:underline;">Mot de passe oublié ?</a>
+  </p>
 
-    </form>
+  <script>
+    // Script login complet (à insérer ici ou en fichier externe)
+    (function () {
+      const API_URL = 'https://apicars.p2p-cars.com/api/login';
+      const form = document.getElementById('loginForm');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const rememberInput = document.getElementById('rememberMe');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnContent = document.getElementById('btnContent');
+      const messageBox = document.getElementById('message');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      const forgotPasswordLink = document.getElementById('forgotPassword');
 
-    <!-- message global (erreur / succès) -->
-    <div id="message" role="status" aria-live="polite"></div>
-
-    <p class="muted">
-      Vous aurez votre compte en remplissant l’un des formulaires de service
-      <a href="index.html" style="color:var(--blue); text-decoration:underline;">cliquer ici</a>.
-    </p>
-  </section>
-
-  <div id="results">
-    <h2>Tableau des Annonces</h2>
-    <table id="table-annonces" role="table" aria-label="Annonces"></table>
-
-    <h2>Tableau des Demandes d'Achat</h2>
-    <table id="table-achats" role="table" aria-label="Achats"></table>
-
-    <h2>Tableau des Demandes de Recherche</h2>
-    <table id="table-recherches" role="table" aria-label="Recherches"></table>
-  </div>
-
-  <footer style="text-align:center; margin: 20px 0; color: #e2e8f0;">
-    &copy; 2025 IASMarket Services. Tous droits réservés.
-  </footer>
-
-<script>
-(function () {
-  const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
-  const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
-  const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
-
-  const form = document.getElementById('loginForm');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const rememberInput = document.getElementById('rememberMe');
-  const submitBtn = document.getElementById('submitBtn');
-  const btnContent = document.getElementById('btnContent');
-  const messageBox = document.getElementById('message');
-  const emailError = document.getElementById('emailError');
-  const passwordError = document.getElementById('passwordError');
-  const btnLogout = document.getElementById('logoutBtn'); // bouton déconnexion
-  const forgotLink = document.getElementById('forgotLink'); // lien mot de passe oublié
-
-  /** ================== UTILS ================== **/
-
-  // Sécurité XSS : échapper texte
-  function escapeHtml(str = '') {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  // Affiche un message visuel à l'utilisateur
-  function showMessage(type, text) {
-    messageBox.innerHTML = '';
-    const el = document.createElement('div');
-    el.className = 'text';
-    if (type === 'error') {
-      el.style.background = 'rgba(255,107,107,0.12)';
-      el.style.color = 'var(--error)';
-    } else if (type === 'success') {
-      el.style.background = 'rgba(52,211,153,0.12)';
-      el.style.color = 'var(--success)';
-    } else {
-      el.style.background = 'rgba(255,255,255,0.03)';
-      el.style.color = 'var(--muted)';
-    }
-    el.textContent = text;
-    messageBox.appendChild(el);
-  }
-
-  function clearFieldErrors() {
-    emailError.textContent = '';
-    passwordError.textContent = '';
-    emailInput.classList.remove('input-error');
-    passwordInput.classList.remove('input-error');
-  }
-
-  function setFieldError(inputEl, errorEl, message) {
-    inputEl.classList.add('input-error');
-    errorEl.textContent = message;
-  }
-
-  function setLoading(loading) {
-    if (loading) {
-      submitBtn.disabled = true;
-      btnContent.innerHTML = '<span class="spinner"></span> Connexion…';
-    } else {
-      submitBtn.disabled = false;
-      btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
-    }
-  }
-
-  // Fonction pour remplir un tableau avec les données API
-  function remplirTableau(idTable, data) {
-    const table = document.getElementById(idTable);
-    table.innerHTML = '';
-
-    if (!Array.isArray(data) || data.length === 0) {
-      table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
-      return;
-    }
-
-    const headers = [
-      "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", 
-      "Carburant", "Transmission", "Description", "Prix", "Valider"
-    ];
-    const thead = document.createElement('thead');
-    const htr = document.createElement('tr');
-    headers.forEach(h => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      htr.appendChild(th);
-    });
-    thead.appendChild(htr);
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    data.forEach(item => {
-      const tr = document.createElement('tr');
-
-      // Ajout des cellules texte
-      const textCells = [
-        item.Ref || item.ref || '', // support "Ref" ou "ref"
-        item.date || '',
-        item.marque || '',
-        item.modele || '',
-        item.annee || '',
-        item.cv || '',
-        item.kilometrage || '',
-        item.carburant || '',
-        item.transmission || '',
-        item.description || '',
-        item.prix || ''
-      ];
-
-      textCells.forEach(c => {
-        const td = document.createElement('td');
-        td.textContent = c;
-        tr.appendChild(td);
-      });
-
-      // Ajout checkbox modifiable pour "Valider"
-      const tdValide = document.createElement('td');
-      const chk = document.createElement('input');
-      chk.type = 'checkbox';
-      chk.checked = String(item.valide).toLowerCase() === 'oui' || item.valide === true;
-      chk.addEventListener('change', () => {
-        fetch(API_EDIT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ref: item.Ref || item.ref,
-            valide: chk.checked ? 'Oui' : 'Non'
-          })
-        }).then(r => r.json())
-          .then(() => showMessage('success', 'Mise à jour réussie'))
-          .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
-      });
-      tdValide.appendChild(chk);
-      tr.appendChild(tdValide);
-
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-  }
-
-  // Connexion API
-  async function loginUser(email, password) {
-    setLoading(true);
-    showMessage('info', 'Connexion en cours...');
-    try {
-      const resp = await fetch(API_LOGIN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
-
-      // Si rester connecté → sauvegarde
-      if (rememberInput.checked) {
-        localStorage.setItem('p2p_email', email);
-        localStorage.setItem('p2p_pwd', btoa(password)); // base64
-      } else {
-        localStorage.removeItem('p2p_email');
-        localStorage.removeItem('p2p_pwd');
+      function showMessage(type, text) {
+        messageBox.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'text';
+        el.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'black');
+        el.textContent = text;
+        messageBox.appendChild(el);
       }
 
-      showMessage('success', 'Connexion réussie ✅');
-      document.getElementById('results').style.display = 'block';
-      btnLogout.style.display = 'inline-block';
+      function clearFieldErrors() {
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        emailInput.classList.remove('input-error');
+        passwordInput.classList.remove('input-error');
+      }
 
-      remplirTableau('table-annonces', data.annonces || []);
-      remplirTableau('table-achats', data.achats || []);
-      remplirTableau('table-recherches', data.recherches || []);
+      function setFieldError(inputEl, errorEl, message) {
+        inputEl.classList.add('input-error');
+        errorEl.textContent = message;
+      }
 
-    } catch (err) {
-      showMessage('error', err.message);
-    }
-    setLoading(false);
-  }
+      function setLoading(loading) {
+        if (loading) {
+          submitBtn.disabled = true;
+          btnContent.innerHTML = '<span class="spinner" aria-hidden="true"></span> Connexion…';
+        } else {
+          submitBtn.disabled = false;
+          btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+        }
+      }
 
-  /** ================== EVENTS ================== **/
+      forgotPasswordLink.addEventListener('click', async () => {
+        clearFieldErrors();
+        const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showMessage('error', 'Entrez un email valide pour réinitialiser votre mot de passe.');
+          return;
+        }
+        showMessage('info', 'Envoi de la demande de réinitialisation...');
+        try {
+          const response = await fetch('https://apicars.p2p-cars.com/api/loginrest', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email })
+          });
+          if (!response.ok) throw new Error('Erreur lors de l\'envoi de la demande');
+          showMessage('success', 'Email de réinitialisation envoyé ✅');
+        } catch (err) {
+          showMessage('error', 'Erreur lors de l\'envoi de la demande, réessayez.');
+        }
+      });
 
-  // Soumission formulaire
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    clearFieldErrors();
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearFieldErrors();
+        showMessage('info', ''); // vider message global
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
 
-    let hasError = false;
-    if (!emailRegex.test(email)) {
-      setFieldError(emailInput, emailError, 'Email invalide');
-      hasError = true;
-    }
-    if (!password || password.length < 4) {
-      setFieldError(passwordInput, passwordError, 'Mot de passe trop court');
-      hasError = true;
-    }
-    if (hasError) return;
+        // validation client
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let hasError = false;
+        if (!emailRegex.test(email)) {
+          setFieldError(emailInput, emailError, 'Adresse email invalide');
+          hasError = true;
+        }
+        if (!password || password.length < 4) {
+          setFieldError(passwordInput, passwordError, 'Mot de passe trop court (min 4 caractères)');
+          hasError = true;
+        }
+        if (hasError) {
+          showMessage('error', 'Corrigez les erreurs ci-dessus avant d’envoyer.');
+          return;
+        }
 
-    loginUser(email, password);
-  });
+        setLoading(true);
+        showMessage('info', 'Connexion en cours...');
 
-  // Déconnexion
-  btnLogout.addEventListener('click', () => {
-    localStorage.removeItem('p2p_email');
-    localStorage.removeItem('p2p_pwd');
-    document.getElementById('results').style.display = 'none';
-    btnLogout.style.display = 'none';
-    showMessage('info', 'Vous êtes déconnecté');
-  });
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
 
-  // Mot de passe oublié
-  forgotLink.addEventListener('click', e => {
-    e.preventDefault();
-    const email = emailInput.value.trim();
-    if (!email) {
-      showMessage('error', 'Entrez votre email avant de demander un mot de passe');
-      return;
-    }
-    fetch(API_FORGOT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    })
-      .then(r => r.json())
-      .then(() => showMessage('success', 'Email envoyé avec succès'))
-      .catch(() => showMessage('error', 'Erreur envoi email'));
-  });
+          if (!response.ok) {
+            let errMsg = `Erreur serveur (${response.status})`;
+            try {
+              const errJson = await response.json();
+              errMsg = errJson.message || errJson.error || errMsg;
+            } catch {}
+            if (response.status === 401) {
+              showMessage('error', 'Identifiants incorrects — vérifiez votre email/mot de passe.');
+            } else {
+              showMessage('error', errMsg);
+            }
+            setLoading(false);
+            return;
+          }
 
-  /** ================== AUTO LOGIN ================== **/
-  window.addEventListener('DOMContentLoaded', () => {
-    passwordInput.value = '';
-    rememberInput.checked = true;
-    btnLogout.style.display = 'none'; // caché au démarrage
+          // success
+          // stocker email + pwd encodé dans localStorage pour session
+          if (rememberInput.checked) {
+            localStorage.setItem('p2p_email', email);
+            localStorage.setItem('p2p_pwd', btoa(password)); // base64
+          } else {
+            localStorage.removeItem('p2p_email');
+            localStorage.removeItem('p2p_pwd');
+          }
 
-    // Auto-login si infos stockées
-    const savedEmail = localStorage.getItem('p2p_email');
-    const savedPwd = localStorage.getItem('p2p_pwd');
-    if (savedEmail && savedPwd) {
-      emailInput.value = savedEmail;
-      rememberInput.checked = true;
-      loginUser(savedEmail, atob(savedPwd)); // décode base64
-    }
-  });
+          showMessage('success', 'Connexion réussie ✅');
+          setLoading(false);
 
-})();
-</script>
+          // rediriger vers profile
+          window.location.href = 'https://p2p-cars.com/profile';
 
+        } catch (err) {
+          showMessage('error', 'Erreur réseau — impossible de contacter le serveur.');
+          setLoading(false);
+        }
+      });
 
+      // Au chargement remplir email sauvegardé
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedEmail = localStorage.getItem('p2p_email');
+        if (savedEmail) emailInput.value = savedEmail;
+      });
 
+    })();
+  </script>
 </body>
+
+
 </html>
