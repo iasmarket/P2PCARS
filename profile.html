@@ -158,89 +158,101 @@
         messageBox.appendChild(el);
       }
 
-      function remplirTableau(idTable, data) {
-        const table = document.getElementById(idTable);
-        table.innerHTML = '';
+function remplirTableau(idTable, data, userId) {
+  const table = document.getElementById(idTable);
+  table.innerHTML = ''; // Vide le tableau avant remplissage
 
-        if (!Array.isArray(data) || data.length === 0) {
-          table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
-          return;
+  if (!Array.isArray(data) || data.length === 0) {
+    table.innerHTML = '<tr><td colspan="13">Aucune donnée disponible</td></tr>';
+    return;
+  }
+
+  // Définition des entêtes de colonnes (avec colonne Supprimer en 1er)
+  const headers = [
+    "Supprimer", "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
+    "Carburant", "Transmission", "Description", "Prix", "Valide"
+  ];
+
+  // Création du header du tableau
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+  headers.forEach(h => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Corps du tableau
+  const tbody = document.createElement('tbody');
+
+  data.forEach((item, idx) => {
+    const tr = document.createElement('tr');
+
+    // --- Colonne Supprimer avec bouton corbeille ---
+    const tdDelete = document.createElement('td');
+    const btnDelete = document.createElement('button');
+    btnDelete.innerHTML = '🗑️'; // Icône corbeille emoji
+    btnDelete.title = 'Supprimer cette ligne';
+    btnDelete.style.cursor = 'pointer';
+    btnDelete.style.border = 'none';
+    btnDelete.style.background = 'transparent';
+    btnDelete.style.fontSize = '1.2em';
+
+    // Événement clic sur corbeille
+    btnDelete.addEventListener('click', async () => {
+      if (!confirm(`Voulez-vous vraiment supprimer la ligne Ref: ${item.Ref}?`)) return;
+
+      try {
+        const response = await fetch('https://apicars.p2p-cars.com/api/deletitem', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userId, Ref: item.Ref })
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          alert('Ligne supprimée avec succès');
+          tr.remove(); // Supprime la ligne du tableau dans l'UI
+        } else {
+          alert('Erreur lors de la suppression : ' + (result.message || 'Erreur serveur'));
         }
-
-        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
-        const thead = document.createElement('thead');
-        const htr = document.createElement('tr');
-        headers.forEach(h => {
-          const th = document.createElement('th');
-          th.textContent = h;
-          htr.appendChild(th);
-        });
-        thead.appendChild(htr);
-        table.appendChild(thead);
-
-        const tbody = document.createElement('tbody');
-
-        data.forEach((item, idx) => {
-          const tr = document.createElement('tr');
-
-          // Ref peut être vide => afficher id ou index si vide
-          const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
-
-
-          const cells = [
-            ref,
-            item.date || '',
-            item.marque || '',
-            item.modele || '',
-            item.annee || '',
-            item.cv || '',
-            item.kilometrage || '',
-            item.carburant || '',
-            item.transmission || '',
-            item.description || '',
-            item.prix || '',
-          ];
-
-          // Création des td pour les cellules classiques
-          cells.forEach(c => {
-            const td = document.createElement('td');
-            td.textContent = c;
-            tr.appendChild(td);
-          });
-
-          // Colonne Valider avec checkbox modifiable
-          const tdValide = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.valide === 'oui' || item.valide === true; // gérer oui/non ou bool
-          tdValide.appendChild(checkbox);
-          tr.appendChild(tdValide);
-
-          // écoute modification checkbox pour envoyer fetch
-          checkbox.addEventListener('change', async () => {
-            const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
-            try {
-              const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ ref: ref, valide: nouvelleValeur })
-              });
-              if (!resp.ok) throw new Error('Erreur serveur');
-              showMessage('success', `État "valider" modifié: ${nouvelleValeur}`);
-            } catch(err) {
-              showMessage('error', 'Erreur lors de la modification.');
-              // revenir à l'état précédent
-              checkbox.checked = !checkbox.checked;
-            }
-          });
-
-          tbody.appendChild(tr);
-        });
-
-        table.appendChild(tbody);
-        resultsSection.style.display = 'block';
+      } catch (err) {
+        alert('Erreur réseau, impossible de supprimer');
       }
+    });
 
+    tdDelete.appendChild(btnDelete);
+    tr.appendChild(tdDelete);
+
+    // --- Ajout des autres colonnes ---
+    const cells = [
+      item.Ref || `#${idx + 1}`,
+      item.date || '',
+      item.marque || '',
+      item.modele || '',
+      item.annee || '',
+      item.cv || '',
+      item.kilometrage || '',
+      item.carburant || '',
+      item.transmission || '',
+      item.description || '',
+      item.prix || '',
+      item.valide ? 'Oui' : 'Non'
+    ];
+
+    cells.forEach(text => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+}
       async function fetchProfile(email, password) {
         try {
           const resp = await fetch(API_LOGIN, {
@@ -252,9 +264,10 @@
           if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
 
           emailDisplay.textContent = email;
-          remplirTableau('table-annonces', data.annonces || []);
-          remplirTableau('table-achats', data.achats || []);
-          remplirTableau('table-recherches', data.recherches || []);
+          remplirTableau('table-annonces', data.annonces, data.email);
+          remplirTableau('table-achats', data.achats, data.email);
+          remplirTableau('table-recherches', data.recherches, data.email);
+
           showMessage('success', 'Données chargées');
         } catch(err) {
           showMessage('error', 'Session expirée, reconnectez-vous');
