@@ -160,20 +160,18 @@
 
 function remplirTableau(idTable, data, userId) {
   const table = document.getElementById(idTable);
-  table.innerHTML = ''; // Vide le tableau avant remplissage
+  table.innerHTML = '';
 
   if (!Array.isArray(data) || data.length === 0) {
     table.innerHTML = '<tr><td colspan="13">Aucune donnée disponible</td></tr>';
     return;
   }
 
-  // Définition des entêtes de colonnes (avec colonne Supprimer en 1er)
   const headers = [
     "Supprimer", "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
     "Carburant", "Transmission", "Description", "Prix", "Valide"
   ];
 
-  // Création du header du tableau
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
   headers.forEach(h => {
@@ -184,23 +182,21 @@ function remplirTableau(idTable, data, userId) {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Corps du tableau
   const tbody = document.createElement('tbody');
 
   data.forEach((item, idx) => {
     const tr = document.createElement('tr');
 
-    // --- Colonne Supprimer avec bouton corbeille ---
+    // Bouton corbeille
     const tdDelete = document.createElement('td');
     const btnDelete = document.createElement('button');
-    btnDelete.innerHTML = '🗑️'; // Icône corbeille emoji
+    btnDelete.innerHTML = '🗑️';
     btnDelete.title = 'Supprimer cette ligne';
     btnDelete.style.cursor = 'pointer';
     btnDelete.style.border = 'none';
     btnDelete.style.background = 'transparent';
     btnDelete.style.fontSize = '1.2em';
 
-    // Événement clic sur corbeille
     btnDelete.addEventListener('click', async () => {
       if (!confirm(`Voulez-vous vraiment supprimer la ligne Ref: ${item.Ref}?`)) return;
 
@@ -214,7 +210,7 @@ function remplirTableau(idTable, data, userId) {
 
         if (response.ok && result.success) {
           alert('Ligne supprimée avec succès');
-          tr.remove(); // Supprime la ligne du tableau dans l'UI
+          tr.remove();
         } else {
           alert('Erreur lors de la suppression : ' + (result.message || 'Erreur serveur'));
         }
@@ -226,20 +222,20 @@ function remplirTableau(idTable, data, userId) {
     tdDelete.appendChild(btnDelete);
     tr.appendChild(tdDelete);
 
-    // --- Ajout des autres colonnes ---
+    // Colonnes de données
     const cells = [
       item.Ref || `#${idx + 1}`,
-      item.date || '',
-      item.marque || '',
-      item.modele || '',
-      item.annee || '',
-      item.cv || '',
-      item.kilometrage || '',
-      item.carburant || '',
-      item.transmission || '',
-      item.description || '',
-      item.prix || '',
-      item.valide ? 'Oui' : 'Non'
+      item.Date || item.date || '',
+      item.Marque || item.marque || '',
+      item.Modèle || item.modele || '',
+      item.Année || item.annee || '',
+      item.CV || item.cv || '',
+      item.Kilométrage || item.kilometrage || '',
+      item.Carburant || item.carburant || '',
+      item.Transmission || item.transmission || '',
+      item.Description || item.description || '',
+      item.Prix || item.prix || '',
+      item.Valide || item.valide ? 'Oui' : 'Non'
     ];
 
     cells.forEach(text => {
@@ -253,6 +249,7 @@ function remplirTableau(idTable, data, userId) {
 
   table.appendChild(tbody);
 }
+    
       async function fetchProfile(email, password) {
         try {
           const resp = await fetch(API_LOGIN, {
@@ -264,9 +261,10 @@ function remplirTableau(idTable, data, userId) {
           if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
 
           emailDisplay.textContent = email;
-          remplirTableau('table-annonces', data.annonces, data.email);
-          remplirTableau('table-achats', data.achats, data.email);
-          remplirTableau('table-recherches', data.recherches, data.email);
+          remplirTableau('table-annonces', data.annonces, data.id);
+          remplirTableau('table-achats', data.achats, data.id);
+          remplirTableau('table-recherches', data.recherches, data.id);
+
 
           showMessage('success', 'Données chargées');
         } catch(err) {
