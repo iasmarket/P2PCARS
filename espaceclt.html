@@ -190,9 +190,9 @@
 
 <script>
 (function () {
-  const API_URL = 'https://apicars.p2p-cars.com/api/login';
+  const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
+  const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
   const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
-  const API_LOGINREST = 'https://apicars.p2p-cars.com/api/loginrest';
 
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
@@ -203,11 +203,12 @@
   const messageBox = document.getElementById('message');
   const emailError = document.getElementById('emailError');
   const passwordError = document.getElementById('passwordError');
-  const logoutBtn = document.getElementById('logoutBtn');
+  const btnLogout = document.getElementById('logoutBtn'); // bouton déconnexion
+  const forgotLink = document.getElementById('forgotLink'); // lien mot de passe oublié
 
-  // cacher bouton déconnexion au démarrage
-  logoutBtn.style.display = 'none';
+  /** ================== UTILS ================== **/
 
+  // Sécurité XSS : échapper texte
   function escapeHtml(str = '') {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -217,6 +218,7 @@
       .replace(/'/g, '&#39;');
   }
 
+  // Affiche un message visuel à l'utilisateur
   function showMessage(type, text) {
     messageBox.innerHTML = '';
     const el = document.createElement('div');
@@ -224,11 +226,9 @@
     if (type === 'error') {
       el.style.background = 'rgba(255,107,107,0.12)';
       el.style.color = 'var(--error)';
-      el.style.border = '1px solid rgba(255,107,107,0.18)';
     } else if (type === 'success') {
       el.style.background = 'rgba(52,211,153,0.12)';
       el.style.color = 'var(--success)';
-      el.style.border = '1px solid rgba(52,211,153,0.18)';
     } else {
       el.style.background = 'rgba(255,255,255,0.03)';
       el.style.color = 'var(--muted)';
@@ -259,6 +259,7 @@
     }
   }
 
+  // Fonction pour remplir un tableau avec les données API
   function remplirTableau(idTable, data) {
     const table = document.getElementById(idTable);
     table.innerHTML = '';
@@ -268,7 +269,10 @@
       return;
     }
 
-    const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
+    const headers = [
+      "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", 
+      "Carburant", "Transmission", "Description", "Prix", "Valider"
+    ];
     const thead = document.createElement('thead');
     const htr = document.createElement('tr');
     headers.forEach(h => {
@@ -283,11 +287,9 @@
     data.forEach(item => {
       const tr = document.createElement('tr');
 
-      // trouver clé Ref (insensible à la casse)
-      const refKey = Object.keys(item).find(k => k.toLowerCase() === 'ref') || '';
-
-      const cells = [
-        item[refKey] || '',
+      // Ajout des cellules texte
+      const textCells = [
+        item.Ref || item.ref || '', // support "Ref" ou "ref"
         item.date || '',
         item.marque || '',
         item.modele || '',
@@ -300,27 +302,28 @@
         item.prix || ''
       ];
 
-      cells.forEach(c => {
+      textCells.forEach(c => {
         const td = document.createElement('td');
         td.textContent = c;
         tr.appendChild(td);
       });
 
-      // checkbox Valider
+      // Ajout checkbox modifiable pour "Valider"
       const tdValide = document.createElement('td');
       const chk = document.createElement('input');
       chk.type = 'checkbox';
-      chk.checked = (String(item.valide).toLowerCase() === 'oui' || item.valide === true);
-      chk.addEventListener('change', async () => {
-        try {
-          await fetch(API_EDIT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ref: item[refKey], valide: chk.checked ? 'Oui' : 'Non' })
-          });
-        } catch (err) {
-          showMessage('error', 'Erreur lors de la mise à jour du statut.');
-        }
+      chk.checked = String(item.valide).toLowerCase() === 'oui' || item.valide === true;
+      chk.addEventListener('change', () => {
+        fetch(API_EDIT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ref: item.Ref || item.ref,
+            valide: chk.checked ? 'Oui' : 'Non'
+          })
+        }).then(r => r.json())
+          .then(() => showMessage('success', 'Mise à jour réussie'))
+          .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
       });
       tdValide.appendChild(chk);
       tr.appendChild(tdValide);
@@ -330,123 +333,113 @@
     table.appendChild(tbody);
   }
 
-  async function fetchWithTimeout(resource, options = {}) {
-    const { timeout = 15000 } = options;
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
+  // Connexion API
+  async function loginUser(email, password) {
+    setLoading(true);
+    showMessage('info', 'Connexion en cours...');
     try {
-      const resp = await fetch(resource, { ...options, signal: controller.signal });
-      clearTimeout(id);
-      return resp;
-    } catch (err) {
-      clearTimeout(id);
-      throw err;
-    }
-  }
-
-  async function chargerDonnees(token) {
-    try {
-      const resp = await fetch(API_URL, {
+      const resp = await fetch(API_LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ email, password })
       });
-      if (!resp.ok) throw new Error();
       const data = await resp.json();
+      if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
+
+      // Si rester connecté → sauvegarde
+      if (rememberInput.checked) {
+        localStorage.setItem('p2p_email', email);
+        localStorage.setItem('p2p_pwd', btoa(password)); // base64
+      } else {
+        localStorage.removeItem('p2p_email');
+        localStorage.removeItem('p2p_pwd');
+      }
+
+      showMessage('success', 'Connexion réussie ✅');
       document.getElementById('results').style.display = 'block';
-      logoutBtn.style.display = 'inline-block';
+      btnLogout.style.display = 'inline-block';
+
       remplirTableau('table-annonces', data.annonces || []);
       remplirTableau('table-achats', data.achats || []);
       remplirTableau('table-recherches', data.recherches || []);
-    } catch {
-      localStorage.removeItem('p2p_token');
+
+    } catch (err) {
+      showMessage('error', err.message);
     }
+    setLoading(false);
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    passwordInput.value = '';
-    rememberInput.checked = true;
-    const savedEmail = localStorage.getItem('p2p_email');
-    if (savedEmail) emailInput.value = savedEmail;
+  /** ================== EVENTS ================== **/
 
-    const savedToken = localStorage.getItem('p2p_token');
-    if (savedToken) {
-      chargerDonnees(savedToken);
-    }
-  });
-
-  form.addEventListener('submit', async (e) => {
+  // Soumission formulaire
+  form.addEventListener('submit', e => {
     e.preventDefault();
     clearFieldErrors();
-    showMessage('info', '');
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     let hasError = false;
     if (!emailRegex.test(email)) {
-      setFieldError(emailInput, emailError, 'Adresse email invalide');
+      setFieldError(emailInput, emailError, 'Email invalide');
       hasError = true;
     }
     if (!password || password.length < 4) {
       setFieldError(passwordInput, passwordError, 'Mot de passe trop court');
       hasError = true;
     }
-    if (hasError) {
-      showMessage('error', 'Corrigez les erreurs.');
+    if (hasError) return;
+
+    loginUser(email, password);
+  });
+
+  // Déconnexion
+  btnLogout.addEventListener('click', () => {
+    localStorage.removeItem('p2p_email');
+    localStorage.removeItem('p2p_pwd');
+    document.getElementById('results').style.display = 'none';
+    btnLogout.style.display = 'none';
+    showMessage('info', 'Vous êtes déconnecté');
+  });
+
+  // Mot de passe oublié
+  forgotLink.addEventListener('click', e => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    if (!email) {
+      showMessage('error', 'Entrez votre email avant de demander un mot de passe');
       return;
     }
+    fetch(API_FORGOT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    })
+      .then(r => r.json())
+      .then(() => showMessage('success', 'Email envoyé avec succès'))
+      .catch(() => showMessage('error', 'Erreur envoi email'));
+  });
 
-    setLoading(true);
-    try {
-      const response = await fetchWithTimeout(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        timeout: 15000
-      });
+  /** ================== AUTO LOGIN ================== **/
+  window.addEventListener('DOMContentLoaded', () => {
+    passwordInput.value = '';
+    rememberInput.checked = true;
+    btnLogout.style.display = 'none'; // caché au démarrage
 
-      if (!response.ok) {
-        showMessage('error', 'Identifiants incorrects.');
-        setLoading(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      if (rememberInput.checked) {
-        localStorage.setItem('p2p_email', email);
-      } else {
-        localStorage.removeItem('p2p_email');
-      }
-
-      // sauvegarde token pour session persistante
-      if (data.token) {
-        localStorage.setItem('p2p_token', data.token);
-      }
-
-      showMessage('success', 'Connexion réussie ✅');
-      setLoading(false);
-      document.getElementById('results').style.display = 'block';
-      logoutBtn.style.display = 'inline-block';
-
-      remplirTableau('table-annonces', data.annonces || []);
-      remplirTableau('table-achats', data.achats || []);
-      remplirTableau('table-recherches', data.recherches || []);
-    } catch {
-      showMessage('error', 'Erreur réseau.');
-      setLoading(false);
+    // Auto-login si infos stockées
+    const savedEmail = localStorage.getItem('p2p_email');
+    const savedPwd = localStorage.getItem('p2p_pwd');
+    if (savedEmail && savedPwd) {
+      emailInput.value = savedEmail;
+      rememberInput.checked = true;
+      loginUser(savedEmail, atob(savedPwd)); // décode base64
     }
   });
 
-  logoutBtn.addEventListener('click', () => {
-    localStorage.removeItem('p2p_token');
-    document.getElementById('results').style.display = 'none';
-    logoutBtn.style.display = 'none';
-    showMessage('info', 'Déconnecté.');
-  });
 })();
 </script>
+
 
 
 </body>
