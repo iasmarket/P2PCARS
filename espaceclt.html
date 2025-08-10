@@ -286,11 +286,17 @@
         }
       });
 
-      // remplir email si enregistré
-      window.addEventListener('DOMContentLoaded', () => {
-        const savedEmail = localStorage.getItem('p2p_email');
-        if (savedEmail) emailInput.value = savedEmail;
-      });
+        // remplir email si enregistré
+        window.addEventListener('DOMContentLoaded', () => {
+          const savedEmail = localStorage.getItem('p2p_email');
+          if (savedEmail) emailInput.value = savedEmail;
+
+          // Si déjà connecté → redirection vers le profil
+          const token = localStorage.getItem('p2p_token');
+          if (token) {
+            window.location.href = 'https://p2p-cars.com/profile';
+          }
+        });
     })();
   </script>
 </body>
