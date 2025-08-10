@@ -123,51 +123,167 @@
   </style>
 </head>
 <body>
-    <h1>Mon Profil</h1>
-    <button onclick="logout()">Déconnexion</button>
+  <h1>Profil utilisateur</h1>
+  <div>
+    Connecté en tant que : <span id="emailDisplay"></span>
+    <button id="logoutBtn" style="margin-left:20px;">Déconnexion</button>
+  </div>
 
-    <div id="profileContent"></div>
+  <div id="message" style="margin-top: 10px;"></div>
 
-    <script>
-        const userData = JSON.parse(localStorage.getItem("userData"));
+  <section id="results" style="display:none; margin-top: 20px;">
+    <h2>Annonces</h2>
+    <table id="table-annonces" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
 
-        if (!userData || !userData.success) {
-            window.location.href = "login.html";
-        } else {
-            const container = document.getElementById("profileContent");
-            container.innerHTML = `
-                <p><strong>Email :</strong> ${userData.email}</p>
-                ${renderSection("Annonces", userData.annonces)}
-                ${renderSection("Achats", userData.achats)}
-                ${renderSection("Recherches", userData.recherches)}
-            `;
+    <h2>Achats</h2>
+    <table id="table-achats" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
+
+    <h2>Recherches</h2>
+    <table id="table-recherches" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
+  </section>
+
+  <script>
+    (function(){
+      const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
+      const messageBox = document.getElementById('message');
+      const btnLogout = document.getElementById('logoutBtn');
+      const emailDisplay = document.getElementById('emailDisplay');
+      const resultsSection = document.getElementById('results');
+
+      function showMessage(type, text) {
+        messageBox.innerHTML = '';
+        const el = document.createElement('div');
+        el.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'black');
+        el.textContent = text;
+        messageBox.appendChild(el);
+      }
+
+      function remplirTableau(idTable, data) {
+        const table = document.getElementById(idTable);
+        table.innerHTML = '';
+
+        if (!Array.isArray(data) || data.length === 0) {
+          table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
+          return;
         }
 
-        function renderSection(title, data) {
-            if (!data || data.length === 0) {
-                return `<div class="section"><h2>${title}</h2><p>Aucune donnée</p></div>`;
+        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
+        const thead = document.createElement('thead');
+        const htr = document.createElement('tr');
+        headers.forEach(h => {
+          const th = document.createElement('th');
+          th.textContent = h;
+          htr.appendChild(th);
+        });
+        thead.appendChild(htr);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+
+        data.forEach((item, idx) => {
+          const tr = document.createElement('tr');
+
+          // Ref peut être vide => afficher id ou index si vide
+          const ref = item.ref || `#${idx+1}`;
+
+          const cells = [
+            ref,
+            item.date || '',
+            item.marque || '',
+            item.modele || '',
+            item.annee || '',
+            item.cv || '',
+            item.kilometrage || '',
+            item.carburant || '',
+            item.transmission || '',
+            item.description || '',
+            item.prix || '',
+          ];
+
+          // Création des td pour les cellules classiques
+          cells.forEach(c => {
+            const td = document.createElement('td');
+            td.textContent = c;
+            tr.appendChild(td);
+          });
+
+          // Colonne Valider avec checkbox modifiable
+          const tdValide = document.createElement('td');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = item.valide === 'oui' || item.valide === true; // gérer oui/non ou bool
+          tdValide.appendChild(checkbox);
+          tr.appendChild(tdValide);
+
+          // écoute modification checkbox pour envoyer fetch
+          checkbox.addEventListener('change', async () => {
+            const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
+            try {
+              const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ref: ref, valide: nouvelleValeur })
+              });
+              if (!resp.ok) throw new Error('Erreur serveur');
+              showMessage('success', `État "valider" modifié: ${nouvelleValeur}`);
+            } catch(err) {
+              showMessage('error', 'Erreur lors de la modification.');
+              // revenir à l'état précédent
+              checkbox.checked = !checkbox.checked;
             }
+          });
 
-            let headers = Object.keys(data[0]);
-            let rows = data.map(row => 
-                `<tr>${headers.map(h => `<td>${row[h]}</td>`).join("")}</tr>`
-            ).join("");
+          tbody.appendChild(tr);
+        });
 
-            return `
-                <div class="section">
-                    <h2>${title}</h2>
-                    <table>
-                        <tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>
-                        ${rows}
-                    </table>
-                </div>
-            `;
+        table.appendChild(tbody);
+        resultsSection.style.display = 'block';
+      }
+
+      async function fetchProfile(email, password) {
+        try {
+          const resp = await fetch(API_LOGIN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          const data = await resp.json();
+          if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
+
+          emailDisplay.textContent = email;
+          remplirTableau('table-annonces', data.annonces || []);
+          remplirTableau('table-achats', data.achats || []);
+          remplirTableau('table-recherches', data.recherches || []);
+          showMessage('success', 'Données chargées');
+        } catch(err) {
+          showMessage('error', 'Session expirée, reconnectez-vous');
+          setTimeout(() => {
+            window.location.href = '/login.html';
+          }, 3000);
+        }
+      }
+
+      btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('p2p_email');
+        localStorage.removeItem('p2p_pwd');
+        window.location.href = '/login.html';
+      });
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const email = localStorage.getItem('p2p_email');
+        const pwdEncoded = localStorage.getItem('p2p_pwd');
+
+        if (!email || !pwdEncoded) {
+          showMessage('error', 'Non connecté');
+          setTimeout(() => window.location.href = '/login.html', 2000);
+          return;
         }
 
-        function logout() {
-            localStorage.removeItem("userData");
-            window.location.href = "login.html";
-        }
-    </script>
+        fetchProfile(email, atob(pwdEncoded));
+      });
+
+    })();
+  </script>
 </body>
+
 </html>
