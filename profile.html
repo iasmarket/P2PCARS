@@ -79,12 +79,11 @@
           table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
           return;
         }
-
         // 🔹 Déterminer le type en fonction de l'idTable
-        let typeExcel = '';
-        if (idTable === 'table-annonces') typeExcel = 'annonce';
-        if (idTable === 'table-achats') typeExcel = 'achat';
-        if (idTable === 'table-recherches') typeExcel = 'recherche';
+        let typee = '';
+        if (idTable === 'table-annonces') typee = 'annonce';
+        if (idTable === 'table-achats') typee = 'achat';
+        if (idTable === 'table-recherches') typee = 'recherche';
 
         const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider", "Supprimer"];
         const thead = document.createElement('thead');
@@ -100,90 +99,83 @@
         const tbody = document.createElement('tbody');
 
         data.forEach((item, idx) => {
-          const tr = document.createElement('tr');
-          const id = item.id;
-          const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
+        const tr = document.createElement('tr');
 
-          const cells = [
-            ref,
-            item.date || '',
-            item.marque || '',
-            item.modele || '',
-            item.annee || '',
-            item.cv || '',
-            item.kilometrage || '',
-            item.carburant || '',
-            item.transmission || '',
-            item.description || '',
-            item.prix || '',
-          ];
+        const id = item.id; // ✅ ID venant du backend
+        const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
 
-          cells.forEach(c => {
-            const td = document.createElement('td');
-            td.textContent = c;
-            tr.appendChild(td);
-          });
+        const cells = [
+          ref,
+          item.date || '',
+          item.marque || '',
+          item.modele || '',
+          item.annee || '',
+          item.cv || '',
+          item.kilometrage || '',
+          item.carburant || '',
+          item.transmission || '',
+          item.description || '',
+          item.prix || '',
+        ];
 
-          // ✅ Checkbox modification
-          const tdValide = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.valide === 'oui' || item.valide === true;
-          tdValide.appendChild(checkbox);
-          tr.appendChild(tdValide);
+        cells.forEach(c => {
+          const td = document.createElement('td');
+          td.textContent = c;
+          tr.appendChild(td);
+        });
 
-          checkbox.addEventListener('change', async () => {
-            const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
-            try {
-              const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                  id: id,
-                  Ref: ref,
-                  valide: nouvelleValeur,
-                  table: typeExcel // 🔹 Envoi du nom de l’Excel
-                })
-              });
-              if (!resp.ok) throw new Error('Erreur serveur');
-              showMessage('success', `État modifié: ${nouvelleValeur}`);
-            } catch (err) {
-              showMessage('error', 'Erreur lors de la modification.');
-              checkbox.checked = !checkbox.checked;
-            }
-          });
+        // ✅ Checkbox modification
+        const tdValide = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.valide === 'oui' || item.valide === true;
+        tdValide.appendChild(checkbox);
+        tr.appendChild(tdValide);
 
-          // ✅ Suppression
-          const tdDelete = document.createElement('td');
-          const delIcon = document.createElement('i');
-          delIcon.className = 'fa fa-trash icon-btn';
-          delIcon.addEventListener('click', async () => {
-            if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
-            try {
-              const resp = await fetch(API_DELETE, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                  id: id,
-                  Ref: ref,
-                  table: typeExcel // 🔹 Envoi du nom de l’Excel
-                })
-              });
-              if (!resp.ok) throw new Error('Erreur serveur');
-              tr.remove();
-              showMessage('success', `Ref ${ref} supprimé avec succès`);
-            } catch (err) {
-              showMessage('error', 'Erreur lors de la suppression.');
-            }
-          });
-          tdDelete.appendChild(delIcon);
-          tr.appendChild(tdDelete);
+        checkbox.addEventListener('change', async () => {
+          const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
+          try {
+            const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ id: id, Ref: ref, valide: nouvelleValeur })
+            });
+            if (!resp.ok) throw new Error('Erreur serveur');
+            showMessage('success', `État modifié: ${nouvelleValeur}`);
+          } catch (err) {
+            showMessage('error', 'Erreur lors de la modification.');
+            checkbox.checked = !checkbox.checked;
+          }
+        });
+
+        // ✅ Suppression
+        const tdDelete = document.createElement('td');
+        const delIcon = document.createElement('i');
+        delIcon.className = 'fa fa-trash icon-btn';
+        delIcon.addEventListener('click', async () => {
+          if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
+          try {
+            const resp = await fetch(API_DELETE, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ id: id, Ref: ref })
+            });
+            if (!resp.ok) throw new Error('Erreur serveur');
+            tr.remove();
+            showMessage('success', `Ref ${ref} supprimé avec succès`);
+          } catch (err) {
+            showMessage('error', 'Erreur lors de la suppression.');
+          }
+        });
+        tdDelete.appendChild(delIcon);
+        tr.appendChild(tdDelete);
 
           tbody.appendChild(tr);
         });
 
-        table.appendChild(tbody);
-        resultsSection.style.display = 'block';
+
+          table.appendChild(tbody);
+          resultsSection.style.display = 'block';
       }
 
       async function fetchProfile(email, password) {
