@@ -123,181 +123,36 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo1.png" alt="Logo société mère" />
-    <div class="header-center">
-      <h1>P2P-CARS</h1>
-      <p class="text-h">Connexion à votre compte</p>
-    </div>
-    <img src="logo4.png" alt="Logo plateforme" />
-  </header>
-
-  <section class="form-section" aria-labelledby="title-connexion">
-    <h2 id="title-connexion">Connexion</h2>
-
-    <form id="loginForm" novalidate>
-      <label for="email">Email :</label>
-      <input type="email" id="email" name="email" autocomplete="username" required aria-describedby="emailError" />
-      <div id="emailError" class="error-text" aria-live="polite"></div>
-
-      <label for="password">Mot de passe :</label>
-      <input type="password" id="password" name="password" autocomplete="current-password" required aria-describedby="passwordError" />
-      <div id="passwordError" class="error-text" aria-live="polite"></div>
-
-      <label class="checkbox-container" for="rememberMe">
-        <input type="checkbox" id="rememberMe" name="rememberMe" checked />
-        Rester connecté
-      </label>
-
-      <button type="submit" id="submitBtn" aria-live="polite">
-        <span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span>
-      </button>
-
-      <p style="text-align:center; margin-top:10px;">
-        <a href="#" id="forgotPassword" style="color:#3b82f6; font-size:0.9rem;">Mot de passe oublié ?</a>
-      </p>
+    <h1>Connexion</h1>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+        <div class="error" id="errorMsg"></div>
     </form>
 
-    <div id="message" role="status" aria-live="polite"></div>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
 
-    <p class="muted">
-      Vous aurez votre compte en remplissant l’un des formulaires de service
-      <a href="index.html" style="color:var(--blue); text-decoration:underline;">cliquer ici</a>.
-    </p>
-  </section>
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
 
-  <footer style="text-align:center; margin: 20px 0; color: #e2e8f0;">
-    &copy; 2025 IASMarket Services. Tous droits réservés.
-  </footer>
+            const data = await res.json();
 
-  <script>
-    (function () {
-      const API_URL = 'https://apicars.p2p-cars.com/api/login';
-
-      const form = document.getElementById('loginForm');
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const rememberInput = document.getElementById('rememberMe');
-      const submitBtn = document.getElementById('submitBtn');
-      const btnContent = document.getElementById('btnContent');
-      const messageBox = document.getElementById('message');
-      const emailError = document.getElementById('emailError');
-      const passwordError = document.getElementById('passwordError');
-
-      function showMessage(type, text) {
-        messageBox.innerHTML = '';
-        const el = document.createElement('div');
-        el.className = 'text';
-        if (type === 'error') {
-          el.style.background = 'rgba(255,107,107,0.12)';
-          el.style.color = '#ff6b6b';
-          el.style.border = '1px solid rgba(255,107,107,0.18)';
-        } else if (type === 'success') {
-          el.style.background = 'rgba(52,211,153,0.12)';
-          el.style.color = '#34d399';
-          el.style.border = '1px solid rgba(52,211,153,0.18)';
-        } else {
-          el.style.background = 'rgba(255,255,255,0.03)';
-          el.style.color = 'rgba(226,232,240,0.85)';
-        }
-        el.textContent = text;
-        messageBox.appendChild(el);
-      }
-
-      function clearFieldErrors() {
-        emailError.textContent = '';
-        passwordError.textContent = '';
-        emailInput.classList.remove('input-error');
-        passwordInput.classList.remove('input-error');
-      }
-
-      function setFieldError(inputEl, errorEl, message) {
-        inputEl.classList.add('input-error');
-        errorEl.textContent = message;
-      }
-
-      function setLoading(loading) {
-        if (loading) {
-          submitBtn.disabled = true;
-          btnContent.innerHTML = '<span class="spinner"></span> Connexion…';
-        } else {
-          submitBtn.disabled = false;
-          btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
-        }
-      }
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearFieldErrors();
-        showMessage('info', '');
-
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        let hasError = false;
-        if (!emailRegex.test(email)) {
-          setFieldError(emailInput, emailError, 'Adresse email invalide');
-          hasError = true;
-        }
-        if (!password || password.length < 4) {
-          setFieldError(passwordInput, passwordError, 'Mot de passe trop court');
-          hasError = true;
-        }
-        if (hasError) {
-          showMessage('error', 'Corrigez les erreurs.');
-          return;
-        }
-
-        setLoading(true);
-        try {
-          const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
-
-          if (!response.ok) {
-            showMessage('error', 'Identifiants incorrects.');
-            setLoading(false);
-            return;
-          }
-
-          const data = await response.json();
-
-          if (rememberInput.checked) {
-            localStorage.setItem('p2p_email', email);
-          } else {
-            localStorage.removeItem('p2p_email');
-          }
-
-          if (data.token) {
-            localStorage.setItem('p2p_token', data.token);
-          }
-
-          showMessage('success', 'Connexion réussie ✅');
-          setLoading(false);
-
-          // redirection vers la page profil
-          window.location.href = 'https://p2p-cars.com/profile.html';
-
-        } catch (error) {
-          showMessage('error', 'Erreur réseau.');
-          setLoading(false);
-        }
-      });
-
-        // remplir email si enregistré
-        window.addEventListener('DOMContentLoaded', () => {
-          const savedEmail = localStorage.getItem('p2p_email');
-          if (savedEmail) emailInput.value = savedEmail;
-
-          // Si déjà connecté → redirection vers le profil
-          const token = localStorage.getItem('p2p_token');
-          if (token) {
-            window.location.href = 'https://p2p-cars.com/profile';
-          }
+            if (data.success) {
+                // Stocker les infos pour la page profil
+                localStorage.setItem("userData", JSON.stringify(data));
+                window.location.href = "profile.html";
+            } else {
+                document.getElementById("errorMsg").textContent = data.message || "Erreur de connexion";
+            }
         });
-    })();
-  </script>
+    </script>
 </body>
 </html>
