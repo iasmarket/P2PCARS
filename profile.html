@@ -267,13 +267,13 @@
       // Déconnexion
       logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('p2p_token');
-        window.location.href = 'https://p2p-cars.com/espaceclt-login.html';
+        window.location.href = 'https://p2p-cars.com/profile.html';
       });
 
       window.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('p2p_token');
         if (!token) {
-          window.location.href = 'https://p2p-cars.com/espaceclt-login.html';
+          window.location.href = 'https://p2p-cars.com/profile.html';
           return;
         }
         fetchUserData(token);
