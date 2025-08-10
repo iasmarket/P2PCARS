@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>P2P-CARS - Connexion</title>
+  <title>P2P-CARS - Profil</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -16,110 +16,22 @@
       --error: #ff6b6b;
       --success: #34d399;
     }
-
-    html,body{height:100%;}
     body {
       background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
-                url('arier.png') no-repeat center center fixed;
+                  url('arier.png') no-repeat center center fixed;
       background-size: cover;
       color: var(--text);
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
-
-    header {
-      background: rgba(255,255,255,0.07);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
-      padding: 18px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 14px 10px 20px 10px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      gap: 40px;
-    }
-    header img { max-height:110px; transition:transform .25s; }
-    header img:hover { transform: scale(1.05); }
-    header h1 { font-size:2.4rem; color:var(--blue); margin:0; }
-    header .text-h { color:var(--text); margin:0; }
-
-    .form-section {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(11px);
-      border-radius: 15px;
-      max-width: 520px;
-      margin: auto;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.20);
-      padding: 28px 22px;
-      margin-bottom: 20px;
-    }
-    .form-section h2 { text-align:center; color:var(--blue); margin-top:0; }
-
-    form label { display:block; font-weight:500; margin-bottom:6px; }
-    input[type="email"], input[type="password"] {
-      width:100%;
-      padding:10px;
-      border-radius:7px;
-      border:1px solid #334155;
-      background:var(--bg-input);
-      color:var(--text);
-      font-size:1rem;
-      box-sizing:border-box;
-    }
-    input:focus { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); border-color: var(--blue); }
-
-    .input-error { border-color: var(--error) !important; box-shadow: none; }
-    .error-text { color: var(--error); font-size:0.85rem; margin-top:6px; }
-    .success-text { color: var(--success); font-size:0.95rem; margin-top:6px; }
-
-    .checkbox-container {
-      display:flex; align-items:center; gap:10px;
-      font-size:0.95rem; cursor:pointer; user-select:none; margin-top:8px;
-    }
-    .checkbox-container input[type="checkbox"] {
-      appearance:none; width:18px; height:18px; border:2px solid var(--blue);
-      border-radius:4px; position:relative; cursor:pointer; background:transparent;
-    }
-    .checkbox-container input[type="checkbox"]:checked {
-      background:var(--blue); border-color:var(--blue);
-    }
-    .checkbox-container input[type="checkbox"]:checked::after{
-      content:"\2713"; position:absolute; left:3px; top:-1px; color:#fff; font-size:12px;
-    }
-    .checkbox-container:hover input[type="checkbox"]{ border-color:var(--blue-dark); }
-
-    button[type="submit"]{
-      display:inline-flex; align-items:center; gap:8px;
-      background:var(--blue); color:#fff; border:none; padding:10px 18px; border-radius:7px;
-      font-weight:600; cursor:pointer; margin-top:12px; font-size:1rem;
-    }
-    button[disabled]{ opacity:0.7; cursor:not-allowed; }
-
-    /* spinner */
-    .spinner {
-      width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.35);
-      border-top-color: #fff; animation:spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    #message { margin-top:12px; text-align:center; min-height:20px; }
-    #message .text { display:inline-block; padding:8px 12px; border-radius:8px; font-weight:600; }
-
-    #results { max-width:95%; margin:auto; display:none; }
-
+    h1 { color: var(--blue); }
     table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.92rem; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden; }
     th, td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; vertical-align:top; }
     th { background: rgba(59,130,246,0.12); color:#fff; font-weight:600; }
     tr:hover { background: rgba(59,130,246,0.06); }
-
-    /* small helpers */
-    .muted { color:var(--muted); font-size:0.92rem; text-align:center; margin-top:10px; }
-    @media (max-width:720px){
-      header { flex-direction:column; text-align:center; gap:12px; }
-      .form-section{ margin:12px; padding:18px; }
-    }
+    .icon-btn { cursor:pointer; color:#ff6b6b; font-size:1rem; }
+    .icon-btn:hover { color:#ff0000; }
   </style>
 </head>
 <body>
@@ -133,18 +45,19 @@
 
   <section id="results" style="display:none; margin-top: 20px;">
     <h2>Annonces</h2>
-    <table id="table-annonces" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
+    <table id="table-annonces"></table>
 
     <h2>Achats</h2>
-    <table id="table-achats" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
+    <table id="table-achats"></table>
 
     <h2>Recherches</h2>
-    <table id="table-recherches" border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse;"></table>
+    <table id="table-recherches"></table>
   </section>
 
   <script>
     (function(){
       const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
+      const API_DELETE = 'https://apicars.p2p-cars.com/api/deletitem';
       const messageBox = document.getElementById('message');
       const btnLogout = document.getElementById('logoutBtn');
       const emailDisplay = document.getElementById('emailDisplay');
@@ -167,7 +80,7 @@
           return;
         }
 
-        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
+        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider", "Supprimer"];
         const thead = document.createElement('thead');
         const htr = document.createElement('tr');
         headers.forEach(h => {
@@ -182,10 +95,7 @@
 
         data.forEach((item, idx) => {
           const tr = document.createElement('tr');
-
-          // Ref peut être vide => afficher id ou index si vide
           const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
-
 
           const cells = [
             ref,
@@ -201,22 +111,19 @@
             item.prix || '',
           ];
 
-          // Création des td pour les cellules classiques
           cells.forEach(c => {
             const td = document.createElement('td');
             td.textContent = c;
             tr.appendChild(td);
           });
 
-          // Colonne Valider avec checkbox modifiable
           const tdValide = document.createElement('td');
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
-          checkbox.checked = item.valide === 'oui' || item.valide === true; // gérer oui/non ou bool
+          checkbox.checked = item.valide === 'oui' || item.valide === true;
           tdValide.appendChild(checkbox);
           tr.appendChild(tdValide);
 
-          // écoute modification checkbox pour envoyer fetch
           checkbox.addEventListener('change', async () => {
             const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
             try {
@@ -226,13 +133,34 @@
                 body: JSON.stringify({ ref: ref, valide: nouvelleValeur })
               });
               if (!resp.ok) throw new Error('Erreur serveur');
-              showMessage('success', `État "valider" modifié: ${nouvelleValeur}`);
+              showMessage('success', `État modifié: ${nouvelleValeur}`);
             } catch(err) {
               showMessage('error', 'Erreur lors de la modification.');
-              // revenir à l'état précédent
               checkbox.checked = !checkbox.checked;
             }
           });
+
+          // Colonne Supprimer
+          const tdDelete = document.createElement('td');
+          const delIcon = document.createElement('i');
+          delIcon.className = 'fa fa-trash icon-btn';
+          delIcon.addEventListener('click', async () => {
+            if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
+            try {
+              const resp = await fetch(API_DELETE, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ref: ref })
+              });
+              if (!resp.ok) throw new Error('Erreur serveur');
+              tr.remove();
+              showMessage('success', `Ref ${ref} supprimé avec succès`);
+            } catch(err) {
+              showMessage('error', 'Erreur lors de la suppression.');
+            }
+          });
+          tdDelete.appendChild(delIcon);
+          tr.appendChild(tdDelete);
 
           tbody.appendChild(tr);
         });
@@ -258,9 +186,7 @@
           showMessage('success', 'Données chargées');
         } catch(err) {
           showMessage('error', 'Session expirée, reconnectez-vous');
-          setTimeout(() => {
-            window.location.href = '/login.html';
-          }, 3000);
+          setTimeout(() => window.location.href = '/login.html', 3000);
         }
       }
 
@@ -286,5 +212,4 @@
     })();
   </script>
 </body>
-
 </html>
