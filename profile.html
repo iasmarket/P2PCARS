@@ -184,7 +184,8 @@
           const tr = document.createElement('tr');
 
           // Ref peut être vide => afficher id ou index si vide
-          const ref = item.ref || `#${idx+1}`;
+          const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
+
 
           const cells = [
             ref,
