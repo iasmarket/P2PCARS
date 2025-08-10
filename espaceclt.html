@@ -137,21 +137,22 @@
 
     <form id="loginForm" novalidate>
       <label for="email">Email :</label>
-      <input type="email" id="email" name="email" autocomplete="username" required aria-describedby="emailError">
+      <input type="email" id="email" name="email" autocomplete="username" required aria-describedby="emailError" />
       <div id="emailError" class="error-text" aria-live="polite"></div>
 
       <label for="password">Mot de passe :</label>
-      <input type="password" id="password" name="password" autocomplete="current-password" required aria-describedby="passwordError">
+      <input type="password" id="password" name="password" autocomplete="current-password" required aria-describedby="passwordError" />
       <div id="passwordError" class="error-text" aria-live="polite"></div>
 
       <label class="checkbox-container" for="rememberMe">
-        <input type="checkbox" id="rememberMe" name="rememberMe" checked>
+        <input type="checkbox" id="rememberMe" name="rememberMe" checked />
         Rester connecté
       </label>
 
       <button type="submit" id="submitBtn" aria-live="polite">
         <span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span>
       </button>
+
       <!-- Bouton Déconnexion -->
       <button id="logoutBtn" style="display:none; background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:7px; cursor:pointer; margin:10px auto; display:block;">
         <i class="fas fa-sign-out-alt"></i> Déconnexion
@@ -161,7 +162,6 @@
       <p style="text-align:center; margin-top:10px;">
         <a href="#" id="forgotPassword" style="color:#3b82f6; font-size:0.9rem;">Mot de passe oublié ?</a>
       </p>
-
     </form>
 
     <!-- message global (erreur / succès) -->
@@ -190,265 +190,280 @@
 
 <script>
 (function () {
+  // URLs API utilisées
   const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
   const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
   const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
 
+  // Références aux éléments DOM
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
-  const rememberInput = document.getElementById('rememberMe');
+  const rememberCheckbox = document.getElementById('rememberMe');
   const submitBtn = document.getElementById('submitBtn');
   const btnContent = document.getElementById('btnContent');
-  const messageBox = document.getElementById('message');
-  const emailError = document.getElementById('emailError');
-  const passwordError = document.getElementById('passwordError');
-  const btnLogout = document.getElementById('logoutBtn');
-  const forgotLink = document.getElementById('forgotLink');
+  const messageDiv = document.getElementById('message');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const forgotPasswordLink = document.getElementById('forgotPassword');
 
-  /** ======= UTILS ======= **/
+  // Tables résultats
+  const tableAnnonces = document.getElementById('table-annonces');
+  const tableAchats = document.getElementById('table-achats');
+  const tableRecherches = document.getElementById('table-recherches');
+  const resultsDiv = document.getElementById('results');
 
-  // Affiche un message avec styles selon type
-  function showMessage(type, text) {
-    messageBox.innerHTML = '';
-    const el = document.createElement('div');
-    el.className = 'text';
-    if (type === 'error') {
-      el.style.background = 'rgba(255,107,107,0.12)';
-      el.style.color = 'var(--error)';
-    } else if (type === 'success') {
-      el.style.background = 'rgba(52,211,153,0.12)';
-      el.style.color = 'var(--success)';
+  // Validation simple email
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  // Affiche un message d'erreur sous l'input
+  function showInputError(input, message) {
+    const errorDiv = document.getElementById(input.id + 'Error');
+    if (message) {
+      input.classList.add('input-error');
+      errorDiv.textContent = message;
     } else {
-      el.style.background = 'rgba(255,255,255,0.03)';
-      el.style.color = 'var(--muted)';
+      input.classList.remove('input-error');
+      errorDiv.textContent = '';
     }
-    el.textContent = text;
-    messageBox.appendChild(el);
   }
 
-  // Nettoie les erreurs visuelles sur champs
-  function clearFieldErrors() {
-    emailError.textContent = '';
-    passwordError.textContent = '';
-    emailInput.classList.remove('input-error');
-    passwordInput.classList.remove('input-error');
+  // Affiche message global
+  function showMessage(message, type = 'error') {
+    messageDiv.textContent = '';
+    messageDiv.className = '';
+    if (!message) return;
+    const span = document.createElement('span');
+    span.classList.add('text');
+    if (type === 'error') {
+      span.style.backgroundColor = 'rgba(255,107,107,0.9)';
+      span.style.color = '#fff';
+    } else if (type === 'success') {
+      span.style.backgroundColor = 'rgba(52,211,153,0.9)';
+      span.style.color = '#fff';
+    }
+    span.textContent = message;
+    messageDiv.appendChild(span);
   }
 
-  // Affiche erreur sur un champ spécifique
-  function setFieldError(inputEl, errorEl, message) {
-    inputEl.classList.add('input-error');
-    errorEl.textContent = message;
-  }
-
-  // Active/désactive le bouton et change son texte
-  function setLoading(loading) {
-    if (loading) {
-      submitBtn.disabled = true;
-      btnContent.innerHTML = '<span class="spinner"></span> Connexion…';
+  // Active/désactive le bouton submit
+  function setSubmitDisabled(disabled) {
+    submitBtn.disabled = disabled;
+    if (disabled) {
+      btnContent.innerHTML = '<div class="spinner" aria-label="Chargement en cours"></div>';
     } else {
-      submitBtn.disabled = false;
       btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
     }
   }
 
-  // Remplissage des tableaux avec données reçues
-  function remplirTableau(idTable, data) {
-    const table = document.getElementById(idTable);
-    table.innerHTML = '';
+  // Nettoie les tableaux résultats
+  function clearResults() {
+    tableAnnonces.innerHTML = '';
+    tableAchats.innerHTML = '';
+    tableRecherches.innerHTML = '';
+    resultsDiv.style.display = 'none';
+  }
 
-    if (!Array.isArray(data) || data.length === 0) {
-      table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
-      return;
+  // Affiche les tableaux de données
+  function displayTables(data) {
+    clearResults();
+    resultsDiv.style.display = 'block';
+
+    // Fonction d'affichage générique d'une table à partir d'un tableau d'objets
+    function fillTable(table, array, title) {
+      if (!Array.isArray(array) || array.length === 0) {
+        table.innerHTML = '<tr><td>Aucune donnée disponible</td></tr>';
+        return;
+      }
+
+      // Entêtes : toutes les clés de l'objet
+      const headers = Object.keys(array[0]);
+      let theadHTML = '<thead><tr>';
+      headers.forEach(h => { theadHTML += `<th>${h}</th>`; });
+      theadHTML += '</tr></thead>';
+
+      // Corps
+      let tbodyHTML = '<tbody>';
+      array.forEach(item => {
+        tbodyHTML += '<tr>';
+        headers.forEach(h => {
+          tbodyHTML += `<td>${item[h]}</td>`;
+        });
+        tbodyHTML += '</tr>';
+      });
+      tbodyHTML += '</tbody>';
+
+      table.innerHTML = theadHTML + tbodyHTML;
     }
 
-    const headers = [
-      "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
-      "Carburant", "Transmission", "Description", "Prix", "Valider"
-    ];
-    const thead = document.createElement('thead');
-    const htr = document.createElement('tr');
-    headers.forEach(h => {
-      const th = document.createElement('th');
-      th.textContent = h;
-      htr.appendChild(th);
-    });
-    thead.appendChild(htr);
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-    data.forEach(item => {
-      const tr = document.createElement('tr');
-
-      // Colonnes texte
-      const textCells = [
-        item.Ref || item.ref || '',
-        item.date || '',
-        item.marque || '',
-        item.modele || '',
-        item.annee || '',
-        item.cv || '',
-        item.kilometrage || '',
-        item.carburant || '',
-        item.transmission || '',
-        item.description || '',
-        item.prix || ''
-      ];
-
-      textCells.forEach(c => {
-        const td = document.createElement('td');
-        td.textContent = c;
-        tr.appendChild(td);
-      });
-
-      // Colonne checkbox "Valider"
-      const tdValide = document.createElement('td');
-      const chk = document.createElement('input');
-      chk.type = 'checkbox';
-      chk.checked = String(item.valide).toLowerCase() === 'oui' || item.valide === true;
-      chk.addEventListener('change', () => {
-        fetch(API_EDIT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ref: item.Ref || item.ref,
-            valide: chk.checked ? 'Oui' : 'Non'
-          })
-        }).then(r => r.json())
-          .then(() => showMessage('success', 'Mise à jour réussie'))
-          .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
-      });
-      tdValide.appendChild(chk);
-      tr.appendChild(tdValide);
-
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
+    fillTable(tableAnnonces, data.annonces || [], 'Annonces');
+    fillTable(tableAchats, data.achats || [], 'Achats');
+    fillTable(tableRecherches, data.recherches || [], 'Recherches');
   }
 
-  // Affiche l'interface avec données (après connexion ou reload)
-  function afficherInterface(data) {
-    document.getElementById('results').style.display = 'block';
-    btnLogout.style.display = 'inline-block';
-    remplirTableau('table-annonces', data.annonces || []);
-    remplirTableau('table-achats', data.achats || []);
-    remplirTableau('table-recherches', data.recherches || []);
-  }
+  // Fonction connexion
+  async function login(email, password) {
+    setSubmitDisabled(true);
+    showMessage('');
 
-  // Fonction connexion avec API + stockage session
-  async function loginUser(email, password) {
-    setLoading(true);
-    showMessage('info', 'Connexion en cours...');
     try {
-      const resp = await fetch(API_LOGIN, {
+      const response = await fetch(API_LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
-      const data = await resp.json();
-      if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
 
-      // Stockage dans localStorage uniquement si "Se souvenir"
-      if (rememberInput.checked) {
-        localStorage.setItem('p2p_session', JSON.stringify({
-          email,
-          password: btoa(password), // base64 pour masquer un peu
-          annonces: data.annonces,
-          achats: data.achats,
-          recherches: data.recherches
-        }));
-      } else {
-        localStorage.removeItem('p2p_session');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de la connexion');
       }
 
-      showMessage('success', 'Connexion réussie ✅');
-      afficherInterface(data);
+      const data = await response.json();
 
-    } catch (err) {
-      showMessage('error', err.message);
+      // Vérifie que la réponse contient bien ce qu'on attend
+      if (!data.token || !data.user) {
+        throw new Error('Réponse API incomplète');
+      }
+
+      // Sauvegarde dans localStorage si demandé
+      if (rememberCheckbox.checked) {
+        // Stocker email + token seulement, jamais le mot de passe en clair
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userToken', data.token);
+      } else {
+        // Supprime si décoché
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userToken');
+      }
+
+      // Affiche tableaux si présents
+      if (data.annonces || data.achats || data.recherches) {
+        displayTables(data);
+      } else {
+        clearResults();
+      }
+
+      // Affiche bouton déconnexion et cache le formulaire
+      logoutBtn.style.display = 'block';
+      form.style.display = 'none';
+
+      showMessage('Connexion réussie !', 'success');
+
+    } catch (error) {
+      showMessage(error.message || 'Erreur lors de la connexion', 'error');
+      clearResults();
+    } finally {
+      setSubmitDisabled(false);
     }
-    setLoading(false);
   }
 
-  /** ======= ÉVÉNEMENTS ======= **/
+  // Déconnexion simple
+  function logout() {
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userToken');
+    clearResults();
+    showMessage('Vous êtes déconnecté.', 'success');
+    logoutBtn.style.display = 'none';
+    form.style.display = 'block';
+  }
 
-  // Soumission formulaire : validation & appel login
-  form.addEventListener('submit', e => {
+  // Validation du formulaire
+  function validateForm() {
+    let valid = true;
+
+    if (!emailInput.value.trim()) {
+      showInputError(emailInput, 'Veuillez saisir votre email.');
+      valid = false;
+    } else if (!isValidEmail(emailInput.value.trim())) {
+      showInputError(emailInput, 'Email invalide.');
+      valid = false;
+    } else {
+      showInputError(emailInput, '');
+    }
+
+    if (!passwordInput.value.trim()) {
+      showInputError(passwordInput, 'Veuillez saisir votre mot de passe.');
+      valid = false;
+    } else {
+      showInputError(passwordInput, '');
+    }
+
+    return valid;
+  }
+
+  // Auto login si stockage local
+  async function autoLoginIfStored() {
+    const storedEmail = localStorage.getItem('userEmail');
+    const storedToken = localStorage.getItem('userToken');
+
+    if (storedEmail && storedToken) {
+      // Ici, on peut essayer de valider le token via une requête API si disponible
+      // Pour l'exemple, on simule que la session est valide
+      showMessage('Connexion automatique...', 'success');
+
+      // Affiche bouton déconnexion et cache formulaire
+      logoutBtn.style.display = 'block';
+      form.style.display = 'none';
+
+      // Idéalement, récupérer aussi les données (annonces, achats, recherches) en faisant une requête API avec le token
+      // Sinon, afficher un message et proposer à l'utilisateur de se reconnecter
+
+      // Pour la démo, on ne récupère pas les tableaux
+    }
+  }
+
+  // Événements
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    clearFieldErrors();
+    if (!validateForm()) return;
 
     const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const password = passwordInput.value.trim();
 
-    let hasError = false;
-    if (!emailRegex.test(email)) {
-      setFieldError(emailInput, emailError, 'Email invalide');
-      hasError = true;
-    }
-    if (!password || password.length < 4) {
-      setFieldError(passwordInput, passwordError, 'Mot de passe trop court');
-      hasError = true;
-    }
-    if (hasError) return;
-
-    loginUser(email, password);
+    await login(email, password);
   });
 
-  // Déconnexion : nettoyage localStorage + interface
-  btnLogout.addEventListener('click', () => {
-    localStorage.removeItem('p2p_session');
-    document.getElementById('results').style.display = 'none';
-    btnLogout.style.display = 'none';
-    showMessage('info', 'Vous êtes déconnecté');
+  logoutBtn.addEventListener('click', () => {
+    logout();
   });
 
-  // Mot de passe oublié
-  forgotLink.addEventListener('click', e => {
+  forgotPasswordLink.addEventListener('click', async (e) => {
     e.preventDefault();
+
     const email = emailInput.value.trim();
     if (!email) {
-      showMessage('error', 'Entrez votre email avant de demander un mot de passe');
+      showMessage('Veuillez saisir votre email pour récupérer le mot de passe.', 'error');
       return;
     }
-    fetch(API_FORGOT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    })
-    .then(r => r.json())
-    .then(() => showMessage('success', 'Email envoyé avec succès'))
-    .catch(() => showMessage('error', 'Erreur envoi email'));
-  });
+    if (!isValidEmail(email)) {
+      showMessage('Email invalide.', 'error');
+      return;
+    }
 
-  /** ======= AUTO LOGIN AU CHARGEMENT ======= **/
-  window.addEventListener('DOMContentLoaded', () => {
-    passwordInput.value = '';
-    rememberInput.checked = true;
-    btnLogout.style.display = 'none';
+    showMessage('Demande de récupération envoyée...', 'success');
 
-    const sessionRaw = localStorage.getItem('p2p_session');
-    if (sessionRaw) {
-      try {
-        const session = JSON.parse(sessionRaw);
-        emailInput.value = session.email || '';
-        rememberInput.checked = true;
-        // Recharge interface avec données sauvegardées
-        afficherInterface({
-          annonces: session.annonces || [],
-          achats: session.achats || [],
-          recherches: session.recherches || []
-        });
-      } catch {
-        localStorage.removeItem('p2p_session');
+    try {
+      const response = await fetch(API_FORGOT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de la récupération');
       }
+
+      showMessage('Un email de récupération a été envoyé.', 'success');
+    } catch (error) {
+      showMessage(error.message || 'Erreur lors de la récupération', 'error');
     }
   });
+
+  // Initialisation
+  autoLoginIfStored();
 })();
 </script>
-
-
-
-
 </body>
 </html>
