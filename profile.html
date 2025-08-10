@@ -130,15 +130,16 @@
               const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ ref: ref, valide: nouvelleValeur })
+                body: JSON.stringify({ id: id, Ref: ref, valide: nouvelleValeur }) // ✅ id + Ref
               });
               if (!resp.ok) throw new Error('Erreur serveur');
               showMessage('success', `État modifié: ${nouvelleValeur}`);
-            } catch(err) {
+            } catch (err) {
               showMessage('error', 'Erreur lors de la modification.');
               checkbox.checked = !checkbox.checked;
             }
           });
+
 
           // Colonne Supprimer
           const tdDelete = document.createElement('td');
@@ -150,15 +151,16 @@
               const resp = await fetch(API_DELETE, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ ref: ref })
+                body: JSON.stringify({ id: id, Ref: ref }) // ✅ id + Ref
               });
               if (!resp.ok) throw new Error('Erreur serveur');
-              tr.remove();
+              tr.remove(); // Supprime la ligne dans le DOM
               showMessage('success', `Ref ${ref} supprimé avec succès`);
-            } catch(err) {
+            } catch (err) {
               showMessage('error', 'Erreur lors de la suppression.');
             }
           });
+
           tdDelete.appendChild(delIcon);
           tr.appendChild(tdDelete);
 
