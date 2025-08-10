@@ -123,163 +123,51 @@
   </style>
 </head>
 <body>
-  <header>
-    <img src="logo1.png" alt="Logo société mère" />
-    <div class="header-center">
-      <h1>P2P-CARS</h1>
-      <p class="text-h">Espace Client</p>
-    </div>
-    <img src="logo4.png" alt="Logo plateforme" />
-  </header>
+    <h1>Mon Profil</h1>
+    <button onclick="logout()">Déconnexion</button>
 
-  <section class="form-section" aria-labelledby="title-profile">
-    <h2 id="title-profile">Bienvenue, <span id="userEmail"></span></h2>
-    <button id="logoutBtn" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:7px; cursor:pointer; margin-bottom: 15px;">
-      <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </button>
+    <div id="profileContent"></div>
 
-    <div id="results">
-      <h2>Tableau des Annonces</h2>
-      <table id="table-annonces" role="table" aria-label="Annonces"></table>
+    <script>
+        const userData = JSON.parse(localStorage.getItem("userData"));
 
-      <h2>Tableau des Demandes d'Achat</h2>
-      <table id="table-achats" role="table" aria-label="Achats"></table>
-
-      <h2>Tableau des Demandes de Recherche</h2>
-      <table id="table-recherches" role="table" aria-label="Recherches"></table>
-    </div>
-
-    <div id="message" role="status" aria-live="polite"></div>
-  </section>
-
-  <footer style="text-align:center; margin: 20px 0; color: #e2e8f0;">
-    &copy; 2025 IASMarket Services. Tous droits réservés.
-  </footer>
-
-  <script>
-    (function () {
-      const API_URL = 'https://apicars.p2p-cars.com/api/login';
-
-      const userEmailSpan = document.getElementById('userEmail');
-      const logoutBtn = document.getElementById('logoutBtn');
-      const messageBox = document.getElementById('message');
-
-      function showMessage(type, text) {
-        messageBox.innerHTML = '';
-        const el = document.createElement('div');
-        el.className = 'text';
-        if (type === 'error') {
-          el.style.background = 'rgba(255,107,107,0.12)';
-          el.style.color = '#ff6b6b';
-          el.style.border = '1px solid rgba(255,107,107,0.18)';
-        } else if (type === 'success') {
-          el.style.background = 'rgba(52,211,153,0.12)';
-          el.style.color = '#34d399';
-          el.style.border = '1px solid rgba(52,211,153,0.18)';
+        if (!userData || !userData.success) {
+            window.location.href = "login.html";
         } else {
-          el.style.background = 'rgba(255,255,255,0.03)';
-          el.style.color = 'rgba(226,232,240,0.85)';
-        }
-        el.textContent = text;
-        messageBox.appendChild(el);
-      }
-
-      function remplirTableau(idTable, data) {
-        const table = document.getElementById(idTable);
-        table.innerHTML = '';
-
-        if (!Array.isArray(data) || data.length === 0) {
-          table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
-          return;
+            const container = document.getElementById("profileContent");
+            container.innerHTML = `
+                <p><strong>Email :</strong> ${userData.email}</p>
+                ${renderSection("Annonces", userData.annonces)}
+                ${renderSection("Achats", userData.achats)}
+                ${renderSection("Recherches", userData.recherches)}
+            `;
         }
 
-        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider"];
-        const thead = document.createElement('thead');
-        const htr = document.createElement('tr');
-        headers.forEach(h => {
-          const th = document.createElement('th');
-          th.textContent = h;
-          htr.appendChild(th);
-        });
-        thead.appendChild(htr);
-        table.appendChild(thead);
-
-        const tbody = document.createElement('tbody');
-        data.forEach(item => {
-          const tr = document.createElement('tr');
-
-          const refKey = Object.keys(item).find(k => k.toLowerCase() === 'ref') || '';
-
-          const cells = [
-            item[refKey] || '',
-            item.date || '',
-            item.marque || '',
-            item.modele || '',
-            item.annee || '',
-            item.cv || '',
-            item.kilometrage || '',
-            item.carburant || '',
-            item.transmission || '',
-            item.description || '',
-            item.prix || '',
-            item.valider || ''
-          ];
-
-          cells.forEach(text => {
-            const td = document.createElement('td');
-            td.textContent = text;
-            tr.appendChild(td);
-          });
-
-          tbody.appendChild(tr);
-        });
-        table.appendChild(tbody);
-      }
-
-      async function fetchUserData(token) {
-        try {
-          // Remplacer par vrai endpoint qui récupère les données du profil et tableaux
-          const resp = await fetch('https://apicars.p2p-cars.com/api/userdata', {
-            headers: {
-              Authorization: 'Bearer ' + token
+        function renderSection(title, data) {
+            if (!data || data.length === 0) {
+                return `<div class="section"><h2>${title}</h2><p>Aucune donnée</p></div>`;
             }
-          });
 
-          if (!resp.ok) throw new Error('Erreur récupération données');
+            let headers = Object.keys(data[0]);
+            let rows = data.map(row => 
+                `<tr>${headers.map(h => `<td>${row[h]}</td>`).join("")}</tr>`
+            ).join("");
 
-          const data = await resp.json();
-
-          // Exemple données:
-          // data = { email: "test@exemple.com", annonces: [...], achats: [...], recherches: [...] }
-
-          userEmailSpan.textContent = data.email || '';
-
-          remplirTableau('table-annonces', data.annonces || []);
-          remplirTableau('table-achats', data.achats || []);
-          remplirTableau('table-recherches', data.recherches || []);
-
-          showMessage('success', 'Données chargées');
-        } catch (err) {
-          showMessage('error', err.message);
+            return `
+                <div class="section">
+                    <h2>${title}</h2>
+                    <table>
+                        <tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>
+                        ${rows}
+                    </table>
+                </div>
+            `;
         }
-      }
 
-      // Déconnexion
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('p2p_token');
-        window.location.href = 'https://p2p-cars.com/espaceclt';
-      });
-
-      window.addEventListener('DOMContentLoaded', () => {
-        const token = localStorage.getItem('p2p_token');
-        if (!token) {
-          // Pas connecté → retour vers login
-          window.location.href = 'https://p2p-cars.com/espaceclt';
-          return;
+        function logout() {
+            localStorage.removeItem("userData");
+            window.location.href = "login.html";
         }
-        fetchUserData(token);
-      });
-    })();
-  </script>
+    </script>
 </body>
 </html>
