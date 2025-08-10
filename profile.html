@@ -258,7 +258,7 @@
         } catch(err) {
           showMessage('error', 'Session expirée, reconnectez-vous');
           setTimeout(() => {
-            window.location.href = '/espaceclt';
+            window.location.href = '/login.html';
           }, 3000);
         }
       }
@@ -266,7 +266,7 @@
       btnLogout.addEventListener('click', () => {
         localStorage.removeItem('p2p_email');
         localStorage.removeItem('p2p_pwd');
-        window.location.href = '/espaceclt.html';
+        window.location.href = '/login.html';
       });
 
       window.addEventListener('DOMContentLoaded', () => {
@@ -275,7 +275,7 @@
 
         if (!email || !pwdEncoded) {
           showMessage('error', 'Non connecté');
-          setTimeout(() => window.location.href = '/espaceclt.html', 2000);
+          setTimeout(() => window.location.href = '/login.html', 2000);
           return;
         }
 
