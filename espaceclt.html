@@ -190,9 +190,9 @@
 
 <script>
 (function () {
-  const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
-  const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
+  const API_URL = 'https://apicars.p2p-cars.com/api/login';
   const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
+  const API_LOGINREST = 'https://apicars.p2p-cars.com/api/loginrest';
 
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
@@ -204,31 +204,10 @@
   const emailError = document.getElementById('emailError');
   const passwordError = document.getElementById('passwordError');
   const logoutBtn = document.getElementById('logoutBtn');
-  const results = document.getElementById('results');
 
-  /* -------------------- Gestion des cookies -------------------- */
-  function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-      const date = new Date();
-      date.setTime(date.getTime() + (days*24*60*60*1000));
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
-  }
+  // cacher bouton déconnexion au démarrage
+  logoutBtn.style.display = 'none';
 
-  function getCookie(name) {
-    const value = "; " + document.cookie;
-    const parts = value.split("; " + name + "=");
-    if (parts.length === 2) return decodeURIComponent(parts.pop().split(";").shift());
-    return null;
-  }
-
-  function eraseCookie(name) {
-    document.cookie = name + "=; Max-Age=-99999999; path=/";
-  }
-
-  /* -------------------- Fonctions utilitaires -------------------- */
   function escapeHtml(str = '') {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -241,15 +220,18 @@
   function showMessage(type, text) {
     messageBox.innerHTML = '';
     const el = document.createElement('div');
+    el.className = 'text';
     if (type === 'error') {
       el.style.background = 'rgba(255,107,107,0.12)';
-      el.style.color = 'red';
+      el.style.color = 'var(--error)';
+      el.style.border = '1px solid rgba(255,107,107,0.18)';
     } else if (type === 'success') {
       el.style.background = 'rgba(52,211,153,0.12)';
-      el.style.color = 'green';
+      el.style.color = 'var(--success)';
+      el.style.border = '1px solid rgba(52,211,153,0.18)';
     } else {
       el.style.background = 'rgba(255,255,255,0.03)';
-      el.style.color = '#999';
+      el.style.color = 'var(--muted)';
     }
     el.textContent = text;
     messageBox.appendChild(el);
@@ -277,13 +259,12 @@
     }
   }
 
-  /* -------------------- Remplir tableau avec checkbox Valider -------------------- */
-  function remplirTableau(idTable, data, token) {
+  function remplirTableau(idTable, data) {
     const table = document.getElementById(idTable);
     table.innerHTML = '';
 
     if (!Array.isArray(data) || data.length === 0) {
-      table.innerHTML = '<tr><td colspan="12">Aucune donnée</td></tr>';
+      table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
       return;
     }
 
@@ -302,11 +283,11 @@
     data.forEach(item => {
       const tr = document.createElement('tr');
 
-      // On s'assure que "Ref" fonctionne quelle que soit la casse de la clé
-      const refValue = item.ref || item.Ref || item.référence || '';
+      // trouver clé Ref (insensible à la casse)
+      const refKey = Object.keys(item).find(k => k.toLowerCase() === 'ref') || '';
 
       const cells = [
-        refValue,
+        item[refKey] || '',
         item.date || '',
         item.marque || '',
         item.modele || '',
@@ -319,37 +300,29 @@
         item.prix || ''
       ];
 
-      // Ajout des cellules normales
       cells.forEach(c => {
         const td = document.createElement('td');
-        td.textContent = escapeHtml(c);
+        td.textContent = c;
         tr.appendChild(td);
       });
 
-      // Colonne Valider (checkbox)
+      // checkbox Valider
       const tdValide = document.createElement('td');
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = (String(item.valide || '').toLowerCase() === 'oui');
-      checkbox.addEventListener('change', () => {
-        const newValue = checkbox.checked ? 'Oui' : 'Non';
-        fetch(API_EDIT, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            ref: refValue,
-            valide: newValue
-          })
-        }).then(() => {
-          showMessage('success', `Valeur mise à jour : ${newValue}`);
-        }).catch(() => {
-          showMessage('error', 'Erreur lors de la mise à jour.');
-        });
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.checked = (String(item.valide).toLowerCase() === 'oui' || item.valide === true);
+      chk.addEventListener('change', async () => {
+        try {
+          await fetch(API_EDIT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ref: item[refKey], valide: chk.checked ? 'Oui' : 'Non' })
+          });
+        } catch (err) {
+          showMessage('error', 'Erreur lors de la mise à jour du statut.');
+        }
       });
-      tdValide.appendChild(checkbox);
+      tdValide.appendChild(chk);
       tr.appendChild(tdValide);
 
       tbody.appendChild(tr);
@@ -357,34 +330,58 @@
     table.appendChild(tbody);
   }
 
-  /* -------------------- Charger données après login -------------------- */
-  function chargerDonnees(token) {
-    fetch(API_LOGIN, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-      .then(res => res.json())
-      .then(data => {
-        results.style.display = 'block';
-        logoutBtn.style.display = 'inline-block';
-        remplirTableau('table-annonces', data.annonces, token);
-        remplirTableau('table-achats', data.achats, token);
-        remplirTableau('table-recherches', data.recherches, token);
-      })
-      .catch(() => {
-        showMessage('error', 'Impossible de charger les données.');
-      });
+  async function fetchWithTimeout(resource, options = {}) {
+    const { timeout = 15000 } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    try {
+      const resp = await fetch(resource, { ...options, signal: controller.signal });
+      clearTimeout(id);
+      return resp;
+    } catch (err) {
+      clearTimeout(id);
+      throw err;
+    }
   }
 
-  /* -------------------- Événement connexion -------------------- */
+  async function chargerDonnees(token) {
+    try {
+      const resp = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      if (!resp.ok) throw new Error();
+      const data = await resp.json();
+      document.getElementById('results').style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+      remplirTableau('table-annonces', data.annonces || []);
+      remplirTableau('table-achats', data.achats || []);
+      remplirTableau('table-recherches', data.recherches || []);
+    } catch {
+      localStorage.removeItem('p2p_token');
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    passwordInput.value = '';
+    rememberInput.checked = true;
+    const savedEmail = localStorage.getItem('p2p_email');
+    if (savedEmail) emailInput.value = savedEmail;
+
+    const savedToken = localStorage.getItem('p2p_token');
+    if (savedToken) {
+      chargerDonnees(savedToken);
+    }
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearFieldErrors();
+    showMessage('info', '');
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
-
-    // Validation simple
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let hasError = false;
     if (!emailRegex.test(email)) {
@@ -396,17 +393,17 @@
       hasError = true;
     }
     if (hasError) {
-      showMessage('error', 'Corrigez les erreurs avant de continuer.');
+      showMessage('error', 'Corrigez les erreurs.');
       return;
     }
 
     setLoading(true);
-
     try {
-      const response = await fetch(API_LOGIN, {
+      const response = await fetchWithTimeout(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
+        timeout: 15000
       });
 
       if (!response.ok) {
@@ -417,57 +414,39 @@
 
       const data = await response.json();
 
-      // Sauvegarder email si coché
       if (rememberInput.checked) {
         localStorage.setItem('p2p_email', email);
       } else {
         localStorage.removeItem('p2p_email');
       }
 
-      // Stocker le token dans cookie
+      // sauvegarde token pour session persistante
       if (data.token) {
-        setCookie('p2p_token', data.token, 7);
+        localStorage.setItem('p2p_token', data.token);
       }
 
       showMessage('success', 'Connexion réussie ✅');
       setLoading(false);
+      document.getElementById('results').style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
 
-      // Charger les données
-      chargerDonnees(data.token);
+      remplirTableau('table-annonces', data.annonces || []);
+      remplirTableau('table-achats', data.achats || []);
+      remplirTableau('table-recherches', data.recherches || []);
     } catch {
       showMessage('error', 'Erreur réseau.');
       setLoading(false);
     }
   });
 
-  /* -------------------- Déconnexion -------------------- */
   logoutBtn.addEventListener('click', () => {
-    eraseCookie('p2p_token');
-    results.style.display = 'none';
+    localStorage.removeItem('p2p_token');
+    document.getElementById('results').style.display = 'none';
     logoutBtn.style.display = 'none';
     showMessage('info', 'Déconnecté.');
   });
-
-  /* -------------------- Initialisation au chargement -------------------- */
-  window.addEventListener('DOMContentLoaded', () => {
-    passwordInput.value = '';
-    rememberInput.checked = true;
-
-    const savedEmail = localStorage.getItem('p2p_email');
-    if (savedEmail) emailInput.value = savedEmail;
-
-    logoutBtn.style.display = 'none';
-    results.style.display = 'none';
-
-    const token = getCookie('p2p_token');
-    if (token) {
-      chargerDonnees(token);
-    }
-  });
-
 })();
 </script>
-
 
 
 </body>
