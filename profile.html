@@ -94,78 +94,80 @@
         const tbody = document.createElement('tbody');
 
         data.forEach((item, idx) => {
-          const tr = document.createElement('tr');
-          const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
+        const tr = document.createElement('tr');
 
-          const cells = [
-            ref,
-            item.date || '',
-            item.marque || '',
-            item.modele || '',
-            item.annee || '',
-            item.cv || '',
-            item.kilometrage || '',
-            item.carburant || '',
-            item.transmission || '',
-            item.description || '',
-            item.prix || '',
-          ];
+        const id = item.id; // ✅ ID venant du backend
+        const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
 
-          cells.forEach(c => {
-            const td = document.createElement('td');
-            td.textContent = c;
-            tr.appendChild(td);
-          });
+        const cells = [
+          ref,
+          item.date || '',
+          item.marque || '',
+          item.modele || '',
+          item.annee || '',
+          item.cv || '',
+          item.kilometrage || '',
+          item.carburant || '',
+          item.transmission || '',
+          item.description || '',
+          item.prix || '',
+        ];
 
-          const tdValide = document.createElement('td');
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.checked = item.valide === 'oui' || item.valide === true;
-          tdValide.appendChild(checkbox);
-          tr.appendChild(tdValide);
-
-          checkbox.addEventListener('change', async () => {
-            const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
-            try {
-              const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ id: id, Ref: ref, valide: nouvelleValeur }) // ✅ id + Ref
-              });
-              if (!resp.ok) throw new Error('Erreur serveur');
-              showMessage('success', `État modifié: ${nouvelleValeur}`);
-            } catch (err) {
-              showMessage('error', 'Erreur lors de la modification.');
-              checkbox.checked = !checkbox.checked;
-            }
-          });
-
-
-          // Colonne Supprimer
-          const tdDelete = document.createElement('td');
-          const delIcon = document.createElement('i');
-          delIcon.className = 'fa fa-trash icon-btn';
-          delIcon.addEventListener('click', async () => {
-            if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
-            try {
-              const resp = await fetch(API_DELETE, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ id: id, Ref: ref }) // ✅ id + Ref
-              });
-              if (!resp.ok) throw new Error('Erreur serveur');
-              tr.remove(); // Supprime la ligne dans le DOM
-              showMessage('success', `Ref ${ref} supprimé avec succès`);
-            } catch (err) {
-              showMessage('error', 'Erreur lors de la suppression.');
-            }
-          });
-
-          tdDelete.appendChild(delIcon);
-          tr.appendChild(tdDelete);
-
-          tbody.appendChild(tr);
+        cells.forEach(c => {
+          const td = document.createElement('td');
+          td.textContent = c;
+          tr.appendChild(td);
         });
+
+        // ✅ Checkbox modification
+        const tdValide = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.valide === 'oui' || item.valide === true;
+        tdValide.appendChild(checkbox);
+        tr.appendChild(tdValide);
+
+        checkbox.addEventListener('change', async () => {
+          const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
+          try {
+            const resp = await fetch('https://apicars.p2p-cars.com/api/editdemande', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ id: id, Ref: ref, valide: nouvelleValeur })
+            });
+            if (!resp.ok) throw new Error('Erreur serveur');
+            showMessage('success', `État modifié: ${nouvelleValeur}`);
+          } catch (err) {
+            showMessage('error', 'Erreur lors de la modification.');
+            checkbox.checked = !checkbox.checked;
+          }
+        });
+
+        // ✅ Suppression
+        const tdDelete = document.createElement('td');
+        const delIcon = document.createElement('i');
+        delIcon.className = 'fa fa-trash icon-btn';
+        delIcon.addEventListener('click', async () => {
+          if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
+          try {
+            const resp = await fetch(API_DELETE, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ id: id, Ref: ref })
+            });
+            if (!resp.ok) throw new Error('Erreur serveur');
+            tr.remove();
+            showMessage('success', `Ref ${ref} supprimé avec succès`);
+          } catch (err) {
+            showMessage('error', 'Erreur lors de la suppression.');
+          }
+        });
+        tdDelete.appendChild(delIcon);
+        tr.appendChild(tdDelete);
+
+        tbody.appendChild(tr);
+      });
+
 
         table.appendChild(tbody);
         resultsSection.style.display = 'block';
