@@ -167,9 +167,10 @@ function remplirTableau(idTable, data, userId) {
     return;
   }
 
+  // En-têtes
   const headers = [
-    "Supprimer", "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
-    "Carburant", "Transmission", "Description", "Prix", "Valide"
+    "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
+    "Carburant", "Transmission", "Description", "Prix", "Valide", "Supprimer"
   ];
 
   const thead = document.createElement('thead');
@@ -186,6 +187,28 @@ function remplirTableau(idTable, data, userId) {
 
   data.forEach((item, idx) => {
     const tr = document.createElement('tr');
+
+    // Colonnes de données (sauf Supprimer)
+    const cells = [
+      item.Ref || `#${idx + 1}`,
+      item.Date || item.date || '',
+      item.Marque || item.marque || '',
+      item.Modèle || item.modele || '',
+      item.Année || item.annee || '',
+      item.CV || item.cv || '',
+      item.Kilométrage || item.kilometrage || '',
+      item.Carburant || item.carburant || '',
+      item.Transmission || item.transmission || '',
+      item.Description || item.description || '',
+      item.Prix || item.prix || '',
+      item.Valide || item.valide ? 'Oui' : 'Non'
+    ];
+
+    cells.forEach(text => {
+      const td = document.createElement('td');
+      td.textContent = text;
+      tr.appendChild(td);
+    });
 
     // Bouton corbeille
     const tdDelete = document.createElement('td');
@@ -222,34 +245,12 @@ function remplirTableau(idTable, data, userId) {
     tdDelete.appendChild(btnDelete);
     tr.appendChild(tdDelete);
 
-    // Colonnes de données
-    const cells = [
-      item.Ref || `#${idx + 1}`,
-      item.Date || item.date || '',
-      item.Marque || item.marque || '',
-      item.Modèle || item.modele || '',
-      item.Année || item.annee || '',
-      item.CV || item.cv || '',
-      item.Kilométrage || item.kilometrage || '',
-      item.Carburant || item.carburant || '',
-      item.Transmission || item.transmission || '',
-      item.Description || item.description || '',
-      item.Prix || item.prix || '',
-      item.Valide || item.valide ? 'Oui' : 'Non'
-    ];
-
-    cells.forEach(text => {
-      const td = document.createElement('td');
-      td.textContent = text;
-      tr.appendChild(td);
-    });
-
     tbody.appendChild(tr);
   });
 
   table.appendChild(tbody);
 }
-    
+
       async function fetchProfile(email, password) {
         try {
           const resp = await fetch(API_LOGIN, {
