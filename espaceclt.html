@@ -193,7 +193,9 @@
   const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
   const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
   const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
+  const API_DATA = 'https://apicars.p2p-cars.com/api/mesdemandes'; // exemple API protégée pour recharger
 
+  // Sélecteurs
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
@@ -203,8 +205,8 @@
   const messageBox = document.getElementById('message');
   const emailError = document.getElementById('emailError');
   const passwordError = document.getElementById('passwordError');
-  const btnLogout = document.getElementById('logoutBtn'); // bouton déconnexion
-  const forgotLink = document.getElementById('forgotLink'); // lien mot de passe oublié
+  const btnLogout = document.getElementById('logoutBtn');
+  const forgotLink = document.getElementById('forgotLink');
 
   /** ================== UTILS ================== **/
 
@@ -218,7 +220,7 @@
       .replace(/'/g, '&#39;');
   }
 
-  // Affiche un message visuel à l'utilisateur
+  // Affiche un message visuel
   function showMessage(type, text) {
     messageBox.innerHTML = '';
     const el = document.createElement('div');
@@ -237,6 +239,7 @@
     messageBox.appendChild(el);
   }
 
+  // Efface les erreurs de champs
   function clearFieldErrors() {
     emailError.textContent = '';
     passwordError.textContent = '';
@@ -244,11 +247,13 @@
     passwordInput.classList.remove('input-error');
   }
 
+  // Met une erreur sur un champ
   function setFieldError(inputEl, errorEl, message) {
     inputEl.classList.add('input-error');
     errorEl.textContent = message;
   }
 
+  // Active/désactive le bouton "Connexion"
   function setLoading(loading) {
     if (loading) {
       submitBtn.disabled = true;
@@ -259,7 +264,7 @@
     }
   }
 
-  // Fonction pour remplir un tableau avec les données API
+  // Remplir un tableau HTML avec les données reçues
   function remplirTableau(idTable, data) {
     const table = document.getElementById(idTable);
     table.innerHTML = '';
@@ -287,9 +292,9 @@
     data.forEach(item => {
       const tr = document.createElement('tr');
 
-      // Ajout des cellules texte
+      // Colonnes texte
       const textCells = [
-        item.Ref || item.ref || '', // support "Ref" ou "ref"
+        item.Ref || item.ref || '',
         item.date || '',
         item.marque || '',
         item.modele || '',
@@ -308,7 +313,7 @@
         tr.appendChild(td);
       });
 
-      // Ajout checkbox modifiable pour "Valider"
+      // Checkbox "Valider"
       const tdValide = document.createElement('td');
       const chk = document.createElement('input');
       chk.type = 'checkbox';
@@ -321,9 +326,10 @@
             ref: item.Ref || item.ref,
             valide: chk.checked ? 'Oui' : 'Non'
           })
-        }).then(r => r.json())
-          .then(() => showMessage('success', 'Mise à jour réussie'))
-          .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
+        })
+        .then(r => r.json())
+        .then(() => showMessage('success', 'Mise à jour réussie'))
+        .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
       });
       tdValide.appendChild(chk);
       tr.appendChild(tdValide);
@@ -333,7 +339,9 @@
     table.appendChild(tbody);
   }
 
-  // Connexion API
+  /** ================== LOGIN ================== **/
+
+  // Connexion utilisateur → stockage du token
   async function loginUser(email, password) {
     setLoading(true);
     showMessage('info', 'Connexion en cours...');
@@ -346,27 +354,61 @@
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
 
-      // Si rester connecté → sauvegarde
+      // Stocker token et infos utilisateur
+      localStorage.setItem('p2p_token', data.token || '');
+      localStorage.setItem('p2p_user', JSON.stringify({ email: email }));
+
+      // Si "Se souvenir"
       if (rememberInput.checked) {
-        localStorage.setItem('p2p_email', email);
-        localStorage.setItem('p2p_pwd', btoa(password)); // base64
+        localStorage.setItem('p2p_remember', 'true');
       } else {
-        localStorage.removeItem('p2p_email');
-        localStorage.removeItem('p2p_pwd');
+        localStorage.removeItem('p2p_remember');
       }
 
+      // Affiche interface connectée
       showMessage('success', 'Connexion réussie ✅');
-      document.getElementById('results').style.display = 'block';
-      btnLogout.style.display = 'inline-block';
-
-      remplirTableau('table-annonces', data.annonces || []);
-      remplirTableau('table-achats', data.achats || []);
-      remplirTableau('table-recherches', data.recherches || []);
+      afficherInterface(data);
 
     } catch (err) {
       showMessage('error', err.message);
     }
     setLoading(false);
+  }
+
+  // Afficher l'interface avec les données
+  function afficherInterface(data) {
+    document.getElementById('results').style.display = 'block';
+    btnLogout.style.display = 'inline-block';
+    remplirTableau('table-annonces', data.annonces || []);
+    remplirTableau('table-achats', data.achats || []);
+    remplirTableau('table-recherches', data.recherches || []);
+  }
+
+  // Recharger les données avec le token (après refresh)
+  async function chargerDonneesAvecToken() {
+    const token = localStorage.getItem('p2p_token');
+    if (!token) return;
+
+    try {
+      const resp = await fetch(API_DATA, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await resp.json();
+      afficherInterface(data);
+    } catch {
+      showMessage('error', 'Session expirée, veuillez vous reconnecter');
+      deconnecter();
+    }
+  }
+
+  // Déconnexion
+  function deconnecter() {
+    localStorage.removeItem('p2p_token');
+    localStorage.removeItem('p2p_user');
+    localStorage.removeItem('p2p_remember');
+    document.getElementById('results').style.display = 'none';
+    btnLogout.style.display = 'none';
+    showMessage('info', 'Vous êtes déconnecté');
   }
 
   /** ================== EVENTS ================== **/
@@ -394,14 +436,8 @@
     loginUser(email, password);
   });
 
-  // Déconnexion
-  btnLogout.addEventListener('click', () => {
-    localStorage.removeItem('p2p_email');
-    localStorage.removeItem('p2p_pwd');
-    document.getElementById('results').style.display = 'none';
-    btnLogout.style.display = 'none';
-    showMessage('info', 'Vous êtes déconnecté');
-  });
+  // Déconnexion bouton
+  btnLogout.addEventListener('click', deconnecter);
 
   // Mot de passe oublié
   forgotLink.addEventListener('click', e => {
@@ -421,24 +457,21 @@
       .catch(() => showMessage('error', 'Erreur envoi email'));
   });
 
-  /** ================== AUTO LOGIN ================== **/
+  /** ================== AUTO-CONNEXION ================== **/
   window.addEventListener('DOMContentLoaded', () => {
     passwordInput.value = '';
-    rememberInput.checked = true;
-    btnLogout.style.display = 'none'; // caché au démarrage
+    rememberInput.checked = localStorage.getItem('p2p_remember') === 'true';
+    btnLogout.style.display = 'none';
 
-    // Auto-login si infos stockées
-    const savedEmail = localStorage.getItem('p2p_email');
-    const savedPwd = localStorage.getItem('p2p_pwd');
-    if (savedEmail && savedPwd) {
-      emailInput.value = savedEmail;
-      rememberInput.checked = true;
-      loginUser(savedEmail, atob(savedPwd)); // décode base64
+    // Si token présent → charger données
+    if (localStorage.getItem('p2p_token')) {
+      chargerDonneesAvecToken();
     }
   });
 
 })();
 </script>
+
 
 
 
