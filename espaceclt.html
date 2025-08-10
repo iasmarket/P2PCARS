@@ -193,9 +193,7 @@
   const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
   const API_FORGOT = 'https://apicars.p2p-cars.com/api/loginrest';
   const API_EDIT = 'https://apicars.p2p-cars.com/api/editdemande';
-  const API_DATA = 'https://apicars.p2p-cars.com/api/mesdemandes'; // exemple API protégée pour recharger
 
-  // Sélecteurs
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
@@ -208,19 +206,9 @@
   const btnLogout = document.getElementById('logoutBtn');
   const forgotLink = document.getElementById('forgotLink');
 
-  /** ================== UTILS ================== **/
+  /** ======= UTILS ======= **/
 
-  // Sécurité XSS : échapper texte
-  function escapeHtml(str = '') {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  // Affiche un message visuel
+  // Affiche un message avec styles selon type
   function showMessage(type, text) {
     messageBox.innerHTML = '';
     const el = document.createElement('div');
@@ -239,7 +227,7 @@
     messageBox.appendChild(el);
   }
 
-  // Efface les erreurs de champs
+  // Nettoie les erreurs visuelles sur champs
   function clearFieldErrors() {
     emailError.textContent = '';
     passwordError.textContent = '';
@@ -247,13 +235,13 @@
     passwordInput.classList.remove('input-error');
   }
 
-  // Met une erreur sur un champ
+  // Affiche erreur sur un champ spécifique
   function setFieldError(inputEl, errorEl, message) {
     inputEl.classList.add('input-error');
     errorEl.textContent = message;
   }
 
-  // Active/désactive le bouton "Connexion"
+  // Active/désactive le bouton et change son texte
   function setLoading(loading) {
     if (loading) {
       submitBtn.disabled = true;
@@ -264,7 +252,7 @@
     }
   }
 
-  // Remplir un tableau HTML avec les données reçues
+  // Remplissage des tableaux avec données reçues
   function remplirTableau(idTable, data) {
     const table = document.getElementById(idTable);
     table.innerHTML = '';
@@ -275,7 +263,7 @@
     }
 
     const headers = [
-      "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", 
+      "Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage",
       "Carburant", "Transmission", "Description", "Prix", "Valider"
     ];
     const thead = document.createElement('thead');
@@ -313,7 +301,7 @@
         tr.appendChild(td);
       });
 
-      // Checkbox "Valider"
+      // Colonne checkbox "Valider"
       const tdValide = document.createElement('td');
       const chk = document.createElement('input');
       chk.type = 'checkbox';
@@ -326,10 +314,9 @@
             ref: item.Ref || item.ref,
             valide: chk.checked ? 'Oui' : 'Non'
           })
-        })
-        .then(r => r.json())
-        .then(() => showMessage('success', 'Mise à jour réussie'))
-        .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
+        }).then(r => r.json())
+          .then(() => showMessage('success', 'Mise à jour réussie'))
+          .catch(() => showMessage('error', 'Erreur lors de la mise à jour'));
       });
       tdValide.appendChild(chk);
       tr.appendChild(tdValide);
@@ -339,9 +326,16 @@
     table.appendChild(tbody);
   }
 
-  /** ================== LOGIN ================== **/
+  // Affiche l'interface avec données (après connexion ou reload)
+  function afficherInterface(data) {
+    document.getElementById('results').style.display = 'block';
+    btnLogout.style.display = 'inline-block';
+    remplirTableau('table-annonces', data.annonces || []);
+    remplirTableau('table-achats', data.achats || []);
+    remplirTableau('table-recherches', data.recherches || []);
+  }
 
-  // Connexion utilisateur → stockage du token
+  // Fonction connexion avec API + stockage session
   async function loginUser(email, password) {
     setLoading(true);
     showMessage('info', 'Connexion en cours...');
@@ -354,18 +348,19 @@
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
 
-      // Stocker token et infos utilisateur
-      localStorage.setItem('p2p_token', data.token || '');
-      localStorage.setItem('p2p_user', JSON.stringify({ email: email }));
-
-      // Si "Se souvenir"
+      // Stockage dans localStorage uniquement si "Se souvenir"
       if (rememberInput.checked) {
-        localStorage.setItem('p2p_remember', 'true');
+        localStorage.setItem('p2p_session', JSON.stringify({
+          email,
+          password: btoa(password), // base64 pour masquer un peu
+          annonces: data.annonces,
+          achats: data.achats,
+          recherches: data.recherches
+        }));
       } else {
-        localStorage.removeItem('p2p_remember');
+        localStorage.removeItem('p2p_session');
       }
 
-      // Affiche interface connectée
       showMessage('success', 'Connexion réussie ✅');
       afficherInterface(data);
 
@@ -375,45 +370,9 @@
     setLoading(false);
   }
 
-  // Afficher l'interface avec les données
-  function afficherInterface(data) {
-    document.getElementById('results').style.display = 'block';
-    btnLogout.style.display = 'inline-block';
-    remplirTableau('table-annonces', data.annonces || []);
-    remplirTableau('table-achats', data.achats || []);
-    remplirTableau('table-recherches', data.recherches || []);
-  }
+  /** ======= ÉVÉNEMENTS ======= **/
 
-  // Recharger les données avec le token (après refresh)
-  async function chargerDonneesAvecToken() {
-    const token = localStorage.getItem('p2p_token');
-    if (!token) return;
-
-    try {
-      const resp = await fetch(API_DATA, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await resp.json();
-      afficherInterface(data);
-    } catch {
-      showMessage('error', 'Session expirée, veuillez vous reconnecter');
-      deconnecter();
-    }
-  }
-
-  // Déconnexion
-  function deconnecter() {
-    localStorage.removeItem('p2p_token');
-    localStorage.removeItem('p2p_user');
-    localStorage.removeItem('p2p_remember');
-    document.getElementById('results').style.display = 'none';
-    btnLogout.style.display = 'none';
-    showMessage('info', 'Vous êtes déconnecté');
-  }
-
-  /** ================== EVENTS ================== **/
-
-  // Soumission formulaire
+  // Soumission formulaire : validation & appel login
   form.addEventListener('submit', e => {
     e.preventDefault();
     clearFieldErrors();
@@ -436,8 +395,13 @@
     loginUser(email, password);
   });
 
-  // Déconnexion bouton
-  btnLogout.addEventListener('click', deconnecter);
+  // Déconnexion : nettoyage localStorage + interface
+  btnLogout.addEventListener('click', () => {
+    localStorage.removeItem('p2p_session');
+    document.getElementById('results').style.display = 'none';
+    btnLogout.style.display = 'none';
+    showMessage('info', 'Vous êtes déconnecté');
+  });
 
   // Mot de passe oublié
   forgotLink.addEventListener('click', e => {
@@ -452,23 +416,34 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     })
-      .then(r => r.json())
-      .then(() => showMessage('success', 'Email envoyé avec succès'))
-      .catch(() => showMessage('error', 'Erreur envoi email'));
+    .then(r => r.json())
+    .then(() => showMessage('success', 'Email envoyé avec succès'))
+    .catch(() => showMessage('error', 'Erreur envoi email'));
   });
 
-  /** ================== AUTO-CONNEXION ================== **/
+  /** ======= AUTO LOGIN AU CHARGEMENT ======= **/
   window.addEventListener('DOMContentLoaded', () => {
     passwordInput.value = '';
-    rememberInput.checked = localStorage.getItem('p2p_remember') === 'true';
+    rememberInput.checked = true;
     btnLogout.style.display = 'none';
 
-    // Si token présent → charger données
-    if (localStorage.getItem('p2p_token')) {
-      chargerDonneesAvecToken();
+    const sessionRaw = localStorage.getItem('p2p_session');
+    if (sessionRaw) {
+      try {
+        const session = JSON.parse(sessionRaw);
+        emailInput.value = session.email || '';
+        rememberInput.checked = true;
+        // Recharge interface avec données sauvegardées
+        afficherInterface({
+          annonces: session.annonces || [],
+          achats: session.achats || [],
+          recherches: session.recherches || []
+        });
+      } catch {
+        localStorage.removeItem('p2p_session');
+      }
     }
   });
-
 })();
 </script>
 
