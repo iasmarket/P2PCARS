@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+  
     body {
         background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
         url('arier.png') no-repeat center center fixed;
@@ -242,6 +243,26 @@
         #result { font-size: 1rem;}
         .final-price { font-size: 1.1em;}
     }
+        .market-group {
+      display: flex;
+      gap: 22px;
+      margin-bottom: 16px;
+      margin-top: 10px;
+    }
+    .market-group label {
+      font-size: 0.97rem;
+      color: #e2e8f0;
+      background: #374151;
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .market-group label:hover { background: #3b82f6; color: #fff;}
   </style>
 </head>
 <body>
@@ -262,8 +283,8 @@
   <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
 </div>
 <nav class="header-nav">
-    <a href="#" id="nav-accueil">Accueil</a>
-    <a href="#" id="nav-simulateur">Simulateur Prix</a>
+    <a href="https://p2p-cars.com" id="nav-accueil">Accueil</a>
+    <a href="https://p2p-cars.com/esprix" id="nav-simulateur">Simulateur Prix</a>
     <a href="https://p2p-cars.com/carservices" id="nav-services">Services P2P-Cars</a>
     <a href="https://p2p-cars.com/login" id="nav-login">Espace personnel </a>
 </nav>
@@ -301,6 +322,11 @@
             <label><input type="checkbox" id="accident"> Jamais accidenté</label>
             <label><input type="checkbox" id="reparation"> Petites réparations prévues</label>
             <label><input type="checkbox" id="premierMain"> 1ère main</label>
+        </div>
+        <div class="market-group">
+            <label><input type="radio" name="market" id="demande_haut" value="haut"> Demande augmentée</label>
+            <label><input type="radio" name="market" id="demande_egal" value="egal" checked> Demande = Offre</label>
+            <label><input type="radio" name="market" id="offre_haut" value="offre"> Offre augmentée</label>
         </div>
         <button type="submit">Calculer la dépréciation</button>
     </form>
@@ -426,7 +452,7 @@ function calculerDepréciation() {
     const prixCuivre = parseFloat(document.getElementById("prix_cuivre").value);
     const prixPlastiques = parseFloat(document.getElementById("prix_plastiques").value);
     const kilometrage = parseFloat(document.getElementById("kilometrage").value);
-    
+
     if (
         isNaN(prixInitial) || isNaN(anneeModele) || isNaN(anneeRevente) ||
         isNaN(prixAcier) || isNaN(prixAluminium) || isNaN(prixCuivre) || isNaN(prixPlastiques) || isNaN(kilometrage)
@@ -442,7 +468,7 @@ function calculerDepréciation() {
         plastiques: 0.10
     };
 
-    // 1. Depreciation des matieres premieres
+    // Depreciation des matieres premieres
     const prixRefModel = historiquePrix.find(p => p.annee === anneeModele);
     const prixRefRevente = historiquePrix.find(p => p.annee === anneeRevente);
 
@@ -461,14 +487,17 @@ function calculerDepréciation() {
         prixRefRevente.plastiques * compositionMatières.plastiques
     ) / 1000;
 
-    // Depreciation du prix global de la voiture
+    // Depreciation du prix global de la voiture (forte les 3 premières années, plus lente ensuite)
     const ageVoiture = anneeRevente - anneeModele;
     let prixGlobalDepre = prixInitial;
-    let depreciationGlobale = [];
     for (let i = 1; i <= ageVoiture; i++) {
-        const tauxDepreciation = Math.exp(-0.1); // environ -9.5% par an
-        prixGlobalDepre = prixGlobalDepre * tauxDepreciation;
-        depreciationGlobale.push(prixGlobalDepre);
+        let tauxDepreciation;
+        if (i <= 3) {
+            tauxDepreciation = Math.exp(-0.18); // ~16.5% la première année
+        } else {
+            tauxDepreciation = Math.exp(-0.08); // ~7.7% les années suivantes
+        }
+        prixGlobalDepre *= tauxDepreciation;
     }
 
     // Depreciation matières premières
@@ -478,10 +507,22 @@ function calculerDepréciation() {
     const valeurApresDepreciation = prixGlobalDepre * depreciationMP;
 
     // Bonus kilométrage
-    const bonusKilometrage = 10000 - ((10000 / 300000) * kilometrage);
-
+    const kmage=(20000-(kilometrage/ageVoiture))*0.1;
+    const bonusKilometrage =kmage;
+// 7000 - ((10000 / 300000) * kilometrage)+
     // Prix final estimé
-    const montantFinal = valeurApresDepreciation + bonusKilometrage + ajustement;
+    let montantFinal = valeurApresDepreciation + bonusKilometrage + ajustement;
+
+    // Ajustement selon le marché
+    let prixCorrige = montantFinal;
+    let labelMarche = "Demande = Offre (prix du marché)";
+    if (document.getElementById("demande_haut").checked) {
+        prixCorrige = montantFinal * 1.07; // +7%
+        labelMarche = "Demande augmentée (prix supérieur au marché)";
+    } else if (document.getElementById("offre_haut").checked) {
+        prixCorrige = montantFinal * 0.93; // -7%
+        labelMarche = "Offre augmentée (prix inférieur au marché)";
+    }
 
     let mpDetails = `
     <div class="depreciation-details">
@@ -503,7 +544,8 @@ function calculerDepréciation() {
             <strong>Ajustements :</strong> ${ajustement} MAD<br>
         </div>
         <div class="final-price">
-            Estimation finale du prix : ${montantFinal.toFixed(2)} MAD
+            <span>${labelMarche}</span><br>
+            Estimation finale du prix : <b>${prixCorrige.toFixed(2)} MAD</b>
         </div>`;
 }
 
