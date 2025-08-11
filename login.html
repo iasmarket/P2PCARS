@@ -7,435 +7,102 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    /* ... styles identiques à votre page précédente ... */
     :root {
-  --blue: #3b82f6;
-  --blue-dark: #2563eb;
-  --bg-input: #1e293b;
-  --text: #e2e8f0;
-  --muted: rgba(226,232,240,0.6);
-  --error: #ff6b6b;
-  --success: #34d399;
-  --border-radius: 10px;
-  --transition: 0.3s ease;
-  --font-family: 'Poppins', sans-serif;
-}
-
-/* Reset & base */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: var(--font-family);
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
-              url('arier.png') no-repeat center center fixed;
-  background-size: cover;
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  align-items: center;
-  padding: 20px;
-}
-
-/* HEADER */
-header {
-  background: rgba(255,255,255,0.07);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 18px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 14px 10px 20px 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  gap: 40px;
-}
-header img {
-  max-height: 110px;
-  width: auto;
-  object-fit: contain;
-  transition: transform 0.3s;
-}
-header img:hover { transform: scale(1.05);}
-header .header-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-header h1 {
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: var(--blue);
-  margin-bottom: 0.3em;
-}
-header .text-h {
-  font-size: 1.1rem;
-  color: var(--text);
-  letter-spacing: 0.5px;
-}
-@media (max-width: 750px) {
-  header { flex-direction: column; gap: 12px;}
-  header img { max-width: 70%;}
-}
-
-/* NAVBAR */
-.navbar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-.lang-btns {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-.lang-btns button {
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  border: 2px solid var(--blue);
-  background: var(--bg-input);
-  color: var(--blue);
-  font-weight: bold;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.3s;
-  font-size: 1rem;
-}
-.lang-btns button.active, .lang-btns button:hover {
-  background: var(--blue);
-  color: #fff;
-}
-.home-btn {
-  margin-left: 0.7rem;
-  background: #fff;
-  color: #1e293b;
-  border-radius: 20px;
-  padding: 8px 16px;
-  border: none;
-  font-weight: 600;
-  font-size: 1rem;
-  text-decoration: none;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.07);
-  transition: background 0.2s, color 0.2s;
-}
-.home-btn:hover {
-  background: var(--blue);
-  color: #fff;
-}
-
-/* FORMULAIRE */
-h1 {
-  font-weight: 600;
-  font-size: 2.6rem;
-  margin-bottom: 20px;
-  color: var(--blue);
-  text-shadow: 0 0 6px rgba(59,130,246,0.7);
-  text-align: center;
-  user-select: none;
-}
-
-form#loginForm {
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(14px);
-  border-radius: var(--border-radius);
-  max-width: 420px;
-  width: 100%;
-  padding: 32px 28px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.45);
-  transition: background var(--transition);
-}
-form#loginForm:hover {
-  background: rgba(255, 255, 255, 0.10);
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  font-size: 1.05rem;
-  user-select: none;
-}
-
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: var(--border-radius);
-  border: 1.5px solid #334155;
-  background: var(--bg-input);
-  color: var(--text);
-  font-size: 1rem;
-  transition: border-color var(--transition), box-shadow var(--transition);
-  font-weight: 400;
-  user-select: text;
-}
-input[type="email"]:focus,
-input[type="password"]:focus {
-  outline: none;
-  border-color: var(--blue);
-  box-shadow: 0 0 6px var(--blue);
-  background: #29384d;
-}
-
-.input-error {
-  border-color: var(--error) !important;
-  box-shadow: none !important;
-  background: #3e1e1e !important;
-}
-.error-text {
-  color: var(--error);
-  font-size: 0.85rem;
-  margin-top: 4px;
-  user-select: none;
-}
-.success-text {
-  color: var(--success);
-  font-size: 0.95rem;
-  margin-top: 6px;
-  user-select: none;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  user-select: none;
-  margin: 16px 0 20px 0;
-  color: var(--text);
-}
-.checkbox-container input[type="checkbox"] {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2.5px solid var(--blue);
-  border-radius: 6px;
-  position: relative;
-  cursor: pointer;
-  background: transparent;
-  transition: background var(--transition), border-color var(--transition);
-  flex-shrink: 0;
-}
-.checkbox-container input[type="checkbox"]:checked {
-  background: var(--blue);
-  border-color: var(--blue);
-}
-.checkbox-container input[type="checkbox"]:checked::after {
-  content: "\2713";
-  position: absolute;
-  left: 4px;
-  top: 1px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  user-select: none;
-}
-.checkbox-container:hover input[type="checkbox"] {
-  border-color: var(--blue-dark);
-}
-
-button[type="submit"] {
-  width: 100%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  padding: 14px 0;
-  border-radius: var(--border-radius);
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(59,130,246,0.5);
-  transition: background var(--transition), box-shadow var(--transition);
-  user-select: none;
-}
-button[type="submit"]:hover:not(:disabled) {
-  background: var(--blue-dark);
-  box-shadow: 0 8px 18px rgba(37,99,235,0.7);
-}
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Spinner */
-.spinner {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.45);
-  border-top-color: #fff;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-#message {
-  margin-top: 20px;
-  text-align: center;
-  min-height: 24px;
-  user-select: none;
-}
-#message .text {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: var(--border-radius);
-  font-weight: 700;
-  font-size: 1rem;
-  max-width: 90vw;
-  word-wrap: break-word;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  user-select: none;
-}
-#message .text.error {
-  background: rgb(252, 127, 24);
-  color: var(--error);
-  border: 1.5px solid var(--error);
-}
-#message .text.success {
-  background: rgb(83, 113, 248);
-  color: var(--success);
-  border: 1.5px solid var(--success);
-}
-#message .text.info {
-  background: rgba(252, 153, 24, 0.493);
-  color: var(--blue);
-  border: 1.5px solid var(--blue);
-}
-
-p {
-  margin-top: 24px;
-  text-align: center;
-  font-size: 0.95rem;
-  user-select: none;
-}
-p a#forgotPassword {
-  color: var(--blue);
-  text-decoration: underline;
-  cursor: pointer;
-  transition: color var(--transition);
-  user-select: text;
-}
-p a#forgotPassword:hover {
-  color: var(--blue-dark);
-}
-
-/* Responsive mobile */
-@media (max-width: 480px) {
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 16px;
-  }
-  form#loginForm {
-    padding: 24px 18px;
-    max-width: 95vw;
-  }
-  button[type="submit"] {
-    font-size: 1rem;
-    padding: 12px 0;
-  }
-  .checkbox-container {
-    font-size: 0.9rem;
-    gap: 8px;
-    margin: 14px 0 16px 0;
-  }
-}
-/* Layout principal pour division gauche/droite */
-.main-container {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  width: 100%;
-  max-width: 1200px;
-  flex: 1;
-  margin-top: 20px;
-}
-
-/* Partie gauche : titre */
-.left-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column; /* permet d'empiler le titre et le message */
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-}
-
-.left-section h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--blue);
-  text-shadow: 0 0 6px rgba(59,130,246,0.7);
-  margin-bottom: 10px;
-}
-
-.left-section #message {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 8px;
-  max-width: 80%;
-}
-
-/* Couleurs messages */
-#message.error {
-  color: var(--error);
-}
-#message.success {
-  color: var(--success);
-}
-
-/* Partie droite : formulaire */
-.right-section {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.right-section form {
-  max-width: 420px;
-  width: 100%;
-}
-
-/* Responsive mobile : repasser en vertical */
-@media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-  }
-  .left-section, .right-section {
-    flex: none;
-    padding: 20px 0;
-  }
-}
-    footer {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-        padding: 16px;
-        text-align: center;
-        color: #94a3b8;
-        font-size: 0.9rem;
-        margin-top: auto;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.25);
+      --blue: #3b82f6;
+      --blue-dark: #2563eb;
+      --bg-input: #1e293b;
+      --text: #e2e8f0;
+      --muted: rgba(226,232,240,0.6);
+      --error: #ff6b6b;
+      --success: #34d399;
+      --border-radius: 10px;
+      --transition: 0.3s ease;
+      --font-family: 'Poppins', sans-serif;
     }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      height: 100%; margin: 0;
+      font-family: var(--font-family);
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)), url('arier.png') no-repeat center center fixed;
+      background-size: cover; color: var(--text);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      display: flex; flex-direction: column; min-height: 100vh; align-items: center; padding: 20px;
+    }
+    header {
+      background: rgba(255,255,255,0.07); backdrop-filter: blur(10px); border-radius: 15px;
+      padding: 18px; display: flex; justify-content: center; align-items: center; margin: 14px 10px 20px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35); gap: 40px;
+    }
+    header img { max-height: 110px; width: auto; object-fit: contain; transition: transform 0.3s; }
+    header img:hover { transform: scale(1.05);}
+    header .header-center { display: flex; flex-direction: column; align-items: center; text-align: center;}
+    header h1 { font-size: 2.4rem; font-weight: 700; color: var(--blue); margin-bottom: 0.3em;}
+    header .text-h { font-size: 1.1rem; color: var(--text); letter-spacing: 0.5px;}
+    @media (max-width: 750px) { header { flex-direction: column; gap: 12px;} header img { max-width: 70%; } }
+    .navbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; margin-top: 1rem; }
+    .lang-btns { display: flex; gap: 0.5rem; align-items: center; }
+    .lang-btns button { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--blue); background: var(--bg-input); color: var(--blue);
+      font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; font-size: 1rem; }
+    .lang-btns button.active, .lang-btns button:hover { background: var(--blue); color: #fff; }
+    .home-btn { margin-left: 0.7rem; background: #fff; color: #1e293b; border-radius: 20px; padding: 8px 16px; border: none; font-weight: 600;
+      font-size: 1rem; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.07); transition: background 0.2s, color 0.2s; }
+    .home-btn:hover { background: var(--blue); color: #fff; }
+    h1 { font-weight: 600; font-size: 2.6rem; margin-bottom: 20px; color: var(--blue); text-shadow: 0 0 6px rgba(59,130,246,0.7); text-align: center; user-select: none; }
+    form#loginForm {
+      background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(14px); border-radius: var(--border-radius); max-width: 420px; width: 100%;
+      padding: 32px 28px; box-shadow: 0 15px 30px rgba(0,0,0,0.45); transition: background var(--transition); }
+    form#loginForm:hover { background: rgba(255, 255, 255, 0.10); }
+    label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 1.05rem; user-select: none; }
+    input[type="email"], input[type="password"] { width: 100%; padding: 12px 14px; border-radius: var(--border-radius); border: 1.5px solid #334155;
+      background: var(--bg-input); color: var(--text); font-size: 1rem; transition: border-color var(--transition), box-shadow var(--transition); font-weight: 400; user-select: text; }
+    input[type="email"]:focus, input[type="password"]:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 6px var(--blue); background: #29384d; }
+    .input-error { border-color: var(--error) !important; box-shadow: none !important; background: #3e1e1e !important; }
+    .error-text { color: var(--error); font-size: 0.85rem; margin-top: 4px; user-select: none; }
+    .success-text { color: var(--success); font-size: 0.95rem; margin-top: 6px; user-select: none; }
+    .checkbox-container { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; cursor: pointer; user-select: none; margin: 16px 0 20px 0; color: var(--text);}
+    .checkbox-container input[type="checkbox"] { appearance: none; width: 20px; height: 20px; border: 2.5px solid var(--blue); border-radius: 6px; position: relative; cursor: pointer; background: transparent; transition: background var(--transition), border-color var(--transition); flex-shrink: 0;}
+    .checkbox-container input[type="checkbox"]:checked { background: var(--blue); border-color: var(--blue);}
+    .checkbox-container input[type="checkbox"]:checked::after { content: "\2713"; position: absolute; left: 4px; top: 1px; color: #fff; font-size: 14px; font-weight: 700; user-select: none; }
+    .checkbox-container:hover input[type="checkbox"] { border-color: var(--blue-dark);}
+    button[type="submit"] { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 10px; background: var(--blue); color: #fff; border: none; padding: 14px 0; border-radius: var(--border-radius); font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 6px 12px rgba(59,130,246,0.5); transition: background var(--transition), box-shadow var(--transition); user-select: none;}
+    button[type="submit"]:hover:not(:disabled) { background: var(--blue-dark); box-shadow: 0 8px 18px rgba(37,99,235,0.7);}
+    button[disabled] { opacity: 0.6; cursor: not-allowed; box-shadow: none;}
+    .spinner { width: 18px; height: 18px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.45); border-top-color: #fff; animation: spin 1s linear infinite;}
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #message { margin-top: 20px; text-align: center; min-height: 24px; user-select: none; }
+    #message .text { display: inline-block; padding: 10px 18px; border-radius: var(--border-radius); font-weight: 700; font-size: 1rem; max-width: 90vw; word-wrap: break-word; box-shadow: 0 6px 15px rgba(0,0,0,0.3); user-select: none; }
+    #message .text.error { background: rgb(252, 127, 24); color: var(--error); border: 1.5px solid var(--error);}
+    #message .text.success { background: rgb(83, 113, 248); color: var(--success); border: 1.5px solid var(--success);}
+    #message .text.info { background: rgba(252, 153, 24, 0.493); color: var(--blue); border: 1.5px solid var(--blue);}
+    p { margin-top: 24px; text-align: center; font-size: 0.95rem; user-select: none; }
+    p a#forgotPassword { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
+    p a#forgotPassword:hover { color: var(--blue-dark);}
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; margin-bottom: 16px; }
+      form#loginForm { padding: 24px 18px; max-width: 95vw; }
+      button[type="submit"] { font-size: 1rem; padding: 12px 0;}
+      .checkbox-container { font-size: 0.9rem; gap: 8px; margin: 14px 0 16px 0;}
+    }
+    .main-container { display: flex; justify-content: center; align-items: stretch; width: 100%; max-width: 1200px; flex: 1; margin-top: 20px; }
+    .left-section { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
+    .left-section h1 { font-size: 3rem; font-weight: 700; color: var(--blue); text-shadow: 0 0 6px rgba(59,130,246,0.7); margin-bottom: 10px;}
+    .left-section #message { font-size: 1rem; font-weight: 500; margin-top: 8px; max-width: 80%;}
+    #message.error { color: var(--error);}
+    #message.success { color: var(--success);}
+    .right-section { flex: 1; display: flex; justify-content: center; align-items: center; }
+    .right-section form { max-width: 420px; width: 100%; }
+    @media (max-width: 768px) {
+      .main-container { flex-direction: column;}
+      .left-section, .right-section { flex: none; padding: 20px 0;}
+    }
+    footer { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.25);}
   </style>
 </head>
 <body>
-   <header>
+  <header>
     <img src="logo1.png" alt="Logo société mère">
     <div class="header-center">
       <h1>P2P-CARS</h1>
@@ -443,8 +110,6 @@ p a#forgotPassword:hover {
     </div>
     <img src="logo4.png" alt="Logo plateforme">
   </header>
-
-  <!-- NAVBAR -->
   <div class="navbar">
     <div class="lang-btns">
       <button id="lang-fr">FR</button>
@@ -453,38 +118,125 @@ p a#forgotPassword:hover {
     </div>
     <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
   </div>
-
   <div class="main-container">
-  <div class="left-section">
-    <h1>Connexion</h1>
-     <div id="message"></div>
-  </div>
-  <div class="right-section">
-    <form id="loginForm">
-        
-        <label for="email">Email :</label><br>
+    <div class="left-section">
+      <h1 id="login-title">Connexion</h1>
+      <div id="message"></div>
+    </div>
+    <div class="right-section">
+      <form id="loginForm">
+        <label for="email" id="label-email">Email :</label>
         <input type="email" id="email" name="email" required>
-        <div id="emailError" class="error"></div><br>
-
-        <label for="password">Mot de passe :</label><br>
+        <div id="emailError" class="error"></div>
+        <label for="password" id="label-password">Mot de passe :</label>
         <input type="password" id="password" name="password" required minlength="4">
-        <div id="passwordError" class="error"></div><br>
-
-        <label><input type="checkbox" id="rememberMe" checked> Se souvenir de moi</label><br><br>
-        
+        <div id="passwordError" class="error"></div>
+        <label class="checkbox-container"><input type="checkbox" id="rememberMe" checked> <span id="label-remember">Se souvenir de moi</span></label>
         <button id="submitBtn" type="submit"><span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span></button>
-          <p><a href="#" id="forgotPassword" style="cursor:pointer; color:rgb(23, 23, 24); text-decoration:underline;">Mot de passe oublié ?</a></p>
-                                        
-    </form>
+        <p><a href="#" id="forgotPassword" style="cursor:pointer; text-decoration:underline;">Mot de passe oublié ?</a></p>
+      </form>
+    </div>
   </div>
-</div>
-<footer>
-    &copy; 2025 Plateforme de Voitures d'Occasion. Tous droits réservés.
-</footer>
- 
-
+  <footer>
+    &copy; 2025 IASMarket Services. Tous droits réservés.
+  </footer>
   <script>
-    // Script login complet (à insérer ici ou en fichier externe)
+    // Traductions
+    const translations = {
+      fr: {
+        'login-title': "Connexion",
+        'label-email': "Email :",
+        'label-password': "Mot de passe :",
+        'label-remember': "Se souvenir de moi",
+        'btn': '<i class="fas fa-sign-in-alt"></i> Se connecter',
+        'btn-loading': '<span class="spinner" aria-hidden="true"></span> Connexion…',
+        'forgot': "Mot de passe oublié ?",
+        'home': "Accueil",
+        'error-email': "Adresse email invalide",
+        'error-password': "Mot de passe trop court (min 4 caractères)",
+        'error-form': "Corrigez les erreurs ci-dessus avant d’envoyer.",
+        'info-connecting': "Connexion en cours...",
+        'error-login': "Identifiants incorrects — vérifiez votre email/mot de passe.",
+        'error-server': "Erreur serveur",
+        'success-login': "Connexion réussie ✅",
+        'error-network': "Erreur réseau — impossible de contacter le serveur.",
+        'reset-email-prompt': "Entrez un email valide pour réinitialiser votre mot de passe.",
+        'info-reset': "Envoi de la demande de réinitialisation...",
+        'success-reset': "Email de réinitialisation envoyé ✅",
+        'error-reset': "Erreur lors de l'envoi de la demande, réessayez."
+      },
+      en: {
+        'login-title': "Login",
+        'label-email': "Email:",
+        'label-password': "Password:",
+        'label-remember': "Remember me",
+        'btn': '<i class="fas fa-sign-in-alt"></i> Login',
+        'btn-loading': '<span class="spinner" aria-hidden="true"></span> Logging in…',
+        'forgot': "Forgot password?",
+        'home': "Home",
+        'error-email': "Invalid email address",
+        'error-password': "Password too short (min 4 characters)",
+        'error-form': "Please fix the errors above before submitting.",
+        'info-connecting': "Connecting...",
+        'error-login': "Incorrect credentials — check your email/password.",
+        'error-server': "Server error",
+        'success-login': "Login successful ✅",
+        'error-network': "Network error — could not contact server.",
+        'reset-email-prompt': "Enter a valid email to reset your password.",
+        'info-reset': "Sending reset request...",
+        'success-reset': "Reset email sent ✅",
+        'error-reset': "Error sending request, please try again."
+      },
+      ar: {
+        'login-title': "تسجيل الدخول",
+        'label-email': "البريد الإلكتروني:",
+        'label-password': "كلمة المرور:",
+        'label-remember': "تذكرني",
+        'btn': '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول',
+        'btn-loading': '<span class="spinner" aria-hidden="true"></span> جاري الدخول…',
+        'forgot': "نسيت كلمة المرور؟",
+        'home': "الرئيسية",
+        'error-email': "بريد إلكتروني غير صالح",
+        'error-password': "كلمة المرور قصيرة جداً (4 أحرف على الأقل)",
+        'error-form': "يرجى تصحيح الأخطاء أعلاه قبل الإرسال.",
+        'info-connecting': "جاري الاتصال...",
+        'error-login': "بيانات الدخول غير صحيحة — تحقق من البريد/كلمة المرور.",
+        'error-server': "خطأ في الخادم",
+        'success-login': "تم تسجيل الدخول بنجاح ✅",
+        'error-network': "خطأ في الشبكة — تعذر الاتصال بالخادم.",
+        'reset-email-prompt': "أدخل بريد إلكتروني صالح لإعادة تعيين كلمة المرور.",
+        'info-reset': "جاري إرسال طلب إعادة التعيين...",
+        'success-reset': "تم إرسال البريد الإلكتروني لإعادة التعيين ✅",
+        'error-reset': "حدث خطأ أثناء الإرسال، حاول مرة أخرى."
+      }
+    };
+    let currentLang = "fr";
+    function setLang(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+      document.getElementById('login-title').textContent = translations[lang]['login-title'];
+      document.getElementById('label-email').textContent = translations[lang]['label-email'];
+      document.getElementById('label-password').textContent = translations[lang]['label-password'];
+      document.getElementById('label-remember').textContent = translations[lang]['label-remember'];
+      document.getElementById('btnContent').innerHTML = translations[lang]['btn'];
+      document.getElementById('forgotPassword').textContent = translations[lang]['forgot'];
+      document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
+      ['fr','en','ar'].forEach(l=>{
+        document.getElementById('lang-'+l).classList.remove('active');
+      });
+      document.getElementById('lang-'+lang).classList.add('active');
+      // Clear all error fields/messages on lang switch
+      document.getElementById('emailError').textContent = '';
+      document.getElementById('passwordError').textContent = '';
+      document.getElementById('message').innerHTML = '';
+    }
+    ['fr','en','ar'].forEach(l=>{
+      document.getElementById('lang-'+l).addEventListener('click', () => setLang(l));
+    });
+    setLang('fr');
+
+    // Script login
     (function () {
       const API_URL = 'https://apicars.p2p-cars.com/api/login';
       const form = document.getElementById('loginForm');
@@ -502,7 +254,6 @@ p a#forgotPassword:hover {
         const savedEmail = localStorage.getItem('p2p_email');
         const savedPwd = localStorage.getItem('p2p_pwd');
         if (savedEmail && savedPwd) {
-          // Session active, rediriger vers profile
           window.location.href = 'profile.html';
         } else {
           if (savedEmail) emailInput.value = savedEmail;
@@ -512,8 +263,7 @@ p a#forgotPassword:hover {
       function showMessage(type, text) {
         messageBox.innerHTML = '';
         const el = document.createElement('div');
-        el.className = 'text';
-        el.style.color = type === 'error' ? 'red' : (type === 'success' ? 'green' : 'black');
+        el.className = 'text ' + type;
         el.textContent = text;
         messageBox.appendChild(el);
       }
@@ -533,10 +283,10 @@ p a#forgotPassword:hover {
       function setLoading(loading) {
         if (loading) {
           submitBtn.disabled = true;
-          btnContent.innerHTML = '<span class="spinner" aria-hidden="true"></span> Connexion…';
+          btnContent.innerHTML = translations[currentLang]['btn-loading'];
         } else {
           submitBtn.disabled = false;
-          btnContent.innerHTML = '<i class="fas fa-sign-in-alt"></i> Se connecter';
+          btnContent.innerHTML = translations[currentLang]['btn'];
         }
       }
 
@@ -545,10 +295,10 @@ p a#forgotPassword:hover {
         const email = emailInput.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-          showMessage('error', 'Entrez un email valide pour réinitialiser votre mot de passe.');
+          showMessage('error', translations[currentLang]['reset-email-prompt']);
           return;
         }
-        showMessage('info', 'Envoi de la demande de réinitialisation...');
+        showMessage('info', translations[currentLang]['info-reset']);
         try {
           const response = await fetch('https://apicars.p2p-cars.com/api/loginrest', {
             method: 'POST',
@@ -556,63 +306,56 @@ p a#forgotPassword:hover {
             body: JSON.stringify({ email })
           });
           if (!response.ok) throw new Error('Erreur lors de l\'envoi de la demande');
-          showMessage('success', 'Email de réinitialisation envoyé ✅');
+          showMessage('success', translations[currentLang]['success-reset']);
         } catch (err) {
-          showMessage('error', 'Erreur lors de l\'envoi de la demande, réessayez.');
+          showMessage('error', translations[currentLang]['error-reset']);
         }
       });
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFieldErrors();
-        showMessage('info', ''); // vider message global
+        showMessage('info', '');
 
         const email = emailInput.value.trim();
         const password = passwordInput.value;
-
-        // validation client
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         let hasError = false;
         if (!emailRegex.test(email)) {
-          setFieldError(emailInput, emailError, 'Adresse email invalide');
+          setFieldError(emailInput, emailError, translations[currentLang]['error-email']);
           hasError = true;
         }
         if (!password || password.length < 4) {
-          setFieldError(passwordInput, passwordError, 'Mot de passe trop court (min 4 caractères)');
+          setFieldError(passwordInput, passwordError, translations[currentLang]['error-password']);
           hasError = true;
         }
         if (hasError) {
-          showMessage('error', 'Corrigez les erreurs ci-dessus avant d’envoyer.');
+          showMessage('error', translations[currentLang]['error-form']);
           return;
         }
-
         setLoading(true);
-        showMessage('info', 'Connexion en cours...');
-
+        showMessage('info', translations[currentLang]['info-connecting']);
         try {
           const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
           });
-
           if (!response.ok) {
-            let errMsg = `Erreur serveur (${response.status})`;
+            let errMsg = translations[currentLang]['error-server'] + ` (${response.status})`;
             try {
               const errJson = await response.json();
               errMsg = errJson.message || errJson.error || errMsg;
             } catch {}
             if (response.status === 401) {
-              showMessage('error', 'Identifiants incorrects — vérifiez votre email/mot de passe.');
+              showMessage('error', translations[currentLang]['error-login']);
             } else {
               showMessage('error', errMsg);
             }
             setLoading(false);
             return;
           }
-
           // success
-          // stocker email + pwd encodé dans localStorage pour session
           if (rememberInput.checked) {
             localStorage.setItem('p2p_email', email);
             localStorage.setItem('p2p_pwd', btoa(password)); // base64
@@ -620,28 +363,20 @@ p a#forgotPassword:hover {
             localStorage.removeItem('p2p_email');
             localStorage.removeItem('p2p_pwd');
           }
-
-          showMessage('success', 'Connexion réussie ✅');
+          showMessage('success', translations[currentLang]['success-login']);
           setLoading(false);
-
-          // rediriger vers profile
           window.location.href = 'https://p2p-cars.com/profile';
-
         } catch (err) {
-          showMessage('error', 'Erreur réseau — impossible de contacter le serveur.');
+          showMessage('error', translations[currentLang]['error-network']);
           setLoading(false);
         }
       });
 
-      // Au chargement remplir email sauvegardé
       window.addEventListener('DOMContentLoaded', () => {
         const savedEmail = localStorage.getItem('p2p_email');
         if (savedEmail) emailInput.value = savedEmail;
       });
-
     })();
   </script>
 </body>
-
-
 </html>
