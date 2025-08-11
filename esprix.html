@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2P-CARS - Trouvez Votre Voiture d'Occasion Idéale</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+        background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
+        url('arier.png') no-repeat center center fixed;
+        background-size: cover;
+        color: #e2e8f0;
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    header {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px 10px 20px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      gap: 40px;
+    }
+    header img {
+      max-height: 110px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.3s;
+    }
+    header img:hover { transform: scale(1.05);}
+    header .header-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e98a1e;
+      margin-bottom: 0.3em;
+    }
+    header .text-h {
+      font-size: 1.1rem;
+      color: #effafa;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%;}
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    .lang-btns {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .lang-btns button {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 2px solid #3b82f6;
+      background: #1e293b;
+      color: #3b82f6;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+      font-size: 1rem;
+    }
+    .lang-btns button.active, .lang-btns button:hover { background: #3b82f6; color: #fff;}
+    .home-btn {
+      margin-left: 0.7rem;
+      background: #fff;
+      color: #1e293b;
+      border-radius: 20px;
+      padding: 8px 16px;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+      transition: background 0.2s, color 0.2s;
+    }
+    .home-btn:hover { background: #3b82f6; color: #fff;}
+    footer {
+      text-align:center;
+      margin: 20px 0 0 0;
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.06);
+      border-radius: 15px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      padding: 16px;
+      font-size: 0.97rem;
+    }
+    .header-nav {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 12px 20px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    .header-nav a {
+        color: #3bf6e6;
+        font-weight: 500;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+    .header-nav a:hover {
+        background: rgba(115, 59, 246, 0.562);
+    }
+    .simulateur-section {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        padding: 38px 30px 28px 30px;
+        border-radius: 16px;
+        max-width: 570px;
+        margin: 0 auto 40px auto;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.23);
+    }
+    .simulateur-section h2 {
+        font-size: 2.1rem;
+        font-weight: 700;
+        color: #3b82f6;
+        margin-bottom: 18px;
+        text-align: center;
+    }
+    .simulateur-section label {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #fff;
+        display: block;
+    }
+    .simulateur-section input,
+    .simulateur-section select {
+        padding: 12px;
+        background: #1e293b;
+        color: #e2e8f0;
+        border: 1px solid #3b82f6;
+        border-radius: 8px;
+        font-size: 1rem;
+        margin-bottom: 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .simulateur-section input:focus,
+    .simulateur-section select:focus {
+        outline: none;
+        border-color: #e98a1e;
+    }
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+    .checkbox-group label {
+        font-size: 0.97rem;
+        color: #e2e8f0;
+        background: #374151;
+        padding: 8px 14px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .checkbox-group label:hover { background: #3b82f6; color: #fff;}
+    .simulateur-section button {
+        background: #e98a1e;
+        color: #fff;
+        font-size: 1.13rem;
+        font-weight: 600;
+        padding: 12px 28px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        width: 100%;
+        margin-top: 14px;
+        margin-bottom: 12px;
+    }
+    .simulateur-section button:hover {
+        background: #3b82f6;
+    }
+    #result {
+        margin-top: 24px;
+        padding: 18px;
+        background: #1e293b;
+        border-left: 5px solid #e98a1e;
+        border-radius: 8px;
+        font-size: 1.12rem;
+        color: #f3f3f3;
+        min-height: 40px;
+    }
+    .depreciation-details {
+        margin-top: 14px;
+        background: #222c3a;
+        border-radius: 8px;
+        padding: 13px;
+        color: #aee0fa;
+        font-size: 0.99em;
+    }
+    .final-price {
+        font-size: 1.6em;
+        color: #e98a1e;
+        background: #232d3b;
+        padding: 10px 0;
+        border-radius: 8px;
+        margin-top: 18px;
+        font-weight: bold;
+        text-align: center;
+    }
+    @media (max-width: 600px) {
+        .simulateur-section { padding: 16px 8px 14px 8px;}
+        .simulateur-section h2 { font-size: 1.3rem;}
+        #result { font-size: 1rem;}
+        .final-price { font-size: 1.1em;}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img src="logo1.png" alt="Logo société mère">
+  <div class="header-center">
+    <h1>P2P-CARS</h1>
+    <p class="text-h">Plateforme de Voitures d'Occasion</p>
+  </div>
+  <img src="logo4.png" alt="Logo plateforme">
+</header>
+<div class="navbar">
+  <div class="lang-btns">
+    <button id="lang-fr" onclick="setLang('fr')" aria-label="Français">FR</button>
+    <button id="lang-en" onclick="setLang('en')" aria-label="English">EN</button>
+    <button id="lang-ar" onclick="setLang('ar')" aria-label="العربية">AR</button>
+  </div>
+  <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
+</div>
+<nav class="header-nav">
+    <a href="#" id="nav-accueil">Accueil</a>
+    <a href="#" id="nav-simulateur">Simulateur Prix</a>
+    <a href="https://p2p-cars.com/carservices" id="nav-services">Services P2P-Cars</a>
+    <a href="https://p2p-cars.com/login" id="nav-login">Espace personnel </a>
+</nav>
+
+<section class="simulateur-section">
+    <h2>Simulateur de la Valeur d'une Voiture d'Occasion</h2>
+    <form id="form-simulateur" onsubmit="event.preventDefault(); calculerDepréciation();">
+        <label for="prix_initial">Prix d’achat neuf (MAD) :</label>
+        <input type="number" id="prix_initial" required>
+        
+        <label for="annee_modele">Année du modèle :</label>
+        <select id="annee_modele" required></select>
+        
+        <label for="kilometrage">Kilométrage parcouru :</label>
+        <input type="number" id="kilometrage" required>
+        
+        <label for="annee_revente">Année de revente :</label>
+        <select id="annee_revente" required onchange="remplirPrixParAnnee()"></select>
+        
+        <label for="prix_acier">Prix de l'acier (MAD) :</label>
+        <input type="number" id="prix_acier" required readonly style="background:#374151;">
+        
+        <label for="prix_aluminium">Prix de l'aluminium (MAD) :</label>
+        <input type="number" id="prix_aluminium" required readonly style="background:#374151;">
+
+        <label for="prix_cuivre">Prix du cuivre (MAD) :</label>
+        <input type="number" id="prix_cuivre" required readonly style="background:#374151;">
+
+        <label for="prix_plastiques">Prix des plastiques (MAD) :</label>
+        <input type="number" id="prix_plastiques" required readonly style="background:#374151;">
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="dedouane"> Dédouané </label>
+            <label><input type="checkbox" id="peinture"> Peinture renouvelée</label>
+            <label><input type="checkbox" id="accident"> Jamais accidenté</label>
+            <label><input type="checkbox" id="reparation"> Petites réparations prévues</label>
+            <label><input type="checkbox" id="premierMain"> 1ère main</label>
+        </div>
+        <button type="submit">Calculer la dépréciation</button>
+    </form>
+    <div id="result"></div>
+</section>
+
+<footer>
+  &copy; 2025 IASMarket Services. Tous droits réservés.
+</footer>
+<script>
+const historiquePrix = [
+    
+    { annee: 1986, or: 100, acier: 500, aluminium: 800, cuivre: 1200, plastiques: 300 },
+    { annee: 1987, or: 110, acier: 510, aluminium: 850, cuivre: 1250, plastiques: 320 },
+    { annee: 1988, or: 120, acier: 520, aluminium: 900, cuivre: 1300, plastiques: 330 },
+    { annee: 1989, or: 130, acier: 540, aluminium: 920, cuivre: 1350, plastiques: 340 },
+    { annee: 1990, or: 150, acier: 550, aluminium: 950, cuivre: 1400, plastiques: 350 },
+    { annee: 1991, or: 160, acier: 580, aluminium: 980, cuivre: 1450, plastiques: 360 },
+    { annee: 1992, or: 170, acier: 600, aluminium: 1000, cuivre: 1500, plastiques: 370 },
+    { annee: 1993, or: 180, acier: 620, aluminium: 1030, cuivre: 1550, plastiques: 380 },
+    { annee: 1994, or: 190, acier: 640, aluminium: 1060, cuivre: 1600, plastiques: 390 },
+    { annee: 1995, or: 200, acier: 660, aluminium: 1090, cuivre: 1650, plastiques: 400 },
+    { annee: 1996, or: 210, acier: 680, aluminium: 1120, cuivre: 1700, plastiques: 410 },
+    { annee: 1997, or: 220, acier: 700, aluminium: 1150, cuivre: 1750, plastiques: 420 },
+    { annee: 1998, or: 230, acier: 720, aluminium: 1180, cuivre: 1800, plastiques: 430 },
+    { annee: 1999, or: 240, acier: 740, aluminium: 1210, cuivre: 1850, plastiques: 440 },
+    { annee: 2000, or: 250, acier: 760, aluminium: 1240, cuivre: 1900, plastiques: 450 },
+    { annee: 2001, or: 280, acier: 780, aluminium: 1270, cuivre: 1950, plastiques: 460 },
+    { annee: 2002, or: 290, acier: 800, aluminium: 1300, cuivre: 2000, plastiques: 470 },
+    { annee: 2003, or: 300, acier: 820, aluminium: 1330, cuivre: 2050, plastiques: 480 },
+    { annee: 2004, or: 320, acier: 840, aluminium: 1360, cuivre: 2100, plastiques: 490 },
+    { annee: 2005, or: 340, acier: 860, aluminium: 1390, cuivre: 2150, plastiques: 500 },
+    { annee: 2006, or: 360, acier: 880, aluminium: 1420, cuivre: 2200, plastiques: 510 },
+    { annee: 2007, or: 380, acier: 900, aluminium: 1450, cuivre: 2250, plastiques: 520 },
+    { annee: 2008, or: 410, acier: 920, aluminium: 1480, cuivre: 2300, plastiques: 530 },
+    { annee: 2009, or: 430, acier: 940, aluminium: 1510, cuivre: 2350, plastiques: 540 },
+    { annee: 2010, or: 450, acier: 960, aluminium: 1540, cuivre: 2400, plastiques: 550 },
+    { annee: 2011, or: 480, acier: 980, aluminium: 1570, cuivre: 2450, plastiques: 560 },
+    { annee: 2012, or: 510, acier: 1000, aluminium: 1600, cuivre: 2500, plastiques: 570 },
+    { annee: 2013, or: 530, acier: 1020, aluminium: 1630, cuivre: 2550, plastiques: 580 },
+    { annee: 2014, or: 550, acier: 1040, aluminium: 1660, cuivre: 2600, plastiques: 590 },
+    { annee: 2015, or: 570, acier: 1060, aluminium: 1690, cuivre: 2650, plastiques: 600 },
+    { annee: 2016, or: 590, acier: 1080, aluminium: 1720, cuivre: 2700, plastiques: 610 },
+    { annee: 2017, or: 610, acier: 1100, aluminium: 1750, cuivre: 2750, plastiques: 620 },
+    { annee: 2018, or: 630, acier: 1120, aluminium: 1780, cuivre: 2800, plastiques: 630 },
+    { annee: 2019, or: 650, acier: 1140, aluminium: 1810, cuivre: 2850, plastiques: 640 },
+    { annee: 2020, or: 670, acier: 1160, aluminium: 1840, cuivre: 2900, plastiques: 650 },
+    { annee: 2021, or: 700, acier: 1180, aluminium: 1870, cuivre: 2950, plastiques: 660 },
+    { annee: 2022, or: 750, acier: 1200, aluminium: 1900, cuivre: 3000, plastiques: 670 },
+    { annee: 2023, or: 800, acier: 1220, aluminium: 1930, cuivre: 3050, plastiques: 680 },
+    { annee: 2024, or: 850, acier: 1240, aluminium: 1960, cuivre: 3100, plastiques: 690 },
+    { annee: 2025, or: 2000, acier: 1800, aluminium: 2000, cuivre: 5000, plastiques: 400 }
+
+
+];
+
+
+
+function remplirSelectAnnees() {
+    const selectModele = document.getElementById("annee_modele");
+    const selectRevente = document.getElementById("annee_revente");
+    selectModele.innerHTML = '';
+    selectRevente.innerHTML = '';
+    historiquePrix.forEach(prix => {
+        let option1 = document.createElement("option");
+        option1.value = prix.annee;
+        option1.textContent = prix.annee;
+        selectModele.appendChild(option1);
+
+        let option2 = document.createElement("option");
+        option2.value = prix.annee;
+        option2.textContent = prix.annee;
+        selectRevente.appendChild(option2);
+    });
+}
+
+function remplirPrixParAnnee() {
+    const annee = parseInt(document.getElementById("annee_revente").value);
+    const donnees = historiquePrix.find(p => p.annee === annee);
+    if (donnees) {
+        document.getElementById("prix_acier").value = donnees.acier;
+        document.getElementById("prix_aluminium").value = donnees.aluminium;
+        document.getElementById("prix_cuivre").value = donnees.cuivre;
+        document.getElementById("prix_plastiques").value = donnees.plastiques;
+    }
+}
+
+window.onload = function() {
+    remplirSelectAnnees();
+    remplirPrixParAnnee();
+};
+
+document.getElementById("annee_revente").addEventListener("change", remplirPrixParAnnee);
+
+function calculerDepréciation() {
+  let ajustement = 0;
+  let details = "";
+  if (document.getElementById('dedouane').checked) {
+    ajustement += 10000;
+    details += "- Dédouané : +10 000 MAD<br>";
+  }
+  if (document.getElementById('accident').checked) {
+    ajustement += 2000;
+    details += "- Jamais accidenté : +2 000 MAD<br>";
+  }
+  if (document.getElementById('premierMain').checked) {
+    ajustement += 2000;
+    details += "- 1ère main + pneus neufs : +2 000 MAD<br>";
+  }
+  if (document.getElementById('peinture').checked) {
+    ajustement -= 2000;
+    details += "- Peinture renouvelée : -2 000 MAD<br>";
+  }
+  if (document.getElementById('reparation').checked) {
+    ajustement -= 2000;
+    details += "- Petite réparation : -2 000 MAD<br>";
+  }
+    const prixInitial = parseFloat(document.getElementById("prix_initial").value);
+    const anneeModele = parseInt(document.getElementById("annee_modele").value);
+    const anneeRevente = parseInt(document.getElementById("annee_revente").value);
+    const prixAcier = parseFloat(document.getElementById("prix_acier").value);
+    const prixAluminium = parseFloat(document.getElementById("prix_aluminium").value);
+    const prixCuivre = parseFloat(document.getElementById("prix_cuivre").value);
+    const prixPlastiques = parseFloat(document.getElementById("prix_plastiques").value);
+    const kilometrage = parseFloat(document.getElementById("kilometrage").value);
+    
+    if (
+        isNaN(prixInitial) || isNaN(anneeModele) || isNaN(anneeRevente) ||
+        isNaN(prixAcier) || isNaN(prixAluminium) || isNaN(prixCuivre) || isNaN(prixPlastiques) || isNaN(kilometrage)
+    ) {
+        document.getElementById("result").innerHTML = "Veuillez remplir toutes les informations.";
+        return;
+    }
+
+    const compositionMatières = {
+        acier: 0.65,
+        aluminium: 0.065,
+        cuivre: 0.02,
+        plastiques: 0.10
+    };
+
+    // 1. Depreciation des matieres premieres
+    const prixRefModel = historiquePrix.find(p => p.annee === anneeModele);
+    const prixRefRevente = historiquePrix.find(p => p.annee === anneeRevente);
+
+    // Indices matières premières modèle et revente
+    const indiceModele = (
+        prixRefModel.acier * compositionMatières.acier +
+        prixRefModel.aluminium * compositionMatières.aluminium +
+        prixRefModel.cuivre * compositionMatières.cuivre +
+        prixRefModel.plastiques * compositionMatières.plastiques
+    ) / 1000;
+
+    const indiceRevente = (
+        prixRefRevente.acier * compositionMatières.acier +
+        prixRefRevente.aluminium * compositionMatières.aluminium +
+        prixRefRevente.cuivre * compositionMatières.cuivre +
+        prixRefRevente.plastiques * compositionMatières.plastiques
+    ) / 1000;
+
+    // Depreciation du prix global de la voiture
+    const ageVoiture = anneeRevente - anneeModele;
+    let prixGlobalDepre = prixInitial;
+    let depreciationGlobale = [];
+    for (let i = 1; i <= ageVoiture; i++) {
+        const tauxDepreciation = Math.exp(-0.1); // environ -9.5% par an
+        prixGlobalDepre = prixGlobalDepre * tauxDepreciation;
+        depreciationGlobale.push(prixGlobalDepre);
+    }
+
+    // Depreciation matières premières
+    const depreciationMP = (indiceRevente / indiceModele);
+
+    // Prix estimé après dépréciation globale et matières premières
+    const valeurApresDepreciation = prixGlobalDepre * depreciationMP;
+
+    // Bonus kilométrage
+    const bonusKilometrage = 10000 - ((10000 / 300000) * kilometrage);
+
+    // Prix final estimé
+    const montantFinal = valeurApresDepreciation + bonusKilometrage + ajustement;
+
+    let mpDetails = `
+    <div class="depreciation-details">
+        <strong>Dépréciation du prix global :</strong><br>
+        Prix initial : ${prixInitial.toFixed(2)} MAD<br>
+        Prix après ${ageVoiture} ans : ${prixGlobalDepre.toFixed(2)} MAD<br>
+        <br>
+        <strong>Dépréciation des matières premières :</strong><br>
+        Indice modèle (${anneeModele}) : ${indiceModele.toFixed(4)}<br>
+        Indice revente (${anneeRevente}) : ${indiceRevente.toFixed(4)}<br>
+        Ratio dépréciation MP : ${depreciationMP.toFixed(4)}
+    </div>
+    `;
+
+    document.getElementById("result").innerHTML = 
+        mpDetails +
+        `<div class="depreciation-details">
+            <strong>Bonus kilométrage :</strong> ${bonusKilometrage.toFixed(2)} MAD<br>
+            <strong>Ajustements :</strong> ${ajustement} MAD<br>
+        </div>
+        <div class="final-price">
+            Estimation finale du prix : ${montantFinal.toFixed(2)} MAD
+        </div>`;
+}
+
+function setLang(lang) {
+    alert("Changement de langue : " + lang);
+}
+</script>
+</body>
+</html>
