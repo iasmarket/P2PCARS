@@ -169,13 +169,12 @@
       document.getElementById('title-achats').textContent = translations[lang]['title-achats'];
       document.getElementById('title-recherches').textContent = translations[lang]['title-recherches'];
       document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
-      // Réaffiche les tableaux après changement de langue
+      // Reconstruire les tableaux avec les bons headers
       if (window.lastProfileData) {
         remplirTableau('table-annonces', window.lastProfileData.annonces || []);
         remplirTableau('table-achats', window.lastProfileData.achats || []);
         remplirTableau('table-recherches', window.lastProfileData.recherches || []);
       }
-      // Boutons langues
       ['fr','en','ar'].forEach(l=>{
         document.getElementById('lang-'+l).classList.remove('active');
       });
@@ -303,7 +302,7 @@
       }
       async function fetchProfile(email, password) {
         try {
-          const resp = await fetch(API_LOGIN, {
+          const resp = await fetch('https://apicars.p2p-cars.com/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
