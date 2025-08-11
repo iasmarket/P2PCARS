@@ -142,8 +142,8 @@
         'connected-label': "متصل باسم:",
         'logoutBtn': "تسجيل الخروج",
         'home': "الرئيسية",
-        'title-annonces': "الإعلانات",
-        'title-achats': "المشتريات",
+        'title-annonces': "طلبات إعلان البيع",
+        'title-achats': "طلبات الشراء",
         'title-recherches': "طلبات البحث",
         'tableHeaders': ["المرجع", "التاريخ", "الماركة", "الموديل", "السنة", "القوة", "الكيلومترات", "الوقود", "ناقل الحركة", "الوصف", "السعر", "تأكيد", "حذف"],
         'no-data': "لا توجد بيانات",
@@ -169,12 +169,13 @@
       document.getElementById('title-achats').textContent = translations[lang]['title-achats'];
       document.getElementById('title-recherches').textContent = translations[lang]['title-recherches'];
       document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
-      // Reconstruire les tableaux avec les bons headers
+      // Réaffiche les tableaux après changement de langue
       if (window.lastProfileData) {
         remplirTableau('table-annonces', window.lastProfileData.annonces || []);
         remplirTableau('table-achats', window.lastProfileData.achats || []);
         remplirTableau('table-recherches', window.lastProfileData.recherches || []);
       }
+      // Boutons langues
       ['fr','en','ar'].forEach(l=>{
         document.getElementById('lang-'+l).classList.remove('active');
       });
@@ -302,7 +303,7 @@
       }
       async function fetchProfile(email, password) {
         try {
-          const resp = await fetch('https://apicars.p2p-cars.com/api/login', {
+          const resp = await fetch(API_LOGIN, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
