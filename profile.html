@@ -25,6 +25,32 @@
       margin: 0;
       padding: 20px;
     }
+    header {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px 10px 20px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      gap: 40px;
+    }
+    header img { max-height: 110px; width: auto; object-fit: contain; transition: transform 0.3s; }
+    header img:hover { transform: scale(1.05);}
+    header .header-center { display: flex; flex-direction: column; align-items: center; text-align: center;}
+    header h1 { font-size: 2.4rem; font-weight: 700; color: var(--blue); margin-bottom: 0.3em;}
+    header .text-h { font-size: 1.1rem; color: var(--text); letter-spacing: 0.5px;}
+    @media (max-width: 750px) { header { flex-direction: column; gap: 12px;} header img { max-width: 70%; } }
+    .navbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; margin-top: 1rem; }
+    .lang-btns { display: flex; gap: 0.5rem; align-items: center; }
+    .lang-btns button { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--blue); background: var(--bg-input); color: var(--blue);
+      font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; font-size: 1rem; }
+    .lang-btns button.active, .lang-btns button:hover { background: var(--blue); color: #fff; }
+    .home-btn { margin-left: 0.7rem; background: #fff; color: #1e293b; border-radius: 20px; padding: 8px 16px; border: none; font-weight: 600;
+      font-size: 1rem; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.07); transition: background 0.2s, color 0.2s; }
+    .home-btn:hover { background: var(--blue); color: #fff; }
     h1 { color: var(--blue); }
     table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.92rem; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden; }
     th, td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; vertical-align:top; }
@@ -32,29 +58,134 @@
     tr:hover { background: rgba(59,130,246,0.06); }
     .icon-btn { cursor:pointer; color:#ff6b6b; font-size:1rem; }
     .icon-btn:hover { color:#ff0000; }
+    footer { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.25);}
   </style>
 </head>
 <body>
-  <h1>Profil utilisateur</h1>
-  <div>
-    Connecté en tant que : <span id="emailDisplay"></span>
-    <button id="logoutBtn" style="margin-left:20px;">Déconnexion</button>
+  <header>
+    <img src="logo1.png" alt="Logo société mère">
+    <div class="header-center">
+      <h1>P2P-CARS</h1>
+      <p class="text-h">Plateforme de Voitures d'Occasion</p>
+    </div>
+    <img src="logo4.png" alt="Logo plateforme">
+  </header>
+  <div class="navbar">
+    <div class="lang-btns">
+      <button id="lang-fr">FR</button>
+      <button id="lang-en">EN</button>
+      <button id="lang-ar">AR</button>
+    </div>
+    <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
   </div>
-
+  <h1 id="profile-title">Profil utilisateur</h1>
+  <div>
+    <span id="connected-label">Connecté en tant que :</span>
+    <span id="emailDisplay"></span>
+    <button id="logoutBtn" style="margin-left:20px;"></button>
+  </div>
   <div id="message" style="margin-top: 10px;"></div>
-
   <section id="results" style="display:none; margin-top: 20px;">
-    <h2>Annonces</h2>
+    <h2 id="title-annonces">Annonces</h2>
     <table id="table-annonces"></table>
-
-    <h2>Achats</h2>
+    <h2 id="title-achats">Achats</h2>
     <table id="table-achats"></table>
-
-    <h2>Recherches</h2>
+    <h2 id="title-recherches">Recherches</h2>
     <table id="table-recherches"></table>
   </section>
-
+  <footer>
+    &copy; 2025 IASMarket Services. Tous droits réservés.
+  </footer>
   <script>
+    // Traductions multilangue
+    const translations = {
+      fr: {
+        'profile-title': "Profil utilisateur",
+        'connected-label': "Connecté en tant que :",
+        'logoutBtn': "Déconnexion",
+        'home': "Accueil",
+        'title-annonces': "Annonces",
+        'title-achats': "Achats",
+        'title-recherches': "Recherches",
+        'tableHeaders': ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider", "Supprimer"],
+        'no-data': "Aucune donnée",
+        'confirm-del': "Supprimer l'élément Ref: {ref} ?",
+        'edit-success': "État modifié: {val}",
+        'edit-error': "Erreur lors de la modification.",
+        'del-success': "Ref {ref} supprimé avec succès",
+        'del-error': "Erreur lors de la suppression.",
+        'load-success': "Données chargées",
+        'session-expired': "Session expirée, reconnectez-vous",
+        'not-connected': "Non connecté"
+      },
+      en: {
+        'profile-title': "User profile",
+        'connected-label': "Logged in as:",
+        'logoutBtn': "Logout",
+        'home': "Home",
+        'title-annonces': "Ads",
+        'title-achats': "Purchases",
+        'title-recherches': "Searches",
+        'tableHeaders': ["Ref", "Date", "Brand", "Model", "Year", "HP", "Mileage", "Fuel", "Transmission", "Description", "Price", "Validate", "Delete"],
+        'no-data': "No data",
+        'confirm-del': "Delete item Ref: {ref}?",
+        'edit-success': "Status changed: {val}",
+        'edit-error': "Error during change.",
+        'del-success': "Ref {ref} successfully deleted",
+        'del-error': "Error during deletion.",
+        'load-success': "Data loaded",
+        'session-expired': "Session expired, please log in again",
+        'not-connected': "Not connected"
+      },
+      ar: {
+        'profile-title': "ملف المستخدم",
+        'connected-label': "متصل باسم:",
+        'logoutBtn': "تسجيل الخروج",
+        'home': "الرئيسية",
+        'title-annonces': "الإعلانات",
+        'title-achats': "المشتريات",
+        'title-recherches': "طلبات البحث",
+        'tableHeaders': ["المرجع", "التاريخ", "الماركة", "الموديل", "السنة", "القوة", "الكيلومترات", "الوقود", "ناقل الحركة", "الوصف", "السعر", "تأكيد", "حذف"],
+        'no-data': "لا توجد بيانات",
+        'confirm-del': "حذف العنصر المرجع: {ref}؟",
+        'edit-success': "تم تغيير الحالة: {val}",
+        'edit-error': "خطأ أثناء التغيير.",
+        'del-success': "تم حذف المرجع {ref} بنجاح",
+        'del-error': "خطأ أثناء الحذف.",
+        'load-success': "تم تحميل البيانات",
+        'session-expired': "انتهت الجلسة، يرجى تسجيل الدخول مجددًا",
+        'not-connected': "غير متصل"
+      }
+    };
+    let currentLang = 'fr';
+    function setLang(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+      document.getElementById('profile-title').textContent = translations[lang]['profile-title'];
+      document.getElementById('connected-label').textContent = translations[lang]['connected-label'];
+      document.getElementById('logoutBtn').textContent = translations[lang]['logoutBtn'];
+      document.getElementById('title-annonces').textContent = translations[lang]['title-annonces'];
+      document.getElementById('title-achats').textContent = translations[lang]['title-achats'];
+      document.getElementById('title-recherches').textContent = translations[lang]['title-recherches'];
+      document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
+      // Réaffiche les tableaux après changement de langue
+      if (window.lastProfileData) {
+        remplirTableau('table-annonces', window.lastProfileData.annonces || []);
+        remplirTableau('table-achats', window.lastProfileData.achats || []);
+        remplirTableau('table-recherches', window.lastProfileData.recherches || []);
+      }
+      // Boutons langues
+      ['fr','en','ar'].forEach(l=>{
+        document.getElementById('lang-'+l).classList.remove('active');
+      });
+      document.getElementById('lang-'+lang).classList.add('active');
+    }
+    ['fr','en','ar'].forEach(l=>{
+      document.getElementById('lang-'+l).addEventListener('click', () => setLang(l));
+    });
+    setLang('fr');
+    // Script principal
     (function(){
       const API_LOGIN = 'https://apicars.p2p-cars.com/api/login';
       const API_DELETE = 'https://apicars.p2p-cars.com/api/deletitem';
@@ -62,7 +193,6 @@
       const btnLogout = document.getElementById('logoutBtn');
       const emailDisplay = document.getElementById('emailDisplay');
       const resultsSection = document.getElementById('results');
-
       function showMessage(type, text) {
         messageBox.innerHTML = '';
         const el = document.createElement('div');
@@ -70,23 +200,18 @@
         el.textContent = text;
         messageBox.appendChild(el);
       }
-
       function remplirTableau(idTable, data) {
         const table = document.getElementById(idTable);
         table.innerHTML = '';
-
         if (!Array.isArray(data) || data.length === 0) {
-          table.innerHTML = '<tr><td>Aucune donnée</td></tr>';
+          table.innerHTML = `<tr><td>${translations[currentLang]['no-data']}</td></tr>`;
           return;
         }
-
-        // 🔹 Déterminer le type en fonction de l'idTable
         let typeExcel = '';
         if (idTable === 'table-annonces') typeExcel = 'annonce';
         if (idTable === 'table-achats') typeExcel = 'achat';
         if (idTable === 'table-recherches') typeExcel = 'recherche';
-
-        const headers = ["Ref", "Date", "Marque", "Modèle", "Année", "CV", "Kilométrage", "Carburant", "Transmission", "Description", "Prix", "Valider", "Supprimer"];
+        const headers = translations[currentLang]['tableHeaders'];
         const thead = document.createElement('thead');
         const htr = document.createElement('tr');
         headers.forEach(h => {
@@ -96,14 +221,11 @@
         });
         thead.appendChild(htr);
         table.appendChild(thead);
-
         const tbody = document.createElement('tbody');
-
         data.forEach((item, idx) => {
           const tr = document.createElement('tr');
           const id = item.id;
           const ref = (item.Ref && item.Ref.trim() !== '') ? item.Ref : `#${idx + 1}`;
-
           const cells = [
             ref,
             item.date || '',
@@ -117,21 +239,18 @@
             item.description || '',
             item.prix || '',
           ];
-
           cells.forEach(c => {
             const td = document.createElement('td');
             td.textContent = c;
             tr.appendChild(td);
           });
-
-          // ✅ Checkbox modification
+          // Checkbox modification
           const tdValide = document.createElement('td');
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
           checkbox.checked = item.valide === 'oui' || item.valide === true;
           tdValide.appendChild(checkbox);
           tr.appendChild(tdValide);
-
           checkbox.addEventListener('change', async () => {
             const nouvelleValeur = checkbox.checked ? 'oui' : 'non';
             try {
@@ -142,23 +261,22 @@
                   id: id,
                   Ref: ref,
                   valide: nouvelleValeur,
-                  table: typeExcel // 🔹 Envoi du nom de l’Excel
+                  table: typeExcel
                 })
               });
               if (!resp.ok) throw new Error('Erreur serveur');
-              showMessage('success', `État modifié: ${nouvelleValeur}`);
+              showMessage('success', translations[currentLang]['edit-success'].replace('{val}', nouvelleValeur));
             } catch (err) {
-              showMessage('error', 'Erreur lors de la modification.');
+              showMessage('error', translations[currentLang]['edit-error']);
               checkbox.checked = !checkbox.checked;
             }
           });
-
-          // ✅ Suppression
+          // Suppression
           const tdDelete = document.createElement('td');
           const delIcon = document.createElement('i');
           delIcon.className = 'fa fa-trash icon-btn';
           delIcon.addEventListener('click', async () => {
-            if (!confirm(`Supprimer l'élément Ref: ${ref} ?`)) return;
+            if (!confirm(translations[currentLang]['confirm-del'].replace('{ref}', ref))) return;
             try {
               const resp = await fetch(API_DELETE, {
                 method: 'POST',
@@ -166,26 +284,23 @@
                 body: JSON.stringify({
                   id: id,
                   Ref: ref,
-                  table: typeExcel // 🔹 Envoi du nom de l’Excel
+                  table: typeExcel
                 })
               });
               if (!resp.ok) throw new Error('Erreur serveur');
               tr.remove();
-              showMessage('success', `Ref ${ref} supprimé avec succès`);
+              showMessage('success', translations[currentLang]['del-success'].replace('{ref}', ref));
             } catch (err) {
-              showMessage('error', 'Erreur lors de la suppression.');
+              showMessage('error', translations[currentLang]['del-error']);
             }
           });
           tdDelete.appendChild(delIcon);
           tr.appendChild(tdDelete);
-
           tbody.appendChild(tr);
         });
-
         table.appendChild(tbody);
         resultsSection.style.display = 'block';
       }
-
       async function fetchProfile(email, password) {
         try {
           const resp = await fetch(API_LOGIN, {
@@ -195,37 +310,32 @@
           });
           const data = await resp.json();
           if (!resp.ok) throw new Error(data.message || 'Erreur serveur');
-
           emailDisplay.textContent = email;
+          window.lastProfileData = data;
           remplirTableau('table-annonces', data.annonces || []);
           remplirTableau('table-achats', data.achats || []);
           remplirTableau('table-recherches', data.recherches || []);
-          showMessage('success', 'Données chargées');
+          showMessage('success', translations[currentLang]['load-success']);
         } catch(err) {
-          showMessage('error', 'Session expirée, reconnectez-vous');
+          showMessage('error', translations[currentLang]['session-expired']);
           setTimeout(() => window.location.href = '/login.html', 3000);
         }
       }
-
       btnLogout.addEventListener('click', () => {
         localStorage.removeItem('p2p_email');
         localStorage.removeItem('p2p_pwd');
         window.location.href = '/login.html';
       });
-
       window.addEventListener('DOMContentLoaded', () => {
         const email = localStorage.getItem('p2p_email');
         const pwdEncoded = localStorage.getItem('p2p_pwd');
-
         if (!email || !pwdEncoded) {
-          showMessage('error', 'Non connecté');
+          showMessage('error', translations[currentLang]['not-connected']);
           setTimeout(() => window.location.href = '/login.html', 2000);
           return;
         }
-
         fetchProfile(email, atob(pwdEncoded));
       });
-
     })();
   </script>
 </body>
