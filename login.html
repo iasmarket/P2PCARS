@@ -303,17 +303,17 @@ button[disabled] {
   user-select: none;
 }
 #message .text.error {
-  background: rgba(255,107,107,0.15);
+  background: rgb(252, 127, 24);
   color: var(--error);
   border: 1.5px solid var(--error);
 }
 #message .text.success {
-  background: rgba(52,211,153,0.15);
+  background: rgb(83, 113, 248);
   color: var(--success);
   border: 1.5px solid var(--success);
 }
 #message .text.info {
-  background: rgba(59,130,246,0.15);
+  background: rgba(252, 153, 24, 0.493);
   color: var(--blue);
   border: 1.5px solid var(--blue);
 }
@@ -370,14 +370,34 @@ p a#forgotPassword:hover {
 .left-section {
   flex: 1;
   display: flex;
+  flex-direction: column; /* permet d'empiler le titre et le message */
   justify-content: center;
   align-items: center;
+  text-align: center;
+  padding: 20px;
 }
+
 .left-section h1 {
   font-size: 3rem;
   font-weight: 700;
   color: var(--blue);
   text-shadow: 0 0 6px rgba(59,130,246,0.7);
+  margin-bottom: 10px;
+}
+
+.left-section #message {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 8px;
+  max-width: 80%;
+}
+
+/* Couleurs messages */
+#message.error {
+  color: var(--error);
+}
+#message.success {
+  color: var(--success);
 }
 
 /* Partie droite : formulaire */
@@ -402,7 +422,16 @@ p a#forgotPassword:hover {
     padding: 20px 0;
   }
 }
-
+    footer {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin-top: auto;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.25);
+    }
   </style>
 </head>
 <body>
@@ -428,6 +457,7 @@ p a#forgotPassword:hover {
   <div class="main-container">
   <div class="left-section">
     <h1>Connexion</h1>
+     <div id="message"></div>
   </div>
   <div class="right-section">
     <form id="loginForm">
@@ -441,15 +471,17 @@ p a#forgotPassword:hover {
         <div id="passwordError" class="error"></div><br>
 
         <label><input type="checkbox" id="rememberMe" checked> Se souvenir de moi</label><br><br>
-         <div id="message"></div>
+        
         <button id="submitBtn" type="submit"><span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span></button>
           <p><a href="#" id="forgotPassword" style="cursor:pointer; color:rgb(23, 23, 24); text-decoration:underline;">Mot de passe oublié ?</a></p>
                                         
     </form>
   </div>
 </div>
-
-  
+<footer>
+    &copy; 2025 Plateforme de Voitures d'Occasion. Tous droits réservés.
+</footer>
+ 
 
   <script>
     // Script login complet (à insérer ici ou en fichier externe)
