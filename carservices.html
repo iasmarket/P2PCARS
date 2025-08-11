@@ -13,7 +13,9 @@
         background-size: cover;
         color: #e2e8f0;
         font-family: 'Poppins', sans-serif;
-        ...
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
     }
     header {
       background: rgba(255,255,255,0.07);
@@ -21,14 +23,14 @@
       border-radius: 15px;
       padding: 18px;
       display: flex;
-      justify-content: center;       /* centrer horizontalement */
+      justify-content: center;
       align-items: center;
       margin: 14px 10px 20px 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      gap: 40px;                     /* espace entre logos et centre */
+      gap: 40px;
     }
     header img {
-      max-height: 110px;             /* agrandir les logos */
+      max-height: 110px;
       width: auto;
       object-fit: contain;
       transition: transform 0.3s;
@@ -37,7 +39,7 @@
     header .header-center {
       display: flex;
       flex-direction: column;
-      align-items: center;           /* centrer titre + texte */
+      align-items: center;
       text-align: center;
     }
     header h1 {
@@ -51,16 +53,14 @@
       color: #e2e8f0;
       letter-spacing: 0.5px;
     }
-    @media (max-width: 750px) {
-      header { flex-direction: column; gap: 12px;}
-      header img { max-width: 70%;}
-    }
     .navbar {
       display: flex;
       align-items: center;
       gap: 1rem;
       margin-bottom: 1rem;
       margin-top: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     .lang-btns {
       display: flex;
@@ -100,6 +100,7 @@
       gap: 12px;
       margin-bottom: 18px;
       margin-top: 8px;
+      flex-wrap: wrap;
     }
     .form-switcher button {
       background: #1e293b;
@@ -110,6 +111,8 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
+      font-size: 1rem;
+      margin-bottom: 6px;
     }
     .form-switcher button.active,
     .form-switcher button:hover { background: #3b82f6; color: #fff;}
@@ -124,6 +127,8 @@
       margin-bottom: 30px;
       display: none;
       flex-direction: column;
+      width: 95vw;
+      box-sizing: border-box;
     }
     .form-section.active { display: flex;}
     .form-section h2 { font-size: 1.5rem; color: #3b82f6; margin-bottom: 10px; text-align: center;}
@@ -138,6 +143,7 @@
       border: 1px solid #334155;
       border-radius: 7px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
     form textarea { min-height: 55px; }
     form input[type="file"] { background: transparent; border: none; color: #e2e8f0;}
@@ -148,13 +154,44 @@
       transition: background 0.3s;
     }
     form button[type="submit"]:hover { background: #2563eb;}
-    #result { text-align: center; margin-top: 14px; font-weight: 600;}
-    @media (max-width: 750px) {
-      header { flex-direction: column; text-align: center;}
-      header img { max-width: 68%;}
-      .form-section { padding: 13px 5px;}
+    #result-vendre, #result-achat, #result-chercher { text-align: center; margin-top: 14px; font-weight: 600;}
+    footer {
+      text-align:center;
+      margin: 20px 0 0 0;
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.06);
+      border-radius: 15px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      padding: 16px;
+      font-size: 0.97rem;
     }
-    
+    @media (max-width: 850px) {
+      .form-section {
+        max-width: 99vw;
+        padding: 18px 6px;
+      }
+      header {
+        gap: 12px;
+        padding: 8px 2vw;
+      }
+    }
+    @media (max-width: 600px) {
+      header { flex-direction: column; gap: 10px; }
+      header img { max-width: 68%; }
+      header h1 { font-size: 1.5rem;}
+      .navbar { flex-direction: column; gap: 8px;}
+      .form-switcher { flex-direction: column; gap:8px;}
+      .form-section { padding: 10px 3px; font-size: 0.97rem;}
+      form input, form select, form textarea { font-size: 0.97rem; padding: 8px;}
+      form button[type="submit"] { font-size: 1rem; padding: 9px 8px;}
+      .form-section h2 { font-size: 1.2rem;}
+      .form-section .intro { font-size: 1rem;}
+    }
+    @media (max-width: 400px) {
+      .form-section { padding: 4px 1px; font-size: 0.90rem;}
+      form input, form select, form textarea { font-size: 0.90rem; padding: 6px;}
+      .form-section h2 { font-size: 1rem;}
+    }
   </style>
 </head>
 <body>
@@ -166,7 +203,6 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
-
 <div class="navbar">
   <div class="lang-btns">
     <button id="lang-fr" onclick="setLang('fr')" aria-label="Français">FR</button>
@@ -175,13 +211,11 @@
   </div>
   <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
 </div>
-
 <div class="form-switcher">
   <button id="btn-vendre" class="active" onclick="showForm('vendre')"><i class="fas fa-bullhorn"></i> <span id="t-vendre">Vendre sa voiture</span></button>
   <button id="btn-achat" onclick="showForm('achat')"><i class="fas fa-cart-plus"></i> <span id="t-achat">Demander l'achat</span></button>
   <button id="btn-chercher" onclick="showForm('chercher')"><i class="fas fa-search"></i> <span id="t-chercher">Chercher une voiture</span></button>
 </div>
-
 <section id="form-vendre" class="form-section active">
   <h2 id="titre-vendre"></h2>
   <div class="intro" id="intro-vendre"></div>
@@ -210,39 +244,26 @@
     <input name="telephone" type="tel" required>
     <label id="lbl-cin-v"></label>
     <input name="cin" type="text" required>
-   <!-- Photo recto/verso CIN -->
-  <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-  <input name="cin_img" type="file" accept="image/*" multiple required>
-
-  <!-- Carte grise recto / verso -->
-  <div id="div-cartegrise">
-    <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
-    <input name="cartegrise" type="file" accept="image/*" multiple required >
-  </div>
-
-  <!-- Procuration (facultatif) -->
-  <label id="lbl-checkbox-procuration">
-  <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
-  <input type="checkbox" id="checkbox-procuration">
-</label>
-
-  <div id="div-procuration" style="display:none;">
-    <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
-    <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
-
-  </div>
-
-  <!-- Images voiture -->
-  <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
-  <input name="images" type="file" accept="image/*" multiple required>
-
-  <!-- Bouton envoyer -->
-  <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
-
+    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
+    <div id="div-cartegrise">
+      <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
+      <input name="cartegrise" type="file" accept="image/*" multiple required >
+    </div>
+    <label id="lbl-checkbox-procuration">
+      <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
+      <input type="checkbox" id="checkbox-procuration">
+    </label>
+    <div id="div-procuration" style="display:none;">
+      <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
+      <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
+    </div>
+    <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
+    <input name="images" type="file" accept="image/*" multiple required>
+    <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
   </form>
   <div id="result-vendre"></div>
 </section>
-
 <section id="form-achat" class="form-section">
   <h2 id="titre-achat"></h2>
   <div class="intro" id="intro-achat"></div>
@@ -273,14 +294,10 @@
     <input name="cin" type="text" required>
     <label id="lbl-cin-img-a"></label>
     <input name="cin_img" type="file" accept="image/*" multiple required>
-    
-    
-
     <button type="submit" id="btn-submit-a"></button>
   </form>
   <div id="result-achat"></div>
 </section>
-
 <section id="form-chercher" class="form-section">
   <h2 id="titre-chercher"></h2>
   <div class="intro" id="intro-chercher"></div>
@@ -315,17 +332,14 @@
   </form>
   <div id="result-chercher"></div>
 </section>
-
-<footer style="text-align:center; margin: 20px 0; color: #e2e8f0;">
+<footer>
   &copy; 2025 IASMarket Services. Tous droits réservés.
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // ... tout ton code JS existant ...
 document.getElementById("checkbox-procuration").addEventListener("change", function () {
   const blocProcuration = document.getElementById("div-procuration");
   const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
-
   if (this.checked) {
     blocProcuration.style.display = "block";
     inputsProcuration.forEach(input => input.disabled = false);
@@ -334,9 +348,6 @@ document.getElementById("checkbox-procuration").addEventListener("change", funct
     inputsProcuration.forEach(input => input.disabled = true);
   }
 });
-
-
-
 const allCarModels = {
 "Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
 "Alfa Romeo": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "Alfasud", "Alfetta", "Arna", "Brera", "Dauphine", "Disco Volante", "Giulia", "Giulietta", "GT", "GTA", "GTV", "Matta", "Mito", "Montreal", "Romeo", "RZ", "Spider", "Sprint", "Stelvio", "SZ", "Tonale"],
@@ -445,6 +456,7 @@ const allCarModels = {
 "Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
 "Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
 };
+
 const translations = {
   fr: {
     'titre-vendre': "Déposer une annonce de vente",
@@ -467,7 +479,6 @@ const translations = {
     'lbl-cin-v': "Numéro de CIN :",
     'lbl-cin-img-v': "Photo recto/verso CIN :",
     'lbl-cartegrise-v': "Carte grise :",
-    
     'lbl-images-v': "Images voiture (max 10) :",
     'btn-submit-v': "Envoyer",
     'lbl-marque-a': "Marque :",
@@ -507,7 +518,6 @@ const translations = {
     'lbl-cartegrise-recto-v': "Carte grise (recto/verso) :",
     'lbl-procuration-v': "Procuration (si non propriétaire) :",
     'label_checkbox_procuration': "Procuration",
-
     'choisir': "--Choisir--"
   },
   en: {
@@ -531,7 +541,6 @@ const translations = {
     'lbl-cin-v': "CIN number:",
     'lbl-cin-img-v': "CIN photo (front/back):",
     'lbl-cartegrise-v': "Registration card:",
-  
     'lbl-images-v': "Car images (max 10):",
     'btn-submit-v': "Send",
     'lbl-marque-a': "Brand:",
@@ -551,7 +560,7 @@ const translations = {
     'lbl-marque-c': "Brand:",
     'lbl-modele-c': "Model:",
     'lbl-annee-c': "Year:",
-    'lbl-puissancefiscal-v':"Fiscal horsepower :",
+    'lbl-puissancefiscal-c':"Fiscal horsepower :",
     'lbl-prix-c': "Price (MAD):",
     'lbl-kilometrage-c': "Mileage:",
     'lbl-carburant-c': "Fuel:",
@@ -571,7 +580,6 @@ const translations = {
     'lbl-cartegrise-recto-v': "Registration certificate (front/back):",
     'lbl-procuration-v': "Authorization letter (if not owner):" ,
     'label_checkbox_procuration': "Authorization letter",
-
     'choisir': "--Choose--"
   },
   ar: {
@@ -595,13 +603,12 @@ const translations = {
     'lbl-cin-v': "رقم التعريف:",
     'lbl-cin-img-v': "صورة التعريف (أمامية/خلفية):",
     'lbl-cartegrise-v': "بطاقة التسجيل:",
-   
     'lbl-images-v': "صور السيارة (10 كحد أقصى):",
     'btn-submit-v': "إرسال",
     'lbl-marque-a': "الماركة:",
     'lbl-modele-a': "الموديل:",
     'lbl-annee-a': "السنة:",
-     'lbl-puissancefiscal-a':"القوة الجبائية:",
+    'lbl-puissancefiscal-a':"القوة الجبائية:",
     'lbl-prix-a': "السعر (MAD):",
     'lbl-kilometrage-a': "الكيلومترات:",
     'lbl-carburant-a': "الوقود:",
@@ -615,7 +622,7 @@ const translations = {
     'lbl-marque-c': "الماركة:",
     'lbl-modele-c': "الموديل:",
     'lbl-annee-c': "السنة:",
-     'lbl-puissancefiscal-c':"القوة الجبائية:",
+    'lbl-puissancefiscal-c':"القوة الجبائية:",
     'lbl-prix-c': "السعر (MAD):",
     'lbl-kilometrage-c': "الكيلومترات:",
     'lbl-carburant-c': "الوقود:",
@@ -635,18 +642,14 @@ const translations = {
     'lbl-cartegrise-recto-v': "رخصة السير (أمامية/خلفية):",
     'lbl-procuration-v': "تفويض (إذا لم تكن المالك):",
     'label_checkbox_procuration': "تفويض/وكالة",
-
     'choisir': "--اختر--"
   }
 };
-
-// Gestion du multilangue et du multiformulaire
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
-  // Titre, intro, labels, boutons
   [
     'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
     'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
@@ -658,7 +661,6 @@ function setLang(lang) {
     if(el) el.textContent = translations[lang][id];
   });
   document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
-  // carburant et transmission
   ['carburant-v','carburant-a','carburant-c'].forEach(id=>{
     let sel = document.getElementById(id);
     sel.innerHTML = translations[lang]['carburants'].map(x=>`<option value="${x}">${x}</option>`).join('');
@@ -667,14 +669,11 @@ function setLang(lang) {
     let sel = document.getElementById(id);
     sel.innerHTML = translations[lang]['transmissions'].map(x=>`<option value="${x}">${x}</option>`).join('');
   });
-  // boutons langues
   ['fr','en','ar'].forEach(l=>{
     document.getElementById('lang-'+l).classList.remove('active');
   });
   document.getElementById('lang-'+lang).classList.add('active');
-  // Marque et modèle
   fillBrandSelects();
-  // Remettre à jour les modèles si une marque est sélectionnée
   ["v","a","c"].forEach(suffix=>{
     let marque = document.getElementById(`marque-${suffix}`).value;
     fillModelSelect(`modele-${suffix}`, marque);
@@ -696,7 +695,6 @@ function fillModelSelect(modelId, marque) {
     });
   }
 }
-// Année
 ["annee-v","annee-a","annee-c"].forEach(id => {
   const select = document.getElementById(id);
   select.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>`;
@@ -706,7 +704,6 @@ function fillModelSelect(modelId, marque) {
     select.appendChild(opt);
   }
 });
-// Dépendance modèles
 [
   {marque:'marque-v', modele:'modele-v'},
   {marque:'marque-a', modele:'modele-a'},
@@ -716,7 +713,6 @@ function fillModelSelect(modelId, marque) {
     fillModelSelect(modele, this.value);
   });
 });
-
 const cartegriseInput = document.getElementById('cartegrise-v');
 if (cartegriseInput) {
   cartegriseInput.addEventListener('change', function(){
@@ -726,8 +722,6 @@ if (cartegriseInput) {
     if (inputProc) inputProc.style.display = '';
   });
 }
-
-// Formulaires visibles
 function showForm(form) {
   ['vendre','achat','chercher'].forEach(f=>{
     document.getElementById('form-'+f).classList.remove('active');
@@ -736,8 +730,6 @@ function showForm(form) {
   document.getElementById('form-'+form).classList.add('active');
   document.getElementById('btn-'+form).classList.add('active');
 }
-
-// Soumission des formulaires
 document.getElementById('annonceForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const form = e.target;
@@ -790,12 +782,10 @@ document.getElementById('chercherForm').addEventListener('submit', async functio
     document.getElementById('result-chercher').textContent = "Erreur réseau/CORS.";
   }
 });
-
-// Init
- window.setLang = setLang;
+window.setLang = setLang;
 window.showForm = showForm;
 setLang('fr');
 });
 </script>
-  </body>
+</body>
 </html>
