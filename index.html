@@ -48,12 +48,12 @@
     header h1 {
       font-size: 2.4rem;
       font-weight: 700;
-      color: #3b82f6;
+      color: #e98a1e;
       margin-bottom: 0.3em;
     }
     header .text-h {
       font-size: 1.1rem;
-      color: #e2e8f0;
+      color: #effafa;
       letter-spacing: 0.5px;
     }
     @media (max-width: 750px) {
@@ -122,7 +122,7 @@
         margin-bottom: 30px;
     }
     .header-nav a {
-        color: #3b82f6;
+        color: #3bf6e6;
         font-weight: 500;
         text-decoration: none;
         padding: 10px 16px;
@@ -130,7 +130,7 @@
         transition: background 0.3s ease;
     }
     .header-nav a:hover {
-        background: rgba(59, 130, 246, 0.15);
+        background: rgba(115, 59, 246, 0.562);
     }
     .welcome-section {
         background: rgba(255, 255, 255, 0.05);
@@ -277,11 +277,12 @@
     <a href="#" id="nav-accueil">Accueil</a>
     <a href="#" id="nav-simulateur">Simulateur Prix</a>
     <a href="https://p2p-cars.com/carservices" id="nav-services">Services P2P-Cars</a>
+    <a href="https://p2p-cars.com/login" id="nav-login">Espace personnel </a>
 </nav>
 <section class="welcome-section" id="welcome-section">
     <h2 id="welcome-title">Bienvenue sur P2P-CARS</h2>
-    <p id="welcome-desc">Découvrez les meilleures offres de vente de voitures d'occasion de particulier à particulier.</p>
-    <button id="btn">Explorer maintenant</button>
+    <p id="welcome-desc">Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins. Profitez également d’un service complet, avant et après la vente ou l’achat, entièrement adapté à vos attentes. Et pour faciliter votre acquisition, bénéficiez de plans de paiement flexibles, le tout dans un cadre de confiance entre particuliers.</p>
+    <button id="btn">Envoyer une demande</button>
 </section>
 <section class="filters">
     <label for="search" id="filter-search-label">Rechercher:</label>
@@ -309,8 +310,8 @@
 const translations = {
   fr: {
     'welcome-title': "Bienvenue sur P2P-CARS",
-    'welcome-desc': "Découvrez les meilleures offres de vente de voitures d'occasion de particulier à particulier.",
-    'btn': "Explorer maintenant",
+    'welcome-desc': "Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins. Profitez également d’un service complet, avant et après la vente ou l’achat, entièrement adapté à vos attentes. Et pour faciliter votre acquisition, bénéficiez de plans de paiement flexibles, le tout dans un cadre de confiance entre particuliers.",
+    'btn': "Envoyer une demande",
     'filter-search-label': "Rechercher:",
     'filter-search-ph': "Rechercher...",
     'filter-marque-label': "Marque:",
@@ -329,6 +330,7 @@ const translations = {
     'nav-accueil': "Accueil",
     'nav-simulateur': "Simulateur Prix",
     'nav-services': "Services P2P-Cars",
+    'nav-login':"Espace personnel",
     'brands': ["Renault", "Peugeot", "Toyota"],
     'models': {
       Renault: ["Clio", "Mégane", "Captur"],
@@ -371,8 +373,8 @@ const translations = {
   },
   en: {
     'welcome-title': "Welcome to P2P-CARS",
-    'welcome-desc': "Find the best used car deals directly from sellers.",
-    'btn': "Explore now",
+    'welcome-desc': "Discover the best offers for used cars here, easily announce the sale of your vehicle, or request to find and purchase the exact used car that meets your needs. Enjoy comprehensive services before and after the sale or purchase, fully tailored to your expectations. And to make your acquisition easier, benefit from flexible payment plans, all within a trusted private-to-private environment.",
+    'btn': "Send a request",
     'filter-search-label': "Search:",
     'filter-search-ph': "Search...",
     'filter-marque-label': "Brand:",
@@ -391,6 +393,7 @@ const translations = {
     'nav-accueil': "Home",
     'nav-simulateur': "Price calculator",
     'nav-services': "P2P-Cars Services",
+    'nav-login':"Personal Space",
     'brands': ["Renault", "Peugeot", "Toyota"],
     'models': {
       Renault: ["Clio", "Megane", "Captur"],
@@ -433,8 +436,8 @@ const translations = {
   },
   ar: {
     'welcome-title': "مرحبا بكم في P2P-CARS",
-    'welcome-desc': "اكتشف أفضل عروض السيارات المستعملة من المالك مباشرة.",
-    'btn': "استكشف الآن",
+    'welcome-desc': "اكتشف أفضل عروض السيارات المستعملة هنا، أعلن عن بيع سيارتك بكل سهولة، أو اطلب العثور على وشراء السيارة المستعملة التي تناسب احتياجاتك بدقة. استمتع بخدمات شاملة قبل وبعد البيع أو الشراء، مصممة بالكامل لتلبية توقعاتك. ولتسهيل عملية الشراء، استفد من خطط دفع مرنة، وكل ذلك في بيئة موثوقة بين الأفراد.",
+    'btn': "إرسال طلب",
     'filter-search-label': "بحث:",
     'filter-search-ph': "بحث...",
     'filter-marque-label': "الماركة:",
@@ -453,6 +456,7 @@ const translations = {
     'nav-accueil': "الرئيسية",
     'nav-simulateur': "حساب السعر",
     'nav-services': "خدمات P2P-Cars",
+    'nav-login':"الفضاء الشخصي",
     'brands': ["رينو", "بيجو", "تويوتا"],
     'models': {
       "رينو": ["كليو", "ميجان", "كابتور"],
@@ -504,7 +508,7 @@ function setLang(lang) {
     'welcome-title','welcome-desc','btn','filter-search-label','filter-marque-label',
     'filter-modele-label','filter-annee-label','filter-kilometrage-label',
     'filter-carburant-label','filter-puissance-label',
-    'nav-accueil','nav-simulateur','nav-services'
+    'nav-accueil','nav-simulateur','nav-services','nav-login'
   ].forEach(id => {
     let el = document.getElementById(id);
     if (el && translations[lang][id]) el.textContent = translations[lang][id];
@@ -603,8 +607,10 @@ document.getElementById("search").addEventListener("input", displayCars);
 // Initialisation
 setLang('fr');
 document.getElementById('btn').addEventListener('click', function() {
-  alert(translations[currentLang]['btn']);
+  
+  window.location.href = 'https://p2p-cars.com/carservices';
 });
+
 </script>
 </body>
 </html>
