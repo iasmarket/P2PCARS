@@ -8,14 +8,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
-      url('arier.png') no-repeat center center fixed;
-      background-size: cover;
-      color: #e2e8f0;
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
+        background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
+        url('arier.png') no-repeat center center fixed;
+        background-size: cover;
+        color: #e2e8f0;
+        font-family: 'Poppins', sans-serif;
+        ...
     }
     header {
       background: rgba(255,255,255,0.07);
@@ -23,14 +21,14 @@
       border-radius: 15px;
       padding: 18px;
       display: flex;
-      justify-content: center;
+      justify-content: center;       /* centrer horizontalement */
       align-items: center;
       margin: 14px 10px 20px 10px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      gap: 40px;
+      gap: 40px;                     /* espace entre logos et centre */
     }
     header img {
-      max-height: 110px;
+      max-height: 110px;             /* agrandir les logos */
       width: auto;
       object-fit: contain;
       transition: transform 0.3s;
@@ -39,7 +37,7 @@
     header .header-center {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: center;           /* centrer titre + texte */
       text-align: center;
     }
     header h1 {
@@ -53,14 +51,16 @@
       color: #e2e8f0;
       letter-spacing: 0.5px;
     }
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%;}
+    }
     .navbar {
       display: flex;
       align-items: center;
       gap: 1rem;
       margin-bottom: 1rem;
       margin-top: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
     }
     .lang-btns {
       display: flex;
@@ -100,7 +100,6 @@
       gap: 12px;
       margin-bottom: 18px;
       margin-top: 8px;
-      flex-wrap: wrap;
     }
     .form-switcher button {
       background: #1e293b;
@@ -111,8 +110,6 @@
       font-weight: 600;
       cursor: pointer;
       transition: background 0.3s, color 0.3s;
-      font-size: 1rem;
-      margin-bottom: 6px;
     }
     .form-switcher button.active,
     .form-switcher button:hover { background: #3b82f6; color: #fff;}
@@ -127,8 +124,6 @@
       margin-bottom: 30px;
       display: none;
       flex-direction: column;
-      width: 95vw;
-      box-sizing: border-box;
     }
     .form-section.active { display: flex;}
     .form-section h2 { font-size: 1.5rem; color: #3b82f6; margin-bottom: 10px; text-align: center;}
@@ -143,7 +138,6 @@
       border: 1px solid #334155;
       border-radius: 7px;
       font-size: 1rem;
-      box-sizing: border-box;
     }
     form textarea { min-height: 55px; }
     form input[type="file"] { background: transparent; border: none; color: #e2e8f0;}
@@ -154,44 +148,63 @@
       transition: background 0.3s;
     }
     form button[type="submit"]:hover { background: #2563eb;}
-    #result-vendre, #result-achat, #result-chercher { text-align: center; margin-top: 14px; font-weight: 600;}
-    footer {
-      text-align:center;
-      margin: 20px 0 0 0;
-      color: #e2e8f0;
-      background: rgba(255,255,255,0.06);
-      border-radius: 15px;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-      padding: 16px;
-      font-size: 0.97rem;
+    #result { text-align: center; margin-top: 14px; font-weight: 600;}
+    @media (max-width: 750px) {
+      header { flex-direction: column; text-align: center;}
+      header img { max-width: 68%;}
+      .form-section { padding: 13px 5px;}
     }
-    @media (max-width: 850px) {
-      .form-section {
-        max-width: 99vw;
-        padding: 18px 6px;
-      }
-      header {
-        gap: 12px;
-        padding: 8px 2vw;
-      }
-    }
-    @media (max-width: 600px) {
-      header { flex-direction: column; gap: 10px; }
-      header img { max-width: 68%; }
-      header h1 { font-size: 1.5rem;}
-      .navbar { flex-direction: column; gap: 8px;}
-      .form-switcher { flex-direction: column; gap:8px;}
-      .form-section { padding: 10px 3px; font-size: 0.97rem;}
-      form input, form select, form textarea { font-size: 0.97rem; padding: 8px;}
-      form button[type="submit"] { font-size: 1rem; padding: 9px 8px;}
-      .form-section h2 { font-size: 1.2rem;}
-      .form-section .intro { font-size: 1rem;}
-    }
-    @media (max-width: 400px) {
-      .form-section { padding: 4px 1px; font-size: 0.90rem;}
-      form input, form select, form textarea { font-size: 0.90rem; padding: 6px;}
-      .form-section h2 { font-size: 1rem;}
-    }
+    @media (max-width: 480px) {
+  body {
+    font-size: 0.97rem;
+    padding: 0;
+    margin: 0;
+  }
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 4px;
+    margin: 8px 2px 12px 2px;
+  }
+  header h1 {
+    font-size: 1.45rem;
+  }
+  .navbar {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .form-switcher button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+  .form-section {
+    padding: 6px 2px;
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  form input, form select, form textarea {
+    font-size: 1rem;
+    padding: 10px 5px;
+  }
+  .home-btn {
+    width: 100%;
+    font-size: 1.07rem;
+    margin-left: 0;
+    padding: 10px 0;
+    border-radius: 7px;
+  }
+  .lang-btns button {
+    width: 30px; height: 30px; font-size: 0.95rem;
+  }
+  footer {
+    font-size: 0.95rem;
+    margin: 10px 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -203,19 +216,22 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
+
 <div class="navbar">
   <div class="lang-btns">
-    <button id="lang-fr" aria-label="Français">FR</button>
-    <button id="lang-en" aria-label="English">EN</button>
-    <button id="lang-ar" aria-label="العربية">AR</button>
+    <button id="lang-fr" onclick="setLang('fr')" aria-label="Français">FR</button>
+    <button id="lang-en" onclick="setLang('en')" aria-label="English">EN</button>
+    <button id="lang-ar" onclick="setLang('ar')" aria-label="العربية">AR</button>
   </div>
   <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
 </div>
+
 <div class="form-switcher">
-  <button id="btn-vendre" class="active"><i class="fas fa-bullhorn"></i> <span id="t-vendre">Vendre sa voiture</span></button>
-  <button id="btn-achat"><i class="fas fa-cart-plus"></i> <span id="t-achat">Demander l'achat</span></button>
-  <button id="btn-chercher"><i class="fas fa-search"></i> <span id="t-chercher">Chercher une voiture</span></button>
+  <button id="btn-vendre" class="active" onclick="showForm('vendre')"><i class="fas fa-bullhorn"></i> <span id="t-vendre">Vendre sa voiture</span></button>
+  <button id="btn-achat" onclick="showForm('achat')"><i class="fas fa-cart-plus"></i> <span id="t-achat">Demander l'achat</span></button>
+  <button id="btn-chercher" onclick="showForm('chercher')"><i class="fas fa-search"></i> <span id="t-chercher">Chercher une voiture</span></button>
 </div>
+
 <section id="form-vendre" class="form-section active">
   <h2 id="titre-vendre"></h2>
   <div class="intro" id="intro-vendre"></div>
@@ -244,26 +260,39 @@
     <input name="telephone" type="tel" required>
     <label id="lbl-cin-v"></label>
     <input name="cin" type="text" required>
-    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <div id="div-cartegrise">
-      <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
-      <input name="cartegrise" type="file" accept="image/*" multiple required >
-    </div>
-    <label id="lbl-checkbox-procuration">
-      <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
-      <input type="checkbox" id="checkbox-procuration">
-    </label>
-    <div id="div-procuration" style="display:none;">
-      <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
-      <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
-    </div>
-    <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
-    <input name="images" type="file" accept="image/*" multiple required>
-    <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
+   <!-- Photo recto/verso CIN -->
+  <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+  <input name="cin_img" type="file" accept="image/*" multiple required>
+
+  <!-- Carte grise recto / verso -->
+  <div id="div-cartegrise">
+    <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
+    <input name="cartegrise" type="file" accept="image/*" multiple required >
+  </div>
+
+  <!-- Procuration (facultatif) -->
+  <label id="lbl-checkbox-procuration">
+  <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
+  <input type="checkbox" id="checkbox-procuration">
+</label>
+
+  <div id="div-procuration" style="display:none;">
+    <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
+    <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
+
+  </div>
+
+  <!-- Images voiture -->
+  <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
+  <input name="images" type="file" accept="image/*" multiple required>
+
+  <!-- Bouton envoyer -->
+  <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
+
   </form>
   <div id="result-vendre"></div>
 </section>
+
 <section id="form-achat" class="form-section">
   <h2 id="titre-achat"></h2>
   <div class="intro" id="intro-achat"></div>
@@ -294,10 +323,14 @@
     <input name="cin" type="text" required>
     <label id="lbl-cin-img-a"></label>
     <input name="cin_img" type="file" accept="image/*" multiple required>
+    
+    
+
     <button type="submit" id="btn-submit-a"></button>
   </form>
   <div id="result-achat"></div>
 </section>
+
 <section id="form-chercher" class="form-section">
   <h2 id="titre-chercher"></h2>
   <div class="intro" id="intro-chercher"></div>
@@ -332,14 +365,17 @@
   </form>
   <div id="result-chercher"></div>
 </section>
-<footer>
+
+<footer style="text-align:center; margin: 20px 0; color: #e2e8f0;">
   &copy; 2025 IASMarket Services. Tous droits réservés.
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // ... tout ton code JS existant ...
 document.getElementById("checkbox-procuration").addEventListener("change", function () {
   const blocProcuration = document.getElementById("div-procuration");
   const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
+
   if (this.checked) {
     blocProcuration.style.display = "block";
     inputsProcuration.forEach(input => input.disabled = false);
@@ -348,6 +384,9 @@ document.getElementById("checkbox-procuration").addEventListener("change", funct
     inputsProcuration.forEach(input => input.disabled = true);
   }
 });
+
+
+
 const allCarModels = {
 "Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
 "Alfa Romeo": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "Alfasud", "Alfetta", "Arna", "Brera", "Dauphine", "Disco Volante", "Giulia", "Giulietta", "GT", "GTA", "GTV", "Matta", "Mito", "Montreal", "Romeo", "RZ", "Spider", "Sprint", "Stelvio", "SZ", "Tonale"],
@@ -456,13 +495,208 @@ const allCarModels = {
 "Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
 "Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
 };
+const translations = {
+  fr: {
+    'titre-vendre': "Déposer une annonce de vente",
+    'intro-vendre': "Ici, vous pouvez lancer votre annonce au public. Les informations personnelles (email, téléphone, CIN) ne seront jamais publiées, sauf si elles figurent explicitement dans la description du produit.",
+    'titre-achat': "Demander l'achat d'une voiture",
+    'intro-achat': "Ici, vous pouvez demander à la société d’acheter une voiture précise. Toutes les informations personnelles sont sécurisées et ne seront jamais partagées.",
+    'titre-chercher': "Demander de chercher une voiture",
+    'intro-chercher': "Ici, vous pouvez demander à la société de chercher et acheter une voiture selon vos critères. Toutes les informations personnelles sont sécurisées et ne seront jamais partagées.",
+    'lbl-marque-v': "Marque :",
+    'lbl-modele-v': "Modèle :",
+    'lbl-annee-v': "Année :",
+    'lbl-puissancefiscal-v':"Puissance fiscale :",
+    'lbl-prix-v': "Prix (MAD) :",
+    'lbl-kilometrage-v': "Kilométrage :",
+    'lbl-carburant-v': "Carburant :",
+    'lbl-transmission-v': "Transmission :",
+    'lbl-description-v': "Description :",
+    'lbl-email-v': "Votre email :",
+    'lbl-phone-v': "Numéro de téléphone :",
+    'lbl-cin-v': "Numéro de CIN :",
+    'lbl-cin-img-v': "Photo recto/verso CIN :",
+    'lbl-cartegrise-v': "Carte grise :",
+    
+    'lbl-images-v': "Images voiture (max 10) :",
+    'btn-submit-v': "Envoyer",
+    'lbl-marque-a': "Marque :",
+    'lbl-modele-a': "Modèle :",
+    'lbl-annee-a': "Année :",
+    'lbl-puissancefiscal-a':"Puissance fiscale :",
+    'lbl-prix-a': "Prix (MAD) :",
+    'lbl-kilometrage-a': "Kilométrage :",
+    'lbl-carburant-a': "Carburant :",
+    'lbl-transmission-a': "Transmission :",
+    'lbl-description-a': "Description :",
+    'lbl-email-a': "Votre email :",
+    'lbl-phone-a': "Numéro de téléphone :",
+    'lbl-cin-a': "Numéro de CIN :",
+    'lbl-cin-img-a': "Photo recto/verso CIN :",
+    'btn-submit-a': "Envoyer",
+    'lbl-marque-c': "Marque :",
+    'lbl-modele-c': "Modèle :",
+    'lbl-annee-c': "Année :",
+    'lbl-puissancefiscal-c':"Puissance fiscale :",
+    'lbl-prix-c': "Prix (MAD) :",
+    'lbl-kilometrage-c': "Kilométrage :",
+    'lbl-carburant-c': "Carburant :",
+    'lbl-transmission-c': "Transmission :",
+    'lbl-description-c': "Description :",
+    'lbl-email-c': "Votre email :",
+    'lbl-phone-c': "Numéro de téléphone :",
+    'lbl-cin-c': "Numéro de CIN :",
+    'lbl-cin-img-c': "Photo recto/verso CIN :",
+    'btn-submit-c': "Envoyer",
+    't-vendre': "Vendre sa voiture",
+    't-achat': "Demander l'achat",
+    't-chercher': "Chercher une voiture",
+    'home': "Accueil",
+    'carburants': ["Essence", "Diesel", "Electrique", "Hybride", "GPL", "GNV", "Hydrogène"],
+    'transmissions': ["Manuelle", "Automatique", "Robotisée", "CVT"],
+    'lbl-cartegrise-recto-v': "Carte grise (recto/verso) :",
+    'lbl-procuration-v': "Procuration (si non propriétaire) :",
+    'label_checkbox_procuration': "Procuration",
 
-const translations = {/* ... (voir la réponse précédente pour le contenu complet) ... */};
+    'choisir': "--Choisir--"
+  },
+  en: {
+    'titre-vendre': "Post a car ad",
+    'intro-vendre': "Here you can post your ad to the public. Personal info (email, phone, CIN) will never be published unless included in the description.",
+    'titre-achat': "Request a car purchase",
+    'intro-achat': "Here you can request the company to buy a specific car for you. Your personal info is secure and will never be shared.",
+    'titre-chercher': "Ask to search for a car",
+    'intro-chercher': "Here you can request the company to search and buy a car based on your criteria. Your personal info is secure and will never be shared.",
+    'lbl-marque-v': "Brand:",
+    'lbl-modele-v': "Model:",
+    'lbl-annee-v': "Year:",
+    'lbl-puissancefiscal-v':"Fiscal horsepower :",
+    'lbl-prix-v': "Price (MAD):",
+    'lbl-kilometrage-v': "Mileage:",
+    'lbl-carburant-v': "Fuel:",
+    'lbl-transmission-v': "Transmission:",
+    'lbl-description-v': "Description:",
+    'lbl-email-v': "Your email:",
+    'lbl-phone-v': "Phone number:",
+    'lbl-cin-v': "CIN number:",
+    'lbl-cin-img-v': "CIN photo (front/back):",
+    'lbl-cartegrise-v': "Registration card:",
+  
+    'lbl-images-v': "Car images (max 10):",
+    'btn-submit-v': "Send",
+    'lbl-marque-a': "Brand:",
+    'lbl-modele-a': "Model:",
+    'lbl-annee-a': "Year:",
+    'lbl-puissancefiscal-a':"Fiscal horsepower :",
+    'lbl-prix-a': "Price (MAD):",
+    'lbl-kilometrage-a': "Mileage:",
+    'lbl-carburant-a': "Fuel:",
+    'lbl-transmission-a': "Transmission:",
+    'lbl-description-a': "Description:",
+    'lbl-email-a': "Your email:",
+    'lbl-phone-a': "Phone number:",
+    'lbl-cin-a': "CIN number:",
+    'lbl-cin-img-a': "CIN photo (front/back):",
+    'btn-submit-a': "Send",
+    'lbl-marque-c': "Brand:",
+    'lbl-modele-c': "Model:",
+    'lbl-annee-c': "Year:",
+    'lbl-puissancefiscal-v':"Fiscal horsepower :",
+    'lbl-prix-c': "Price (MAD):",
+    'lbl-kilometrage-c': "Mileage:",
+    'lbl-carburant-c': "Fuel:",
+    'lbl-transmission-c': "Transmission:",
+    'lbl-description-c': "Description:",
+    'lbl-email-c': "Your email:",
+    'lbl-phone-c': "Phone number:",
+    'lbl-cin-c': "CIN number:",
+    'lbl-cin-img-c': "CIN photo (front/back):",
+    'btn-submit-c': "Send",
+    't-vendre': "Sell your car",
+    't-achat': "Request purchase",
+    't-chercher': "Search for a car",
+    'home': "Home",
+    'carburants': ["Petrol", "Diesel", "Electric", "Hybrid", "LPG", "CNG", "Hydrogen"],
+    'transmissions': ["Manual", "Automatic", "Robotized", "CVT"],
+    'lbl-cartegrise-recto-v': "Registration certificate (front/back):",
+    'lbl-procuration-v': "Authorization letter (if not owner):" ,
+    'label_checkbox_procuration': "Authorization letter",
+
+    'choisir': "--Choose--"
+  },
+  ar: {
+    'titre-vendre': "إيداع إعلان سيارة",
+    'intro-vendre': "هنا يمكنك نشر إعلانك للعامة. لن يتم نشر المعلومات الشخصية (البريد، الهاتف، رقم التعريف) إلا إذا وردت في وصف المنتج.",
+    'titre-achat': "طلب شراء سيارة",
+    'intro-achat': "هنا يمكنك طلب شراء سيارة محددة من الشركة. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
+    'titre-chercher': "طلب البحث عن سيارة",
+    'intro-chercher': "هنا يمكنك طلب الشركة للبحث وشراء سيارة حسب معاييرك. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
+    'lbl-marque-v': "الماركة:",
+    'lbl-modele-v': "الموديل:",
+    'lbl-annee-v': "السنة:",
+    'lbl-puissancefiscal-v':"القوة الجبائية:",
+    'lbl-prix-v': "السعر (MAD):",
+    'lbl-kilometrage-v': "الكيلومترات:",
+    'lbl-carburant-v': "الوقود:",
+    'lbl-transmission-v': "ناقل الحركة:",
+    'lbl-description-v': "الوصف:",
+    'lbl-email-v': "البريد الإلكتروني:",
+    'lbl-phone-v': "رقم الهاتف:",
+    'lbl-cin-v': "رقم التعريف:",
+    'lbl-cin-img-v': "صورة التعريف (أمامية/خلفية):",
+    'lbl-cartegrise-v': "بطاقة التسجيل:",
+   
+    'lbl-images-v': "صور السيارة (10 كحد أقصى):",
+    'btn-submit-v': "إرسال",
+    'lbl-marque-a': "الماركة:",
+    'lbl-modele-a': "الموديل:",
+    'lbl-annee-a': "السنة:",
+     'lbl-puissancefiscal-a':"القوة الجبائية:",
+    'lbl-prix-a': "السعر (MAD):",
+    'lbl-kilometrage-a': "الكيلومترات:",
+    'lbl-carburant-a': "الوقود:",
+    'lbl-transmission-a': "ناقل الحركة:",
+    'lbl-description-a': "الوصف:",
+    'lbl-email-a': "البريد الإلكتروني:",
+    'lbl-phone-a': "رقم الهاتف:",
+    'lbl-cin-a': "رقم التعريف:",
+    'lbl-cin-img-a': "صورة التعريف (أمامية/خلفية):",
+    'btn-submit-a': "إرسال",
+    'lbl-marque-c': "الماركة:",
+    'lbl-modele-c': "الموديل:",
+    'lbl-annee-c': "السنة:",
+     'lbl-puissancefiscal-c':"القوة الجبائية:",
+    'lbl-prix-c': "السعر (MAD):",
+    'lbl-kilometrage-c': "الكيلومترات:",
+    'lbl-carburant-c': "الوقود:",
+    'lbl-transmission-c': "ناقل الحركة:",
+    'lbl-description-c': "الوصف:",
+    'lbl-email-c': "البريد الإلكتروني:",
+    'lbl-phone-c': "رقم الهاتف:",
+    'lbl-cin-c': "رقم التعريف:",
+    'lbl-cin-img-c': "صورة التعريف (أمامية/خلفية):",
+    'btn-submit-c': "إرسال",
+    't-vendre': "بيع سيارتك",
+    't-achat': "طلب شراء",
+    't-chercher': "طلب البحث عن سيارة",
+    'home': "الرئيسية",
+    'carburants': ["بنزين", "ديزل", "كهرباء", "هايبرد", "غاز", "غاز طبيعي", "هيدروجين"],
+    'transmissions': ["يدوي", "أوتوماتيكي", "روبوتي", "CVT"],
+    'lbl-cartegrise-recto-v': "رخصة السير (أمامية/خلفية):",
+    'lbl-procuration-v': "تفويض (إذا لم تكن المالك):",
+    'label_checkbox_procuration': "تفويض/وكالة",
+
+    'choisir': "--اختر--"
+  }
+};
+
+// Gestion du multilangue et du multiformulaire
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+  // Titre, intro, labels, boutons
   [
     'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
     'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
@@ -474,6 +708,7 @@ function setLang(lang) {
     if(el) el.textContent = translations[lang][id];
   });
   document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
+  // carburant et transmission
   ['carburant-v','carburant-a','carburant-c'].forEach(id=>{
     let sel = document.getElementById(id);
     sel.innerHTML = translations[lang]['carburants'].map(x=>`<option value="${x}">${x}</option>`).join('');
@@ -482,11 +717,14 @@ function setLang(lang) {
     let sel = document.getElementById(id);
     sel.innerHTML = translations[lang]['transmissions'].map(x=>`<option value="${x}">${x}</option>`).join('');
   });
+  // boutons langues
   ['fr','en','ar'].forEach(l=>{
     document.getElementById('lang-'+l).classList.remove('active');
   });
   document.getElementById('lang-'+lang).classList.add('active');
+  // Marque et modèle
   fillBrandSelects();
+  // Remettre à jour les modèles si une marque est sélectionnée
   ["v","a","c"].forEach(suffix=>{
     let marque = document.getElementById(`marque-${suffix}`).value;
     fillModelSelect(`modele-${suffix}`, marque);
@@ -508,6 +746,7 @@ function fillModelSelect(modelId, marque) {
     });
   }
 }
+// Année
 ["annee-v","annee-a","annee-c"].forEach(id => {
   const select = document.getElementById(id);
   select.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>`;
@@ -517,6 +756,7 @@ function fillModelSelect(modelId, marque) {
     select.appendChild(opt);
   }
 });
+// Dépendance modèles
 [
   {marque:'marque-v', modele:'modele-v'},
   {marque:'marque-a', modele:'modele-a'},
@@ -526,6 +766,7 @@ function fillModelSelect(modelId, marque) {
     fillModelSelect(modele, this.value);
   });
 });
+
 const cartegriseInput = document.getElementById('cartegrise-v');
 if (cartegriseInput) {
   cartegriseInput.addEventListener('change', function(){
@@ -535,6 +776,8 @@ if (cartegriseInput) {
     if (inputProc) inputProc.style.display = '';
   });
 }
+
+// Formulaires visibles
 function showForm(form) {
   ['vendre','achat','chercher'].forEach(f=>{
     document.getElementById('form-'+f).classList.remove('active');
@@ -543,6 +786,8 @@ function showForm(form) {
   document.getElementById('form-'+form).classList.add('active');
   document.getElementById('btn-'+form).classList.add('active');
 }
+
+// Soumission des formulaires
 document.getElementById('annonceForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const form = e.target;
@@ -595,16 +840,12 @@ document.getElementById('chercherForm').addEventListener('submit', async functio
     document.getElementById('result-chercher').textContent = "Erreur réseau/CORS.";
   }
 });
-document.getElementById('lang-fr').addEventListener('click', function(){ setLang('fr'); });
-document.getElementById('lang-en').addEventListener('click', function(){ setLang('en'); });
-document.getElementById('lang-ar').addEventListener('click', function(){ setLang('ar'); });
-document.getElementById('btn-vendre').addEventListener('click', function(){ showForm('vendre'); });
-document.getElementById('btn-achat').addEventListener('click', function(){ showForm('achat'); });
-document.getElementById('btn-chercher').addEventListener('click', function(){ showForm('chercher'); });
-window.setLang = setLang;
+
+// Init
+ window.setLang = setLang;
 window.showForm = showForm;
 setLang('fr');
 });
 </script>
-</body>
+  </body>
 </html>
