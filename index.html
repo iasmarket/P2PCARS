@@ -327,6 +327,39 @@
       .modal { padding: 15px 7px 10px 7px; }
       .modal-actions button { padding: 10px 8px; font-size: 1rem;}
     }
+    #modal-bg {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .modal-images img {
+      max-width: 100%;
+      margin: 5px 0;
+    }
+
   </style>
 </head>
 <body>
@@ -611,10 +644,26 @@ function fillModelSelect() {
   }
 }
 
+function transformResponseToArray(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) return [];
+
+  const length = data[keys[0]].length;
+  const result = [];
+
+  for (let i = 0; i < length; i++) {
+    const obj = {};
+    keys.forEach(key => {
+      obj[key] = data[key][i];
+    });
+    result.push(obj);
+  }
+
+  return result;
+}
 
 
 function displayCars() {
-  // Récupérer les valeurs des filtres
   const search = document.getElementById("search").value.toLowerCase();
   const marque = document.getElementById("marque").value;
   const modele = document.getElementById("modele").value;
@@ -623,21 +672,11 @@ function displayCars() {
   const carburant = document.getElementById("carburant").value;
   const puissance = document.getElementById("puissance").value;
 
-  const postData = {
-    search,
-    marque,
-    modele,
-    annee,
-    kilometrage,
-    carburant,
-    puissance
-  };
+  const postData = { search, marque, modele, annee, kilometrage, carburant, puissance };
 
   fetch(apiURL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(postData)
   })
     .then(res => {
@@ -645,10 +684,8 @@ function displayCars() {
       return res.json();
     })
     .then(data => {
-      // Transformer la réponse en tableau d'annonces
       const annonces = transformResponseToArray(data);
 
-      // Optionnel : filtrer côté client selon les filtres (si le serveur ne filtre pas)
       const filtered = annonces.filter(c => {
         return (
           (search === "" || (c.marque && c.marque.toLowerCase().includes(search)) || (c.modele && c.modele.toLowerCase().includes(search))) &&
@@ -668,8 +705,12 @@ function displayCars() {
         const div = document.createElement("div");
         div.className = "car";
 
-        let imagesArr = Array.isArray(c.images) ? c.images : (typeof c.images === "string" ? c.images.split(",") : []);
-        let imgLink = imagesArr.length > 0 ? imgBase + imagesArr[0].replace(/\\/g, "/") : "images/default.jpg";
+        // Conversion des chemins d'images
+        let imagesArr = typeof c.images === "string"
+          ? c.images.split(/;|,/).map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+          : Array.isArray(c.images) ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/")) : [];
+
+        let imgLink = imagesArr.length > 0 ? imagesArr[0] : "images/default.jpg";
 
         div.innerHTML = `
           <img src="${imgLink}" alt="${c.marque || ""} ${c.modele || ""}">
@@ -693,24 +734,6 @@ function displayCars() {
       console.error("Erreur lors du chargement :", err);
       fallbackDisplayCars();
     });
-}
-
-function transformResponseToArray(data) {
-  const keys = Object.keys(data);
-  if (keys.length === 0) return [];
-
-  const length = data[keys[0]].length;
-  const result = [];
-
-  for (let i = 0; i < length; i++) {
-    const obj = {};
-    keys.forEach(key => {
-      obj[key] = data[key][i];
-    });
-    result.push(obj);
-  }
-
-  return result;
 }
 
 function fallbackDisplayCars() {
@@ -742,8 +765,14 @@ function fallbackDisplayCars() {
   filtered.forEach(c => {
     const div = document.createElement("div");
     div.className = "car";
+
+    // Conversion images fallback
+    let imagesArr = typeof c.image === "string"
+      ? c.image.split(/;|,/).map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+      : ["images/default.jpg"];
+
     div.innerHTML = `
-      <img src="${c.image}" alt="${c.marque} ${c.modele}">
+      <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}">
       <div class="car-details">
         <h3>${c.marque} ${c.modele} (${c.annee})</h3>
         <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
@@ -759,53 +788,51 @@ function fallbackDisplayCars() {
 }
 
 function openModal(car) {
-  let imagesArr = Array.isArray(car.images)
-    ? car.images
-    : (typeof car.images === "string" ? car.images.split(",") : []);
-  let imagesHtml = imagesArr.map(img =>
-    `<img src="${imgBase + img.replace(/\\/g, "/")}" alt="Car image">`
-  ).join('');
+  let imagesArr = typeof car.images === "string"
+    ? car.images.split(/;|,/).map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+    : Array.isArray(car.images) ? car.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/")) : [];
+
+  let imagesHtml = imagesArr.map(img => `<img src="${img}" alt="Car image">`).join('');
   let priceStr = car.prix ? car.prix + " €" : "";
   let modalBg = document.getElementById("modal-bg");
 
   modalBg.innerHTML = `
-    <div class="modal">
-      <button class="modal-close" aria-label="${translations[currentLang]['modal-close']}">&times;</button>
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
       <h2>${translations[currentLang]['modal-title']}</h2>
       <div class="modal-images">${imagesHtml}</div>
       <div class="modal-details">
-        <p><strong>${translations[currentLang]['modal-date']}:</strong> ${car.date || ""}</p>
-        <p><strong>${translations[currentLang]['modal-marque']}:</strong> ${car.marque || ""}</p>
-        <p><strong>${translations[currentLang]['modal-modele']}:</strong> ${car.modele || ""}</p>
-        <p><strong>${translations[currentLang]['modal-annee']}:</strong> ${car.annee || ""}</p>
-        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.puissance_fiscal || ""}</p>
-        <p><strong>${translations[currentLang]['modal-kilometrage']}:</strong> ${car.kilometrage || ""} km</p>
-        <p><strong>${translations[currentLang]['modal-carburant']}:</strong> ${car.carburant || ""}</p>
-        <p><strong>${translations[currentLang]['modal-transmission']}:</strong> ${car.transmission || ""}</p>
-        <p><strong>${translations[currentLang]['modal-desc']}:</strong> ${car.description || ""}</p>
-        <p><strong>${translations[currentLang]['modal-price']}:</strong> ${priceStr}</p>
+        <p><strong>Date:</strong> ${car.date || ""}</p>
+        <p><strong>Marque:</strong> ${car.marque || ""}</p>
+        <p><strong>Modèle:</strong> ${car.modele || ""}</p>
+        <p><strong>Année:</strong> ${car.annee || ""}</p>
+        <p><strong>Puissance fiscale:</strong> ${car.cv || ""}</p>
+        <p><strong>Kilométrage:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>Carburant:</strong> ${car.carburant || ""}</p>
+        <p><strong>Transmission:</strong> ${car.transmission || ""}</p>
+        <p><strong>Description:</strong> ${car.description || ""}</p>
+        <p><strong>Prix:</strong> ${priceStr}</p>
       </div>
       <div class="modal-actions">
-        <button id="contact-btn">${translations[currentLang]['modal-contact']}</button>
-        <button id="buy-btn">${translations[currentLang]['modal-buy']}</button>
+        <button id="contact-btn">Contacter (Ref: ${car.Ref || "N/A"})</button>
+        <button id="buy-btn">Acheter (Ref: ${car.Ref || "N/A"})</button>
       </div>
     </div>
   `;
 
   modalBg.style.display = "flex";
 
-  modalBg.querySelector(".modal-close").onclick = function () {
-    modalBg.style.display = "none";
-  };
+  // Fermer au clic extérieur
   modalBg.onclick = function (e) {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
+  modalBg.querySelector(".modal-close").onclick = function () {
+    modalBg.style.display = "none";
+  };
 
-  // Ici on ajoute l'alerte avec la référence unique Ref de l'annonce
   document.getElementById("contact-btn").onclick = function () {
     alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
   };
-
   document.getElementById("buy-btn").onclick = function () {
     alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
   };
