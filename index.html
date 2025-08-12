@@ -611,6 +611,8 @@ function fillModelSelect() {
   }
 }
 
+
+
 function displayCars() {
   // Récupérer les valeurs des filtres
   const search = document.getElementById("search").value.toLowerCase();
@@ -621,15 +623,14 @@ function displayCars() {
   const carburant = document.getElementById("carburant").value;
   const puissance = document.getElementById("puissance").value;
 
-  // Corps de la requête POST (JSON)
   const postData = {
-    search: search,
-    marque: marque,
-    modele: modele,
-    annee: annee,
-    kilometrage: kilometrage,
-    carburant: carburant,
-    puissance: puissance
+    search,
+    marque,
+    modele,
+    annee,
+    kilometrage,
+    carburant,
+    puissance
   };
 
   fetch(apiURL, {
@@ -640,22 +641,33 @@ function displayCars() {
     body: JSON.stringify(postData)
   })
     .then(res => {
-      if (!res.ok) {
-        throw new Error("Erreur serveur : " + res.status);
-      }
+      if (!res.ok) throw new Error("Erreur serveur : " + res.status);
       return res.json();
     })
     .then(data => {
-      if (!Array.isArray(data)) return;
+      // Transformer la réponse en tableau d'annonces
+      const annonces = transformResponseToArray(data);
+
+      // Optionnel : filtrer côté client selon les filtres (si le serveur ne filtre pas)
+      const filtered = annonces.filter(c => {
+        return (
+          (search === "" || (c.marque && c.marque.toLowerCase().includes(search)) || (c.modele && c.modele.toLowerCase().includes(search))) &&
+          (marque === "" || c.marque === marque) &&
+          (modele === "" || c.modele === modele) &&
+          (annee === "" || c.annee == annee) &&
+          (kilometrage === "" || (c.kilometrage && c.kilometrage <= parseInt(kilometrage))) &&
+          (carburant === "" || c.carburant === carburant) &&
+          (puissance === "" || (c.cv && c.cv <= parseInt(puissance)))
+        );
+      });
 
       const list = document.getElementById("carList");
       list.innerHTML = "";
 
-      data.forEach(c => {
+      filtered.forEach(c => {
         const div = document.createElement("div");
         div.className = "car";
 
-        // Gérer les images
         let imagesArr = Array.isArray(c.images) ? c.images : (typeof c.images === "string" ? c.images.split(",") : []);
         let imgLink = imagesArr.length > 0 ? imgBase + imagesArr[0].replace(/\\/g, "/") : "images/default.jpg";
 
@@ -663,20 +675,17 @@ function displayCars() {
           <img src="${imgLink}" alt="${c.marque || ""} ${c.modele || ""}">
           <div class="car-details">
             <h3>${c.marque || ""} ${c.modele || ""} (${c.annee || ""})</h3>
-            <p><strong>${translations[currentLang]['modal-kilometrage']}</strong> ${c.kilometrage || ""} km</p>
-            <p><strong>${translations[currentLang]['modal-carburant']}</strong> ${c.carburant || ""}</p>
-            <p><strong>${translations[currentLang]['modal-puissance']}</strong> ${c.puissance_fiscal || ""}</p>
-            <p><strong>${translations[currentLang]['modal-price']}</strong> ${c.prix ? c.prix + " €" : ""}</p>
+            <p><strong>Kilométrage:</strong> ${c.kilometrage || ""} km</p>
+            <p><strong>Carburant:</strong> ${c.carburant || ""}</p>
+            <p><strong>Puissance fiscale:</strong> ${c.cv || ""}</p>
+            <p><strong>Prix:</strong> ${c.prix ? c.prix + " €" : ""}</p>
             <p>${c.description || ""}</p>
-            <button class="consult-btn" data-index="${c.Ref_annonce}" style="margin-top:8px;">
-              ${translations[currentLang]['consult-btn']}
-            </button>
+            <button class="consult-btn" data-index="${c.Ref || ""}" style="margin-top:8px;">Consulter</button>
           </div>
         `;
 
         list.appendChild(div);
 
-        // Événement bouton "Consulter"
         div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
       });
     })
@@ -684,6 +693,24 @@ function displayCars() {
       console.error("Erreur lors du chargement :", err);
       fallbackDisplayCars();
     });
+}
+
+function transformResponseToArray(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) return [];
+
+  const length = data[keys[0]].length;
+  const result = [];
+
+  for (let i = 0; i < length; i++) {
+    const obj = {};
+    keys.forEach(key => {
+      obj[key] = data[key][i];
+    });
+    result.push(obj);
+  }
+
+  return result;
 }
 
 function fallbackDisplayCars() {
@@ -766,17 +793,21 @@ function openModal(car) {
   `;
 
   modalBg.style.display = "flex";
+
   modalBg.querySelector(".modal-close").onclick = function () {
     modalBg.style.display = "none";
   };
   modalBg.onclick = function (e) {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
+
+  // Ici on ajoute l'alerte avec la référence unique Ref de l'annonce
   document.getElementById("contact-btn").onclick = function () {
-    window.location.href = "mailto:contact@p2p-cars.com?subject=Contact vendeur Ref " + (car.Ref || "");
+    alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
   };
+
   document.getElementById("buy-btn").onclick = function () {
-    window.location.href = "https://p2p-cars.com/carservices?buy=" + encodeURIComponent(car.Ref || "");
+    alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
   };
 }
 
