@@ -247,12 +247,86 @@
     .car button:hover {
         background: #2563eb;
     }
+    /* Modal styles */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.3s;
+    }
+    .modal {
+      background: #1e293b;
+      border-radius: 18px;
+      max-width: 800px;
+      width: 97vw;
+      max-height: 95vh;
+      overflow-y: auto;
+      padding: 30px 24px 20px 24px;
+      position: relative;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #f87171;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    .modal-images {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+    .modal-images img {
+      height: 160px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+      object-fit: cover;
+      background: #222;
+    }
+    .modal-details {
+      margin-bottom: 18px;
+    }
+    .modal-details p {
+      margin: 6px 0;
+      font-size: 1.08rem;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .modal-actions button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .modal-actions button:hover {
+      background: #2563eb;
+    }
     @media (max-width: 768px) {
         header { flex-direction: column; text-align: center;}
         header img { max-width: 68%;}
         .header-nav { flex-direction: column; gap: 10px;}
         .filters { grid-template-columns: 1fr; }
         .car img { height: 160px; }
+        .modal { padding: 15px 7px 10px 7px; }
+        .modal-actions button { padding: 10px 8px; font-size: 1rem;}
     }
   </style>
 </head>
@@ -543,5 +617,4 @@ document.getElementById('btn').addEventListener('click', function() {
 });
 </script>
 </body>
-</html>
 </html>
