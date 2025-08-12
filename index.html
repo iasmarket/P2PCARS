@@ -306,253 +306,136 @@
 <footer>
   &copy; 2025 IASMarket Services. Tous droits réservés.
 </footer>
+<!-- Modal structure -->
+<div id="modal-bg" style="display:none"></div>
 <script>
+const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
+const imgBase = "https://apicars.p2p-cars.com/";
+
 const translations = {
   fr: {
-    'welcome-title': "Bienvenue sur P2P-CARS",
-    'welcome-desc': "Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins. Profitez également d’un service complet, avant et après la vente ou l’achat, entièrement adapté à vos attentes. Et pour faciliter votre acquisition, bénéficiez de plans de paiement flexibles, le tout dans un cadre de confiance entre particuliers.",
-    'btn': "Envoyer une demande",
-    'filter-search-label': "Rechercher:",
-    'filter-search-ph': "Rechercher...",
-    'filter-marque-label': "Marque:",
-    'filter-marque-ph': "Choisir une marque",
-    'filter-modele-label': "Modèle:",
-    'filter-modele-ph': "Choisir un modèle",
-    'filter-annee-label': "Année:",
-    'filter-annee-ph': "Année",
-    'filter-kilometrage-label': "Kilométrage max:",
-    'filter-kilometrage-ph': "Kilométrage max",
-    'filter-carburant-label': "Carburant:",
-    'filter-carburant-ph': "Carburant",
-    'filter-puissance-label': "Puissance max (CV):",
-    'filter-puissance-ph': "Puissance max (CV)",
-    'home': "Accueil",
-    'nav-accueil': "Accueil",
-    'nav-simulateur': "Simulateur Prix",
-    'nav-services': "Services P2P-Cars",
-    'nav-login':"Espace personnel",
-    'brands': ["Renault", "Peugeot", "Toyota"],
-    'models': {
-      Renault: ["Clio", "Mégane", "Captur"],
-      Peugeot: ["208", "308", "2008"],
-      Toyota: ["Yaris", "Corolla", "C-HR"]
-    },
-    'fuels': ["Essence", "Diesel", "Hybride", "Électrique"],
-    'cars': [
-      {
-        marque: "Renault",
-        modele: "Clio",
-        annee: "2015",
-        kilometrage: 120000,
-        carburant: "Essence",
-        puissance: 5,
-        image: "images/clio.jpg",
-        description: "Petite citadine fiable et économique."
-      },
-      {
-        marque: "Peugeot",
-        modele: "208",
-        annee: "2019",
-        kilometrage: 90000,
-        carburant: "Diesel",
-        puissance: 4,
-        image: "images/peugeot208.jpg",
-        description: "Compacte, confortable et bien entretenue."
-      },
-      {
-        marque: "Toyota",
-        modele: "Yaris",
-        annee: "2021",
-        kilometrage: 60000,
-        carburant: "Hybride",
-        puissance: 4,
-        image: "images/yaris.jpg",
-        description: "Hybride très économique, faible kilométrage."
-      }
-    ]
+    // ... (identique à avant) ...
+    'consult-btn': "Consulter",
+    'modal-title': "Détails de la voiture",
+    'modal-close': "Fermer",
+    'modal-contact': "Contacter le vendeur",
+    'modal-buy': "Demander l'achat P2P",
+    'modal-date': "Date de mise en ligne",
+    'modal-marque': "Marque",
+    'modal-modele': "Modèle",
+    'modal-annee': "Année",
+    'modal-puissance': "Puissance fiscale",
+    'modal-kilometrage': "Kilométrage",
+    'modal-carburant': "Carburant",
+    'modal-transmission': "Transmission",
+    'modal-desc': "Description",
+    'modal-price': "Prix"
   },
   en: {
-    'welcome-title': "Welcome to P2P-CARS",
-    'welcome-desc': "Discover the best offers for used cars here, easily announce the sale of your vehicle, or request to find and purchase the exact used car that meets your needs. Enjoy comprehensive services before and after the sale or purchase, fully tailored to your expectations. And to make your acquisition easier, benefit from flexible payment plans, all within a trusted private-to-private environment.",
-    'btn': "Send a request",
-    'filter-search-label': "Search:",
-    'filter-search-ph': "Search...",
-    'filter-marque-label': "Brand:",
-    'filter-marque-ph': "Choose a brand",
-    'filter-modele-label': "Model:",
-    'filter-modele-ph': "Choose a model",
-    'filter-annee-label': "Year:",
-    'filter-annee-ph': "Year",
-    'filter-kilometrage-label': "Max mileage:",
-    'filter-kilometrage-ph': "Max mileage",
-    'filter-carburant-label': "Fuel:",
-    'filter-carburant-ph': "Fuel",
-    'filter-puissance-label': "Max power (HP):",
-    'filter-puissance-ph': "Max power (HP)",
-    'home': "Home",
-    'nav-accueil': "Home",
-    'nav-simulateur': "Price calculator",
-    'nav-services': "P2P-Cars Services",
-    'nav-login':"Personal Space",
-    'brands': ["Renault", "Peugeot", "Toyota"],
-    'models': {
-      Renault: ["Clio", "Megane", "Captur"],
-      Peugeot: ["208", "308", "2008"],
-      Toyota: ["Yaris", "Corolla", "C-HR"]
-    },
-    'fuels': ["Petrol", "Diesel", "Hybrid", "Electric"],
-    'cars': [
-      {
-        marque: "Renault",
-        modele: "Clio",
-        annee: "2015",
-        kilometrage: 120000,
-        carburant: "Petrol",
-        puissance: 5,
-        image: "images/clio.jpg",
-        description: "Reliable and economical city car."
-      },
-      {
-        marque: "Peugeot",
-        modele: "208",
-        annee: "2019",
-        kilometrage: 90000,
-        carburant: "Diesel",
-        puissance: 4,
-        image: "images/peugeot208.jpg",
-        description: "Compact, comfortable, and well maintained."
-      },
-      {
-        marque: "Toyota",
-        modele: "Yaris",
-        annee: "2021",
-        kilometrage: 60000,
-        carburant: "Hybrid",
-        puissance: 4,
-        image: "images/yaris.jpg",
-        description: "Very economical hybrid, low mileage."
-      }
-    ]
+    // ... (identique à avant) ...
+    'consult-btn': "View details",
+    'modal-title': "Car details",
+    'modal-close': "Close",
+    'modal-contact': "Contact seller",
+    'modal-buy': "Request P2P purchase",
+    'modal-date': "Online since",
+    'modal-marque': "Brand",
+    'modal-modele': "Model",
+    'modal-annee': "Year",
+    'modal-puissance': "Fiscal power",
+    'modal-kilometrage': "Mileage",
+    'modal-carburant': "Fuel",
+    'modal-transmission': "Transmission",
+    'modal-desc': "Description",
+    'modal-price': "Price"
   },
   ar: {
-    'welcome-title': "مرحبا بكم في P2P-CARS",
-    'welcome-desc': "اكتشف أفضل عروض السيارات المستعملة هنا، أعلن عن بيع سيارتك بكل سهولة، أو اطلب العثور على وشراء السيارة المستعملة التي تناسب احتياجاتك بدقة. استمتع بخدمات شاملة قبل وبعد البيع أو الشراء، مصممة بالكامل لتلبية توقعاتك. ولتسهيل عملية الشراء، استفد من خطط دفع مرنة، وكل ذلك في بيئة موثوقة بين الأفراد.",
-    'btn': "إرسال طلب",
-    'filter-search-label': "بحث:",
-    'filter-search-ph': "بحث...",
-    'filter-marque-label': "الماركة:",
-    'filter-marque-ph': "اختر ماركة",
-    'filter-modele-label': "الموديل:",
-    'filter-modele-ph': "اختر موديل",
-    'filter-annee-label': "السنة:",
-    'filter-annee-ph': "السنة",
-    'filter-kilometrage-label': "الحد الأقصى للكيلومترات:",
-    'filter-kilometrage-ph': "أقصى كيلومترات",
-    'filter-carburant-label': "الوقود:",
-    'filter-carburant-ph': "الوقود",
-    'filter-puissance-label': "أقصى قوة (CV):",
-    'filter-puissance-ph': "أقصى قوة (CV)",
-    'home': "الرئيسية",
-    'nav-accueil': "الرئيسية",
-    'nav-simulateur': "حساب السعر",
-    'nav-services': "خدمات P2P-Cars",
-    'nav-login':"الفضاء الشخصي",
-    'brands': ["رينو", "بيجو", "تويوتا"],
-    'models': {
-      "رينو": ["كليو", "ميجان", "كابتور"],
-      "بيجو": ["208", "308", "2008"],
-      "تويوتا": ["ياريس", "كورولا", "سي-إتش آر"]
-    },
-    'fuels': ["بنزين", "ديزل", "هايبرد", "كهرباء"],
-    'cars': [
-      {
-        marque: "رينو",
-        modele: "كليو",
-        annee: "2015",
-        kilometrage: 120000,
-        carburant: "بنزين",
-        puissance: 5,
-        image: "images/clio.jpg",
-        description: "سيارة مدينة موثوقة واقتصادية."
-      },
-      {
-        marque: "بيجو",
-        modele: "208",
-        annee: "2019",
-        kilometrage: 90000,
-        carburant: "ديزل",
-        puissance: 4,
-        image: "images/peugeot208.jpg",
-        description: "مريحة ومدمجة وبحالة جيدة."
-      },
-      {
-        marque: "تويوتا",
-        modele: "ياريس",
-        annee: "2021",
-        kilometrage: 60000,
-        carburant: "هايبرد",
-        puissance: 4,
-        image: "images/yaris.jpg",
-        description: "هايبرد اقتصادي جدًا، كيلومترات قليلة."
-      }
-    ]
+    // ... (identique à avant) ...
+    'consult-btn': "معاينة التفاصيل",
+    'modal-title': "تفاصيل السيارة",
+    'modal-close': "إغلاق",
+    'modal-contact': "اتصل بالبائع",
+    'modal-buy': "طلب شراء P2P",
+    'modal-date': "تاريخ النشر",
+    'modal-marque': "الماركة",
+    'modal-modele': "الموديل",
+    'modal-annee': "السنة",
+    'modal-puissance': "القوة الجبائية",
+    'modal-kilometrage': "الكيلومترات",
+    'modal-carburant': "الوقود",
+    'modal-transmission': "ناقل الحركة",
+    'modal-desc': "الوصف",
+    'modal-price': "السعر"
   }
 };
+
+// ... (Code de gestion de la langue existant) ...
+
 let currentLang = "fr";
 function setLang(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
-  // Traduction des textes
-  [
-    'welcome-title','welcome-desc','btn','filter-search-label','filter-marque-label',
-    'filter-modele-label','filter-annee-label','filter-kilometrage-label',
-    'filter-carburant-label','filter-puissance-label',
-    'nav-accueil','nav-simulateur','nav-services','nav-login'
-  ].forEach(id => {
-    let el = document.getElementById(id);
-    if (el && translations[lang][id]) el.textContent = translations[lang][id];
-  });
-  document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
-  // Boutons langues
-  ['fr','en','ar'].forEach(l=>{
-    document.getElementById('lang-'+l).classList.remove('active');
-  });
-  document.getElementById('lang-'+lang).classList.add('active');
-  // Placeholders et select options
-  document.getElementById('search').placeholder = translations[lang]['filter-search-ph'];
-  document.getElementById('kilometrage').placeholder = translations[lang]['filter-kilometrage-ph'];
-  document.getElementById('puissance').placeholder = translations[lang]['filter-puissance-ph'];
-  // Marques
-  let marqueSel = document.getElementById('marque');
-  marqueSel.innerHTML = `<option value="">${translations[lang]['filter-marque-ph']}</option>` +
-    translations[lang]['brands'].map(m=>`<option value="${m}">${m}</option>`).join('');
-  // Modèles
-  fillModelSelect();
-  // Années
-  let anneeSel = document.getElementById('annee');
-  anneeSel.innerHTML = `<option value="">${translations[lang]['filter-annee-ph']}</option>`;
-  for (let y = new Date().getFullYear(); y >= 2000; y--) {
-    anneeSel.innerHTML += `<option value="${y}">${y}</option>`;
-  }
-  // Carburants
-  let carburantSel = document.getElementById('carburant');
-  carburantSel.innerHTML = `<option value="">${translations[lang]['filter-carburant-ph']}</option>` +
-    translations[lang]['fuels'].map(f=>`<option value="${f}">${f}</option>`).join('');
-  // Affichage des exemples voitures
+  // ... (Code existant) ...
   displayCars();
 }
 function fillModelSelect() {
-  let marque = document.getElementById('marque').value;
-  let modeleSel = document.getElementById('modele');
-  modeleSel.innerHTML = `<option value="">${translations[currentLang]['filter-modele-ph']}</option>`;
-  if (translations[currentLang]['models'][marque]) {
-    translations[currentLang]['models'][marque].forEach(m=>{
-      modeleSel.innerHTML += `<option value="${m}">${m}</option>`;
-    });
-  }
+  // ... (Code existant) ...
 }
 function displayCars() {
+  // Ajoute l'appel à fetch ici
+  fetch(apiURL)
+    .then(res => res.json())
+    .then(data => {
+      if (!Array.isArray(data)) return;
+      const cars = data;
+      const list = document.getElementById("carList");
+      const search = document.getElementById("search").value.toLowerCase();
+      const marque = document.getElementById("marque").value;
+      const modele = document.getElementById("modele").value;
+      const annee = document.getElementById("annee").value;
+      const kilometrage = document.getElementById("kilometrage").value;
+      const carburant = document.getElementById("carburant").value;
+      const puissance = document.getElementById("puissance").value;
+      // Filtre
+      const filtered = cars.filter(c => {
+        return (
+          (search === "" || c.marque?.toLowerCase().includes(search) || c.modele?.toLowerCase().includes(search)) &&
+          (marque === "" || c.marque === marque) &&
+          (modele === "" || c.modele === modele) &&
+          (annee === "" || c.annee == annee) &&
+          (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
+          (carburant === "" || c.carburant === carburant) &&
+          (puissance === "" || c.puissance_fiscal <= parseInt(puissance || Infinity))
+        );
+      });
+      list.innerHTML = "";
+      filtered.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "car";
+        // Pour l'image on prend la première
+        let imagesArr = Array.isArray(c.images) ? c.images : (typeof c.images === "string" ? c.images.split(",") : []);
+        let imgLink = imagesArr.length > 0 ? imgBase + imagesArr[0].replace(/\\/g,"/") : "images/default.jpg";
+        div.innerHTML = `
+          <img src="${imgLink}" alt="${c.marque} ${c.modele}">
+          <div class="car-details">
+            <h3>${c.marque || ""} ${c.modele || ""} (${c.annee || ""})</h3>
+            <p><strong>${translations[currentLang]['modal-kilometrage']}</strong> ${c.kilometrage || ""} km</p>
+            <p><strong>${translations[currentLang]['modal-carburant']}</strong> ${c.carburant || ""}</p>
+            <p><strong>${translations[currentLang]['modal-puissance']}</strong> ${c.puissance_fiscal || ""}</p>
+            <p><strong>${translations[currentLang]['modal-price']}</strong> ${c.prix ? c.prix + " €" : ""}</p>
+            <p>${c.description || ""}</p>
+            <button class="consult-btn" data-index="${c.Ref_annonce}" style="margin-top:8px;">${translations[currentLang]['consult-btn']}</button>
+          </div>
+        `;
+        list.appendChild(div);
+        div.querySelector(".consult-btn").addEventListener("click", ()=>openModal(c));
+      });
+    })
+    .catch(() => {
+      // fallback exemple si erreur API
+      fallbackDisplayCars();
+    });
+}
+function fallbackDisplayCars() {
+  // Utilise l'exemple statique si l'API ne répond pas
   const cars = translations[currentLang]['cars'];
   const list = document.getElementById("carList");
   const search = document.getElementById("search").value.toLowerCase();
@@ -585,12 +468,61 @@ function displayCars() {
         <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
         <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
         <p>${c.description}</p>
-        <button>${translations[currentLang]['btn']}</button>
+        <button class="consult-btn">${translations[currentLang]['consult-btn']}</button>
       </div>
     `;
     list.appendChild(div);
+    div.querySelector(".consult-btn").addEventListener("click", ()=>openModal(c));
   });
 }
+
+// MODAL LOGIC
+function openModal(car) {
+  let imagesArr = Array.isArray(car.images) ? car.images : (typeof car.images === "string" ? car.images.split(",") : []);
+  let imagesHtml = imagesArr.map(img=>`<img src="${imgBase + img.replace(/\\/g,"/")}" alt="Car image">`).join('');
+  let priceStr = car.prix ? car.prix + " €" : "";
+  let modalBg = document.getElementById("modal-bg");
+  modalBg.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" aria-label="${translations[currentLang]['modal-close']}">&times;</button>
+      <h2>${translations[currentLang]['modal-title']}</h2>
+      <div class="modal-images">${imagesHtml}</div>
+      <div class="modal-details">
+        <p><strong>${translations[currentLang]['modal-date']}:</strong> ${car.date_mise_en_ligne || ""}</p>
+        <p><strong>${translations[currentLang]['modal-marque']}:</strong> ${car.marque || ""}</p>
+        <p><strong>${translations[currentLang]['modal-modele']}:</strong> ${car.modele || ""}</p>
+        <p><strong>${translations[currentLang]['modal-annee']}:</strong> ${car.annee || ""}</p>
+        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.puissance_fiscal || ""}</p>
+        <p><strong>${translations[currentLang]['modal-kilometrage']}:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>${translations[currentLang]['modal-carburant']}:</strong> ${car.carburant || ""}</p>
+        <p><strong>${translations[currentLang]['modal-transmission']}:</strong> ${car.transmission || ""}</p>
+        <p><strong>${translations[currentLang]['modal-desc']}:</strong> ${car.description || ""}</p>
+        <p><strong>${translations[currentLang]['modal-price']}:</strong> ${priceStr}</p>
+      </div>
+      <div class="modal-actions">
+        <button id="contact-btn">${translations[currentLang]['modal-contact']}</button>
+        <button id="buy-btn">${translations[currentLang]['modal-buy']}</button>
+      </div>
+    </div>
+  `;
+  modalBg.style.display = "flex";
+  // Fermeture
+  modalBg.querySelector(".modal-close").onclick = function() { modalBg.style.display = "none"; };
+  modalBg.onclick = function(e) {
+    if (e.target === modalBg) modalBg.style.display = "none";
+  };
+  // Action boutons
+  document.getElementById("contact-btn").onclick = function() {
+    // Remplacer par votre logique d'envoi/affichage formulaire contact
+    window.location.href = "mailto:contact@p2p-cars.com?subject=Contact vendeur Ref " + (car.Ref_annonce || "");
+  };
+  document.getElementById("buy-btn").onclick = function() {
+    // Remplacer par la logique d'achat, ici redirige vers le service avec ref annonce
+    window.location.href = "https://p2p-cars.com/carservices?buy=" + encodeURIComponent(car.Ref_annonce || "");
+  };
+}
+
+// Listeners
 document.getElementById("marque").addEventListener("change", () => {
   fillModelSelect();
   displayCars();
@@ -607,10 +539,9 @@ document.getElementById("search").addEventListener("input", displayCars);
 // Initialisation
 setLang('fr');
 document.getElementById('btn').addEventListener('click', function() {
-  
   window.location.href = 'https://p2p-cars.com/carservices';
 });
-
 </script>
 </body>
+</html>
 </html>
