@@ -608,6 +608,7 @@ function fillModelSelect() {
     });
   }
 }
+
 function displayCars() {
   fetch(apiURL)
     .then(res => res.json())
@@ -622,6 +623,7 @@ function displayCars() {
       const kilometrage = document.getElementById("kilometrage").value;
       const carburant = document.getElementById("carburant").value;
       const puissance = document.getElementById("puissance").value;
+
       const filtered = cars.filter(c => {
         return (
           (search === "" || (c.marque && c.marque.toLowerCase().includes(search)) || (c.modele && c.modele.toLowerCase().includes(search))) &&
@@ -630,9 +632,10 @@ function displayCars() {
           (annee === "" || c.annee == annee) &&
           (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
           (carburant === "" || c.carburant === carburant) &&
-          (puissance === "" || c.puissance_fiscal <= parseInt(puissance || Infinity))
+          (puissance === "" || c.cv <= parseInt(puissance || Infinity))
         );
       });
+
       list.innerHTML = "";
       filtered.forEach(c => {
         const div = document.createElement("div");
@@ -645,10 +648,10 @@ function displayCars() {
             <h3>${c.marque || ""} ${c.modele || ""} (${c.annee || ""})</h3>
             <p><strong>${translations[currentLang]['modal-kilometrage']}</strong> ${c.kilometrage || ""} km</p>
             <p><strong>${translations[currentLang]['modal-carburant']}</strong> ${c.carburant || ""}</p>
-            <p><strong>${translations[currentLang]['modal-puissance']}</strong> ${c.puissance_fiscal || ""}</p>
+            <p><strong>${translations[currentLang]['modal-puissance']}</strong> ${c.cv || ""}</p>
             <p><strong>${translations[currentLang]['modal-price']}</strong> ${c.prix ? c.prix + " €" : ""}</p>
             <p>${c.description || ""}</p>
-            <button class="consult-btn" data-index="${c.Ref_annonce}" style="margin-top:8px;">${translations[currentLang]['consult-btn']}</button>
+            <button class="consult-btn" data-index="${c.Ref}" style="margin-top:8px;">${translations[currentLang]['consult-btn']}</button>
           </div>
         `;
         list.appendChild(div);
@@ -659,6 +662,7 @@ function displayCars() {
       fallbackDisplayCars();
     });
 }
+
 function fallbackDisplayCars() {
   const cars = translations[currentLang]['cars'];
   const list = document.getElementById("carList");
@@ -669,6 +673,7 @@ function fallbackDisplayCars() {
   const kilometrage = document.getElementById("kilometrage").value;
   const carburant = document.getElementById("carburant").value;
   const puissance = document.getElementById("puissance").value;
+
   const filtered = cars.filter(c => {
     return (
       (search === "" || c.marque.toLowerCase().includes(search) || c.modele.toLowerCase().includes(search)) &&
@@ -680,6 +685,7 @@ function fallbackDisplayCars() {
       (puissance === "" || c.puissance <= parseInt(puissance || Infinity))
     );
   });
+
   list.innerHTML = "";
   filtered.forEach(c => {
     const div = document.createElement("div");
@@ -699,6 +705,7 @@ function fallbackDisplayCars() {
     div.querySelector(".consult-btn").addEventListener("click", ()=>openModal(c));
   });
 }
+
 function openModal(car) {
   let imagesArr = Array.isArray(car.images) ? car.images : (typeof car.images === "string" ? car.images.split(",") : []);
   let imagesHtml = imagesArr.map(img=>`<img src="${imgBase + img.replace(/\\/g,"/")}" alt="Car image">`).join('');
@@ -714,7 +721,7 @@ function openModal(car) {
         <p><strong>${translations[currentLang]['modal-marque']}:</strong> ${car.marque || ""}</p>
         <p><strong>${translations[currentLang]['modal-modele']}:</strong> ${car.modele || ""}</p>
         <p><strong>${translations[currentLang]['modal-annee']}:</strong> ${car.annee || ""}</p>
-        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.puissance_fiscal || ""}</p>
+        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.cv || ""}</p>
         <p><strong>${translations[currentLang]['modal-kilometrage']}:</strong> ${car.kilometrage || ""} km</p>
         <p><strong>${translations[currentLang]['modal-carburant']}:</strong> ${car.carburant || ""}</p>
         <p><strong>${translations[currentLang]['modal-transmission']}:</strong> ${car.transmission || ""}</p>
@@ -733,12 +740,13 @@ function openModal(car) {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
   document.getElementById("contact-btn").onclick = function() {
-    window.location.href = "mailto:contact@p2p-cars.com?subject=Contact vendeur Ref " + (car.Ref_annonce || "");
+    window.location.href = "mailto:contact@p2p-cars.com?subject=Contact vendeur Ref " + (car.Ref || "");
   };
   document.getElementById("buy-btn").onclick = function() {
-    window.location.href = "https://p2p-cars.com/carservices?buy=" + encodeURIComponent(car.Ref_annonce || "");
+    window.location.href = "https://p2p-cars.com/carservices?buy=" + encodeURIComponent(car.Ref || "");
   };
 }
+
 document.getElementById("marque").addEventListener("change", () => {
   fillModelSelect();
   displayCars();
