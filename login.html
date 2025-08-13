@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,9 +86,8 @@
     p { margin-top: 24px; text-align: center; font-size: 0.95rem; user-select: none; }
     p a#forgotPassword { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
     p a#forgotPassword:hover { color: var(--blue-dark);}
-    p a#créeruncompte { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
-    p a#créeruncompte:hover { color: var(--blue-dark);}
-    @media (max-width: 480px) {
+    p a#creeruncompte { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
+    p a#creeruncompte:hover { color: var(--blue-dark);}    @media (max-width: 480px) {
       h1 { font-size: 2rem; margin-bottom: 16px; }
       form#loginForm { padding: 24px 18px; max-width: 95vw; }
       button[type="submit"] { font-size: 1rem; padding: 12px 0;}
@@ -156,7 +161,7 @@
       font-size: 1.5rem;
       cursor: pointer;
     }
-            
+   
     footer { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.25);}
   </style>
 </head>
@@ -193,7 +198,7 @@
         <label class="checkbox-container"><input type="checkbox" id="rememberMe" checked> <span id="label-remember">Se souvenir de moi</span></label>
         <button id="submitBtn" type="submit"><span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span></button>
         <p><a href="#" id="forgotPassword" style="cursor:pointer; text-decoration:underline;">Mot de passe oublié ?</a></p>
-        <p><a href="#" id="creeruncompteLink" style="cursor:pointer; text-decoration:underline;">Créer un compte</a></p>
+        <p><a href="#" id="creeruncompte" style="cursor:pointer; text-decoration:underline;">Créer un compte</a></p>      
       </form>
     </div>
   </div>
@@ -213,45 +218,45 @@
 
     <input type="text" id="teletzon" placeholder="Téléphone">
    <label for="villezon">Ville :</label>
-<select id="villezon" name="ville">
-  <option value="">-- Sélectionnez une ville --</option>
-  <option value="Agadir">Agadir</option>
-  <option value="Al Hoceima">Al Hoceima</option>
-  <option value="Azrou">Azrou</option>
-  <option value="Beni Mellal">Beni Mellal</option>
-  <option value="Berkane">Berkane</option>
-  <option value="Berrechid">Berrechid</option>
-  <option value="Casablanca">Casablanca</option>
-  <option value="Chefchaouen">Chefchaouen</option>
-  <option value="Dakhla">Dakhla</option>
-  <option value="El Jadida">El Jadida</option>
-  <option value="Errachidia">Errachidia</option>
-  <option value="Essaouira">Essaouira</option>
-  <option value="Fès">Fès</option>
-  <option value="Guelmim">Guelmim</option>
-  <option value="Ifrane">Ifrane</option>
-  <option value="Kénitra">Kénitra</option>
-  <option value="Khouribga">Khouribga</option>
-  <option value="Ksar El Kebir">Ksar El Kebir</option>
-  <option value="Laâyoune">Laâyoune</option>
-  <option value="Larache">Larache</option>
-  <option value="Marrakech">Marrakech</option>
-  <option value="Martil">Martil</option>
-  <option value="Meknès">Meknès</option>
-  <option value="Mohammedia">Mohammedia</option>
-  <option value="Nador">Nador</option>
-  <option value="Ouarzazate">Ouarzazate</option>
-  <option value="Oujda">Oujda</option>
-  <option value="Rabat">Rabat</option>
-  <option value="Safi">Safi</option>
-  <option value="Salé">Salé</option>
-  <option value="Settat">Settat</option>
-  <option value="Sidi Kacem">Sidi Kacem</option>
-  <option value="Tanger">Tanger</option>
-  <option value="Taza">Taza</option>
-  <option value="Tétouan">Tétouan</option>
-  <option value="Tiznit">Tiznit</option>
-</select>
+    <select id="villezon" name="ville">
+      <option value="">-- Sélectionnez une ville --</option>
+      <option value="Agadir">Agadir</option>
+      <option value="Al Hoceima">Al Hoceima</option>
+      <option value="Azrou">Azrou</option>
+      <option value="Beni Mellal">Beni Mellal</option>
+      <option value="Berkane">Berkane</option>
+      <option value="Berrechid">Berrechid</option>
+      <option value="Casablanca">Casablanca</option>
+      <option value="Chefchaouen">Chefchaouen</option>
+      <option value="Dakhla">Dakhla</option>
+      <option value="El Jadida">El Jadida</option>
+      <option value="Errachidia">Errachidia</option>
+      <option value="Essaouira">Essaouira</option>
+      <option value="Fès">Fès</option>
+      <option value="Guelmim">Guelmim</option>
+      <option value="Ifrane">Ifrane</option>
+      <option value="Kénitra">Kénitra</option>
+      <option value="Khouribga">Khouribga</option>
+      <option value="Ksar El Kebir">Ksar El Kebir</option>
+      <option value="Laâyoune">Laâyoune</option>
+      <option value="Larache">Larache</option>
+      <option value="Marrakech">Marrakech</option>
+      <option value="Martil">Martil</option>
+      <option value="Meknès">Meknès</option>
+      <option value="Mohammedia">Mohammedia</option>
+      <option value="Nador">Nador</option>
+      <option value="Ouarzazate">Ouarzazate</option>
+      <option value="Oujda">Oujda</option>
+      <option value="Rabat">Rabat</option>
+      <option value="Safi">Safi</option>
+      <option value="Salé">Salé</option>
+      <option value="Settat">Settat</option>
+      <option value="Sidi Kacem">Sidi Kacem</option>
+      <option value="Tanger">Tanger</option>
+      <option value="Taza">Taza</option>
+      <option value="Tétouan">Tétouan</option>
+      <option value="Tiznit">Tiznit</option>
+    </select>
 
     <button id="btnCreateAccount">Créer un compte</button>
 
@@ -261,7 +266,6 @@
     </div>
   </div>
 </div>
-
   <footer>
     &copy; 2025 IASMarket Services. Tous droits réservés.
   </footer>
@@ -276,7 +280,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> Se connecter',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> Connexion…',
         'forgot': "Mot de passe oublié ?",
-        'créerc': "créer un compte",
+        'creat':"créer un compte",
         'home': "Accueil",
         'error-email': "Adresse email invalide",
         'error-password': "Mot de passe trop court (min 4 caractères)",
@@ -299,7 +303,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> Login',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> Logging in…',
         'forgot': "Forgot password?",
-        'créerc': "create an account",
+        'creat':"Create an account",
         'home': "Home",
         'error-email': "Invalid email address",
         'error-password': "Password too short (min 4 characters)",
@@ -322,7 +326,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> جاري الدخول…',
         'forgot': "نسيت كلمة المرور؟",
-        'créerc': "إنشاء حساب",
+        'creat':"إنشاء حساب",
         'home': "الرئيسية",
         'error-email': "بريد إلكتروني غير صالح",
         'error-password': "كلمة المرور قصيرة جداً (4 أحرف على الأقل)",
@@ -349,7 +353,7 @@
       document.getElementById('label-remember').textContent = translations[lang]['label-remember'];
       document.getElementById('btnContent').innerHTML = translations[lang]['btn'];
       document.getElementById('forgotPassword').textContent = translations[lang]['forgot'];
-      document.getElementById('creeruncompteLink').textContent = translations[lang]['créerc'];
+      document.getElementById('creeruncompte').textContent = translations[lang]['creat'];
       document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
       ['fr','en','ar'].forEach(l=>{
         document.getElementById('lang-'+l).classList.remove('active');
@@ -378,10 +382,8 @@
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
       const forgotPasswordLink = document.getElementById('forgotPassword');
-      const créeruncompteLink = document.getElementById('creeruncompteLink');
-      const modal = document.getElementById('modal');
-      const closeModal = document.getElementById('closeModal');
-      const btnCreateAccount = document.getElementById('btnCreateAccount');
+      const creeruncompteLink = document.getElementById('creeruncompte');
+      const btnCreateAccountLink = document.getElementById('btnCreateAccount');
       const chkAcceptRules = document.getElementById("acceptRules");
 
       window.addEventListener('DOMContentLoaded', () => {
@@ -446,92 +448,7 @@
         }
       });
 
-        // Ouvrir le modal
-        créeruncompteLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          clearFieldErrors();
-          modal.style.display = 'block';
-        });
-
-        // Fermer le modal via la croix
-        closeModal.addEventListener('click', () => {
-          modal.style.display = 'none';
-        });
-
-        // Fermer le modal en cliquant en dehors
-        window.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-
-        // Bouton "Créer un compte"
-      function showModalMessage(type, text) {
-        const modalMsg = document.getElementById('modalMessage');
-        modalMsg.textContent = text;
-        modalMsg.style.padding = '8px';
-        modalMsg.style.borderRadius = '6px';
-        modalMsg.style.fontWeight = 'bold';
-
-        if (type === 'success') {
-          modalMsg.style.background = '#d1fae5';
-          modalMsg.style.color = '#065f46';
-        } else if (type === 'error') {
-          modalMsg.style.background = '#fee2e2';
-          modalMsg.style.color = '#991b1b';
-        } else {
-          modalMsg.style.background = '#e0e7ff';
-          modalMsg.style.color = '#1e3a8a';
-        }
-      }
-
-
-btnCreateAccount.addEventListener("click", async () => {
-  if (!chkAcceptRules.checked) {
-    showModalMessage('error', "Vous devez accepter les règles avant de continuer.");
-    return;
-  }
-
-  const emailEl = document.getElementById("email");
-  const nomprenomEl = document.getElementById("nomprenom");
-  const ncinEl = document.getElementById("ncin");
-  const teleEl = document.getElementById("tele");
-  const villeEl = document.getElementById("ville");
-
-  if (!emailEl || !nomprenomEl || !ncinEl || !teleEl || !villeEl) {
-    console.error("Certains champs sont introuvables dans le DOM");
-    return;
-  }
-
-  const email = emailEl.value;
-  const nomprenom = nomprenomEl.value;
-  const ncin = ncinEl.value;
-  const tele = teleEl.value;
-  const ville = villeEl.value;
-
-  try {
-    const response = await fetch("/api/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, nomprenom, ncin, tele, ville })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      showModalMessage('success', "Compte créé avec succès !");
-    } else {
-      const msgText = result.message?.fr || result.message || "Erreur inconnue";
-      showModalMessage('error', msgText);
-    }
-  } catch (error) {
-    console.error("Erreur lors de l'inscription:", error);
-    showModalMessage('error', "Erreur serveur, veuillez réessayer plus tard.");
-  }
-});
-
-
-
-form.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFieldErrors();
         showMessage('info', '');
@@ -585,17 +502,99 @@ form.addEventListener('submit', async (e) => {
           showMessage('success', translations[currentLang]['success-login']);
           setLoading(false);
           window.location.href = 'https://p2p-cars.com/profile';
-          // Après connexion/signup réussie
-          localStorage.setItem('p2p_email', emailInput.value);
-          localStorage.setItem('p2p_tele', teletzon.value);
-          localStorage.setItem('p2p_ncin', ncinzon.value);
-
         } catch (err) {
           showMessage('error', translations[currentLang]['error-network']);
           setLoading(false);
         }
       });
+///////////
 
+        // Ouvrir le modal
+        creeruncompteLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          clearFieldErrors();
+          modal.style.display = 'block';
+        });
+
+        // Fermer le modal via la croix
+        closeModal.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+
+        // Fermer le modal en cliquant en dehors
+        window.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+
+      
+      function showModalMessage(type, text) {
+        const modalMsg = document.getElementById('modalMessage');
+        modalMsg.textContent = text;
+        modalMsg.style.padding = '8px';
+        modalMsg.style.borderRadius = '6px';
+        modalMsg.style.fontWeight = 'bold';
+
+        if (type === 'success') {
+          modalMsg.style.background = '#d1fae5';
+          modalMsg.style.color = '#065f46';
+        } else if (type === 'error') {
+          modalMsg.style.background = '#fee2e2';
+          modalMsg.style.color = '#991b1b';
+        } else {
+          modalMsg.style.background = '#e0e7ff';
+          modalMsg.style.color = '#1e3a8a';
+        }
+      }
+  // Bouton "Créer un compte"
+btnCreateAccountLink.addEventListener("click", async () => {
+  if (!chkAcceptRules.checked) {
+    showModalMessage('error', "Vous devez accepter les règles avant de continuer.");
+    return;
+  }
+
+const emailEl = document.getElementById("emailzon");
+const nomprenomEl = document.getElementById("nomprenomzon");
+const ncinEl = document.getElementById("ncinzon");
+const teleEl = document.getElementById("teletzon");
+const villeEl = document.getElementById("villezon");
+
+  if (!emailEl || !nomprenomEl || !ncinEl || !teleEl || !villeEl) {
+    console.error("Certains champs sont introuvables dans le DOM");
+    return;
+  }
+
+  const email = emailEl.value;
+  const nomprenom = nomprenomEl.value;
+  const ncin = ncinEl.value;
+  const tele = teleEl.value;
+  const ville = villeEl.value;
+
+  try {
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, nomprenom, ncin, tele, ville })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      showModalMessage('success', "Compte créé avec succès !");
+    } else {
+      const msgText = result.message?.fr || result.message || "Erreur inconnue";
+      showModalMessage('error', msgText);
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'inscription:", error);
+    showModalMessage('error', "Erreur serveur, veuillez réessayer plus tard.");
+  }
+});
+
+
+
+
+/////////////:
       window.addEventListener('DOMContentLoaded', () => {
         const savedEmail = localStorage.getItem('p2p_email');
         if (savedEmail) emailInput.value = savedEmail;
