@@ -487,10 +487,8 @@
 
 
 btnCreateAccount.addEventListener("click", async () => {
-  if (!chkAcceptRules.checked) {
-    showModalMessage('error', "Vous devez accepter les règles avant de continuer.");
-    return;
-  }
+
+
 
   const email = document.getElementById("email").value;
   const nomprenom = document.getElementById("nomprenom").value;
