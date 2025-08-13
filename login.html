@@ -488,6 +488,13 @@
 btnCreateAccount.addEventListener('click', async () => {
   clearFieldErrors();
 
+  // Vérifier que l'utilisateur a accepté les règles
+  const acceptRules = document.getElementById('acceptRules');
+  if (!acceptRules.checked) {
+    showModalMessage("error", "Vous devez accepter les réglementations pour créer un compte.");
+    return; // Stopper l'exécution si non coché
+  }
+
   const datac = {
     email: emailzon.value.trim(),
     nomprenom: nomprenomzon.value.trim(),
