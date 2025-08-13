@@ -382,6 +382,7 @@
       const modal = document.getElementById('modal');
       const closeModal = document.getElementById('closeModal');
       const btnCreateAccount = document.getElementById('btnCreateAccount');
+      const chkAcceptRules = document.getElementById("acceptRules");
 
       window.addEventListener('DOMContentLoaded', () => {
         const savedEmail = localStorage.getItem('p2p_email');
@@ -485,50 +486,39 @@
       }
 
 
-btnCreateAccount.addEventListener('click', async () => {
-  clearFieldErrors();
-
-  // Vérifier que l'utilisateur a accepté les règles
-  const acceptRules = document.getElementById('acceptRules');
-  if (!acceptRules.checked) {
-    showModalMessage("error", "Vous devez accepter les réglementations pour créer un compte.");
-    return; // Stopper l'exécution si non coché
-  }
-
-  const datac = {
-    email: emailzon.value.trim(),
-    nomprenom: nomprenomzon.value.trim(),
-    ncin: ncinzon.value.trim(),
-    tele: teletzon.value.trim(),
-    ville: villezon.value.trim()
-  };
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(datac.email)) {
-    showModalMessage("error", datac.email + " " + translations[currentLang]['reset-email-prompt']);
+btnCreateAccount.addEventListener("click", async () => {
+  if (!chkAcceptRules.checked) {
+    showModalMessage('error', "Vous devez accepter les règles avant de continuer.");
     return;
   }
 
+  const email = document.getElementById("email").value;
+  const nomprenom = document.getElementById("nomprenom").value;
+  const ncin = document.getElementById("ncin").value;
+  const tele = document.getElementById("tele").value;
+  const ville = document.getElementById("ville").value;
+
   try {
-    const response = await fetch('https://apicars.p2p-cars.com/api/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(datac)
+    const response = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, nomprenom, ncin, tele, ville })
     });
 
-    const data = await response.json();
+    const result = await response.json();
 
-    if (response.ok) {
-      showModalMessage("success", datac.email + " " + translations[currentLang]['success-reset']);
-      modal.style.display = 'none';
+    if (result.success) {
+      showModalMessage('success', "Compte créé avec succès !");
     } else {
-      showModalMessage("error", datac.email + " : " + (data.message?.fr || translations[currentLang]['error-reset']));
+      // Affiche le message côté client
+      const msgText = result.message?.fr || result.message || "Erreur inconnue";
+      showModalMessage('error', msgText);
     }
-  } catch (err) {
-    showModalMessage("error", datac.email + " " + translations[currentLang]['error-reset']);
+  } catch (error) {
+    console.error("Erreur lors de l'inscription:", error);
+    showModalMessage('error', "Erreur serveur, veuillez réessayer plus tard.");
   }
 });
-
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFieldErrors();
