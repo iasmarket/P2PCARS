@@ -207,14 +207,7 @@
 
     <input type="email" id="emailzon" placeholder="Email">
     <input type="text" id="nomprenomzon" placeholder="Nom et Prénom">
-    <input type="text" id="ncinzon" placeholder="NCIN">
-
-    <label>CIN Recto :</label>
-    <input type="file" id="cinRecto" accept="image/*">
-    
-    <label>CIN Verso :</label>
-    <input type="file" id="cinVerso" accept="image/*">
-
+    <input type="text" id="ncinzon" placeholder="N°CIN">
     <input type="text" id="teletzon" placeholder="Téléphone">
     <input type="text" id="villezon" placeholder="Ville">
 
@@ -461,8 +454,7 @@
           ville: villezon.value.trim()
         };
 
-        const fileRecto = cinRecto.files[0];
-        const fileVerso = cinVerso.files[0];
+
         const acceptRules = document.getElementById('acceptRules').checked;
 
         // Vérif : tous les champs texte
@@ -473,11 +465,7 @@
           }
         }
 
-        // Vérif : fichiers CIN
-        if (!fileRecto || !fileVerso) {
-          showModalMessage('error', 'Veuillez télécharger les deux faces de votre CIN.');
-          return;
-        }
+
 
         // Vérif : case cochée
         if (!acceptRules) {
@@ -497,8 +485,6 @@
         for (let key in datac) {
           formData.append(key, datac[key]);
         }
-        formData.append('cin_recto', fileRecto);
-        formData.append('cin_verso', fileVerso);
 
         try {
           const response = await fetch('https://apicars.p2p-cars.com/api/signup', {
