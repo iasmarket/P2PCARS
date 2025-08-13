@@ -80,6 +80,8 @@
     p { margin-top: 24px; text-align: center; font-size: 0.95rem; user-select: none; }
     p a#forgotPassword { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
     p a#forgotPassword:hover { color: var(--blue-dark);}
+    p a#créeruncompte { color: var(--blue); text-decoration: underline; cursor: pointer; transition: color var(--transition); user-select: text;}
+    p a#créeruncompte:hover { color: var(--blue-dark);}
     @media (max-width: 480px) {
       h1 { font-size: 2rem; margin-bottom: 16px; }
       form#loginForm { padding: 24px 18px; max-width: 95vw; }
@@ -98,6 +100,63 @@
       .main-container { flex-direction: column;}
       .left-section, .right-section { flex: none; padding: 20px 0;}
     }
+    .modal {
+      display: none; /* caché par défaut */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6); /* fond noir transparent */
+    }
+
+    .modal-content {
+      background-color: #e8f0f14b;
+      margin: auto;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 450px; /* plus large */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="email"],
+    .modal-content input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .modal-content button {
+      background-color: #2563eb;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .modal-content button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+            
     footer { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.25);}
   </style>
 </head>
@@ -134,9 +193,40 @@
         <label class="checkbox-container"><input type="checkbox" id="rememberMe" checked> <span id="label-remember">Se souvenir de moi</span></label>
         <button id="submitBtn" type="submit"><span id="btnContent"><i class="fas fa-sign-in-alt"></i> Se connecter</span></button>
         <p><a href="#" id="forgotPassword" style="cursor:pointer; text-decoration:underline;">Mot de passe oublié ?</a></p>
+        <p><a href="#" id="creeruncompteLink" style="cursor:pointer; text-decoration:underline;">Créer un compte</a></p>
       </form>
     </div>
   </div>
+  <!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal" class="close">&times;</span>
+    <h2>Créer un compte</h2>
+
+    <div id="modalMessage" style="margin-bottom:10px; font-size:0.9rem;"></div>
+
+    <input type="email" id="emailzon" placeholder="Email">
+    <input type="text" id="nomprenomzon" placeholder="Nom et Prénom">
+    <input type="text" id="ncinzon" placeholder="NCIN">
+
+    <label>CIN Recto :</label>
+    <input type="file" id="cinRecto" accept="image/*">
+    
+    <label>CIN Verso :</label>
+    <input type="file" id="cinVerso" accept="image/*">
+
+    <input type="text" id="teletzon" placeholder="Téléphone">
+    <input type="text" id="villezon" placeholder="Ville">
+
+    <button id="btnCreateAccount">Créer un compte</button>
+
+    <div style="margin-top:10px; text-align:left;">
+      <input type="checkbox" id="acceptRules">
+      <label for="acceptRules">J'ai lu et j'accepte les réglementations en vigueur</label>
+    </div>
+  </div>
+</div>
+
   <footer>
     &copy; 2025 IASMarket Services. Tous droits réservés.
   </footer>
@@ -151,6 +241,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> Se connecter',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> Connexion…',
         'forgot': "Mot de passe oublié ?",
+        'créerc': "créer un compte",
         'home': "Accueil",
         'error-email': "Adresse email invalide",
         'error-password': "Mot de passe trop court (min 4 caractères)",
@@ -173,6 +264,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> Login',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> Logging in…',
         'forgot': "Forgot password?",
+        'créerc': "create an account",
         'home': "Home",
         'error-email': "Invalid email address",
         'error-password': "Password too short (min 4 characters)",
@@ -195,6 +287,7 @@
         'btn': '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول',
         'btn-loading': '<span class="spinner" aria-hidden="true"></span> جاري الدخول…',
         'forgot': "نسيت كلمة المرور؟",
+        'créerc': "إنشاء حساب",
         'home': "الرئيسية",
         'error-email': "بريد إلكتروني غير صالح",
         'error-password': "كلمة المرور قصيرة جداً (4 أحرف على الأقل)",
@@ -221,6 +314,7 @@
       document.getElementById('label-remember').textContent = translations[lang]['label-remember'];
       document.getElementById('btnContent').innerHTML = translations[lang]['btn'];
       document.getElementById('forgotPassword').textContent = translations[lang]['forgot'];
+      document.getElementById('creeruncompteLink').textContent = translations[lang]['créerc'];
       document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
       ['fr','en','ar'].forEach(l=>{
         document.getElementById('lang-'+l).classList.remove('active');
@@ -249,6 +343,10 @@
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
       const forgotPasswordLink = document.getElementById('forgotPassword');
+      const créeruncompteLink = document.getElementById('creeruncompteLink');
+      const modal = document.getElementById('modal');
+      const closeModal = document.getElementById('closeModal');
+      const btnCreateAccount = document.getElementById('btnCreateAccount');
 
       window.addEventListener('DOMContentLoaded', () => {
         const savedEmail = localStorage.getItem('p2p_email');
@@ -310,6 +408,169 @@
         } catch (err) {
           showMessage('error', translations[currentLang]['error-reset']);
         }
+      });
+
+        // Ouvrir le modal
+        créeruncompteLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          clearFieldErrors();
+          modal.style.display = 'block';
+        });
+
+        // Fermer le modal via la croix
+        closeModal.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+
+        // Fermer le modal en cliquant en dehors
+        window.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+
+        // Bouton "Créer un compte"
+      function showModalMessage(type, text) {
+        const modalMsg = document.getElementById('modalMessage');
+        modalMsg.textContent = text;
+        modalMsg.style.padding = '8px';
+        modalMsg.style.borderRadius = '6px';
+        modalMsg.style.fontWeight = 'bold';
+
+        if (type === 'success') {
+          modalMsg.style.background = '#d1fae5';
+          modalMsg.style.color = '#065f46';
+        } else if (type === 'error') {
+          modalMsg.style.background = '#fee2e2';
+          modalMsg.style.color = '#991b1b';
+        } else {
+          modalMsg.style.background = '#e0e7ff';
+          modalMsg.style.color = '#1e3a8a';
+        }
+      }
+
+      btnCreateAccount.addEventListener('click', async () => {
+        clearFieldErrors();
+        showModalMessage('', ''); // Efface ancien message
+
+        const datac = {
+          email: emailzon.value.trim(),
+          nomprenom: nomprenomzon.value.trim(),
+          ncin: ncinzon.value.trim(),
+          tele: teletzon.value.trim(),
+          ville: villezon.value.trim()
+        };
+
+        const fileRecto = cinRecto.files[0];
+        const fileVerso = cinVerso.files[0];
+        const acceptRules = document.getElementById('acceptRules').checked;
+
+        // Vérif : tous les champs texte
+        for (let key in datac) {
+          if (!datac[key]) {
+            showModalMessage('error', 'Veuillez remplir tous les champs.');
+            return;
+          }
+        }
+
+        // Vérif : fichiers CIN
+        if (!fileRecto || !fileVerso) {
+          showModalMessage('error', 'Veuillez télécharger les deux faces de votre CIN.');
+          return;
+        }
+
+        // Vérif : case cochée
+        if (!acceptRules) {
+          showModalMessage('error', 'Vous devez accepter les réglementations.');
+          return;
+        }
+
+        // Vérif email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(datac.email)) {
+          showModalMessage('error', translations[currentLang]['reset-email-prompt']);
+          return;
+        }
+
+        // Préparer FormData pour envoyer fichiers + données
+        const formData = new FormData();
+        for (let key in datac) {
+          formData.append(key, datac[key]);
+        }
+        formData.append('cin_recto', fileRecto);
+        formData.append('cin_verso', fileVerso);
+
+        try {
+          const response = await fetch('https://apicars.p2p-cars.com/api/signup', {
+            method: 'POST',
+            body: formData
+          });
+
+          let serverMessage = '';
+          try {
+            const data = await response.json();
+            serverMessage = data.message || '';
+          } catch {
+            serverMessage = '';
+          }
+
+          if (response.ok) {
+            showModalMessage('success', serverMessage || 'Compte créé avec succès ✅');
+            setTimeout(() => {
+              modal.style.display = 'none';
+            }, 1500);
+          } else {
+            if (response.status === 409) {
+              showModalMessage('error', serverMessage || 'Email / NCIN / Téléphone déjà utilisé.');
+            } else if (response.status >= 500) {
+              showModalMessage('error', serverMessage || 'Serveur en maintenance, essayez plus tard.');
+            } else {
+              showModalMessage('error', serverMessage || 'Erreur inconnue, réessayez.');
+            }
+          }
+        } catch (err) {
+          showModalMessage('error', 'Erreur réseau — impossible de contacter le serveur.');
+        }
+      });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+          });
+
+          window.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+          });
+
+          btnCreateAccount.addEventListener('click', async () => {
+            clearFieldErrors();
+            const datac = {
+              email: emailzon.value.trim(),
+              nomprenom: nomprenomzon.value.trim(),
+              ncin: ncinzon.value.trim(),
+              tele: teletzon.value.trim(),
+              ville: villezon.value.trim()
+            };
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(datac.email)) {
+              showMessage('error', translations[currentLang]['reset-email-prompt']);
+              return;
+            }
+
+            showMessage('info', translations[currentLang]['info-reset']);
+            try {
+              const response = await fetch('https://apicars.p2p-cars.com/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datac)
+              });
+
+              if (!response.ok) throw new Error('Erreur lors de l\'envoi de la demande');
+              showMessage('success', translations[currentLang]['success-reset']);
+              modal.style.display = 'none';
+            } catch (err) {
+              showMessage('error', translations[currentLang]['error-reset']);
+            }
       });
 
       form.addEventListener('submit', async (e) => {
