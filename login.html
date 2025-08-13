@@ -487,14 +487,27 @@
 
 
 btnCreateAccount.addEventListener("click", async () => {
+  if (!chkAcceptRules.checked) {
+    showModalMessage('error', "Vous devez accepter les règles avant de continuer.");
+    return;
+  }
 
+  const emailEl = document.getElementById("email");
+  const nomprenomEl = document.getElementById("nomprenom");
+  const ncinEl = document.getElementById("ncin");
+  const teleEl = document.getElementById("tele");
+  const villeEl = document.getElementById("ville");
 
+  if (!emailEl || !nomprenomEl || !ncinEl || !teleEl || !villeEl) {
+    console.error("Certains champs sont introuvables dans le DOM");
+    return;
+  }
 
-  const email = document.getElementById("email").value;
-  const nomprenom = document.getElementById("nomprenom").value;
-  const ncin = document.getElementById("ncin").value;
-  const tele = document.getElementById("tele").value;
-  const ville = document.getElementById("ville").value;
+  const email = emailEl.value;
+  const nomprenom = nomprenomEl.value;
+  const ncin = ncinEl.value;
+  const tele = teleEl.value;
+  const ville = villeEl.value;
 
   try {
     const response = await fetch("/api/signup", {
@@ -504,11 +517,9 @@ btnCreateAccount.addEventListener("click", async () => {
     });
 
     const result = await response.json();
-
     if (result.success) {
       showModalMessage('success', "Compte créé avec succès !");
     } else {
-      // Affiche le message côté client
       const msgText = result.message?.fr || result.message || "Erreur inconnue";
       showModalMessage('error', msgText);
     }
@@ -517,7 +528,10 @@ btnCreateAccount.addEventListener("click", async () => {
     showModalMessage('error', "Erreur serveur, veuillez réessayer plus tard.");
   }
 });
-      form.addEventListener('submit', async (e) => {
+
+
+
+form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearFieldErrors();
         showMessage('info', '');
