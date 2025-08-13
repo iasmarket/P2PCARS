@@ -330,6 +330,18 @@
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('DOMContentLoaded', () => {
+  // Récupérer les infos sauvegardées
+  const savedEmail = localStorage.getItem('p2p_email');
+  const savedTele = localStorage.getItem('p2p_tele');
+  const savedNcin = localStorage.getItem('p2p_ncin');
+
+  // Pré-remplir les champs si disponibles
+  if (savedEmail) emailInput.value = savedEmail;
+  if (savedTele) teletzon.value = savedTele;
+  if (savedNcin) ncinzon.value = savedNcin;
+});
+
 document.getElementById("checkbox-procuration").addEventListener("change", function () {
   const blocProcuration = document.getElementById("div-procuration");
   const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
