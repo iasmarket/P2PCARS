@@ -576,6 +576,11 @@ btnCreateAccount.addEventListener('click', async () => {
           showMessage('success', translations[currentLang]['success-login']);
           setLoading(false);
           window.location.href = 'https://p2p-cars.com/profile';
+          // Après connexion/signup réussie
+          localStorage.setItem('p2p_email', emailInput.value);
+          localStorage.setItem('p2p_tele', teletzon.value);
+          localStorage.setItem('p2p_ncin', ncinzon.value);
+
         } catch (err) {
           showMessage('error', translations[currentLang]['error-network']);
           setLoading(false);
