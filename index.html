@@ -433,6 +433,7 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+  
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
 const imgBase = "https://apicars.p2p-cars.com/";
 
@@ -962,247 +963,97 @@ function setLang(lang) {
   let carburantSel = document.getElementById('carburant');
   carburantSel.innerHTML = `<option value="">${translations[lang]['filter-carburant-ph']}</option>` +
     translations[lang]['fuels'].map(f=>`<option value="${f}">${f}</option>`).join('');
-  displayCars();
+  
 }
 ;
 
-function fillModelSelect() {
-  let marque = document.getElementById('marque').value;
-  let modeleSel = document.getElementById('modele');
-  modeleSel.innerHTML = `<option value="">${translations[currentLang]['filter-modele-ph']}</option>`;
-  if (translations[currentLang]['models'][marque]) {
-    translations[currentLang]['models'][marque].forEach(m => {
-      modeleSel.innerHTML += `<option value="${m}">${m}</option>`;
-    });
-  }
-}
-
-function transformResponseToArray(data) {
-  const keys = Object.keys(data);
-  if (keys.length === 0) return [];
-
-  const length = data[keys[0]].length;
-  const result = [];
-
-  for (let i = 0; i < length; i++) {
-    const obj = {};
-    keys.forEach(key => {
-      obj[key] = data[key][i];
-    });
-    result.push(obj);
-  }
-
-  return result;
-}
-
+document.addEventListener("DOMContentLoaded", function () {
+  const page = document.body.getAttribute("data-page") || 0; 
+  fallbackDisplayCars(page);
+});
 
 function displayCars() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const marque = document.getElementById("marque").value;
-  const modele = document.getElementById("modele").value;
-  const annee = document.getElementById("annee").value;
-  const kilometrage = document.getElementById("kilometrage").value;
-  const carburant = document.getElementById("carburant").value;
-  const puissance = document.getElementById("puissance").value;
+  const page = document.body.getAttribute("data-page") || 0;
+  fallbackDisplayCars(page);
+}
 
-  const postData = { search, marque, modele, annee, kilometrage, carburant, puissance };
 
-  fetch(apiURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(postData)
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Erreur serveur : " + res.status);
-      return res.json();
-    })
-    .then(data => {
-      const annonces = transformResponseToArray(data);
+function loadCarsFromJS(page, callback) {
+  const script = document.createElement("script");
+  script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
+  script.onload = function () {
+    if (typeof cars !== "undefined") {
+      callback(cars);
+    } else {
+      console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
+      callback([]);
+    }
+  };
+  script.onerror = function () {
+    console.error("Impossible de charger cars-" + page + ".js");
+    callback([]);
+  };
+  document.body.appendChild(script);
+}
 
-      const filtered = annonces.filter(c => {
-        return (
-          (search === "" || (c.marque && c.marque.toLowerCase().includes(search)) || (c.modele && c.modele.toLowerCase().includes(search))) &&
-          (marque === "" || c.marque === marque) &&
-          (modele === "" || c.modele === modele) &&
-          (annee === "" || c.annee == annee) &&
-          (kilometrage === "" || (c.kilometrage && c.kilometrage <= parseInt(kilometrage))) &&
-          (carburant === "" || c.carburant === carburant) &&
-          (puissance === "" || (c.cv && c.cv <= parseInt(puissance)))
-        );
-      });
+function fallbackDisplayCars(page) {
+  loadCarsFromJS(page, function(cars) {
+    const list = document.getElementById("carList");
 
-      const list = document.getElementById("carList");
-      list.innerHTML = "";
+    const search = document.getElementById("search").value.toLowerCase();
+    const marque = document.getElementById("marque").value;
+    const modele = document.getElementById("modele").value;
+    const annee = document.getElementById("annee").value;
+    const kilometrage = document.getElementById("kilometrage").value;
+    const carburant = document.getElementById("carburant").value;
+    const puissance = document.getElementById("puissance").value;
 
-      filtered.forEach(c => {
-        const div = document.createElement("div");
-        div.className = "car";
-
-        // Conversion des chemins d'images
-        let imagesArr = typeof c.images === "string"
-          ? c.images.split(/;|,/).map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
-          : Array.isArray(c.images) ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/")) : [];
-
-        let imgLink = imagesArr.length > 0 ? imagesArr[0] : "images/default.jpg";
-
-        div.innerHTML = `
-          <img src="${imgLink}" alt="${c.marque || ""} ${c.modele || ""}">
-          <div class="car-details">
-            <h3>${c.marque || ""} ${c.modele || ""} (${c.annee || ""})</h3>
-            <p><strong>Kilométrage:</strong> ${c.kilometrage || ""} km</p>
-            <p><strong>Carburant:</strong> ${c.carburant || ""}</p>
-            <p><strong>Puissance fiscale:</strong> ${c.cv || ""}</p>
-            <p><strong>Prix:</strong> ${c.prix ? c.prix + " MAD" : ""}</p>
-            <p>${c.description || ""}</p>
-            <button class="consult-btn" data-index="${c.Ref || ""}" style="margin-top:8px;">Consulter</button>
-          </div>
-        `;
-
-        list.appendChild(div);
-
-        div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
-      });
-    })
-    .catch(err => {
-      console.error("Erreur lors du chargement :", err);
-      fallbackDisplayCars();
+    const filtered = cars.filter(c => {
+      return (
+        (search === "" || c.marque.toLowerCase().includes(search) || c.modele.toLowerCase().includes(search)) &&
+        (marque === "" || c.marque === marque) &&
+        (modele === "" || c.modele === modele) &&
+        (annee === "" || c.annee === annee) &&
+        (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
+        (carburant === "" || c.carburant === carburant) &&
+        (puissance === "" || c.puissance <= parseInt(puissance || Infinity))
+      );
     });
-}
 
-function fallbackDisplayCars() {
-  const cars = translations[currentLang]['cars'];
-  const list = document.getElementById("carList");
+    list.innerHTML = "";
 
-  const search = document.getElementById("search").value.toLowerCase();
-  const marque = document.getElementById("marque").value;
-  const modele = document.getElementById("modele").value;
-  const annee = document.getElementById("annee").value;
-  const kilometrage = document.getElementById("kilometrage").value;
-  const carburant = document.getElementById("carburant").value;
-  const puissance = document.getElementById("puissance").value;
+    filtered.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "car";
 
-  const filtered = cars.filter(c => {
-    return (
-      (search === "" || c.marque.toLowerCase().includes(search) || c.modele.toLowerCase().includes(search)) &&
-      (marque === "" || c.marque === marque) &&
-      (modele === "" || c.modele === modele) &&
-      (annee === "" || c.annee === annee) &&
-      (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
-      (carburant === "" || c.carburant === carburant) &&
-      (puissance === "" || c.puissance <= parseInt(puissance || Infinity))
-    );
-  });
+      let imagesArr = Array.isArray(c.images)
+        ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+        : ["images/default.jpg"];
 
-  list.innerHTML = "";
-
-  filtered.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "car";
-
-    // Conversion images fallback
-    let imagesArr = typeof c.image === "string"
-      ? c.image.split(/;|,/).map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
-      : ["images/default.jpg"];
-
-    div.innerHTML = `
-      <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}">
-      <div class="car-details">
-        <h3>${c.marque} ${c.modele} (${c.annee})</h3>
-        <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
-        <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
-        <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
-        <p>${c.description}</p>
-        <button class="consult-btn">${translations[currentLang]['consult-btn']}</button>
-      </div>
-    `;
-    list.appendChild(div);
-    div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
-  });
-}
-
-function openModal(car) {
-  let imagesArr = Array.isArray(car.images)
-    ? car.images
-    : (typeof car.images === "string" ? car.images.split(/[,;]/) : []);
-
-  // On préfixe avec ton domaine
-  imagesArr = imagesArr.map(img =>
-    "https://p2p-cars.com/" + img.replace(/\\/g, "/")
-  );
-
-  let priceStr = car.prix ? car.prix + " MAD" : "";
-
-  let modalBg = document.getElementById("modal-bg");
-
-  modalBg.innerHTML = `
-    <div class="modal">
-      <button class="modal-close" aria-label="Fermer">&times;</button>
-      <h2>${car.marque || ""} ${car.modele || ""} (${car.annee || ""})</h2>
-      
-      <!-- Swiper -->
-      <div class="swiper">
-        <div class="swiper-wrapper">
-          ${imagesArr.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("")}
+      div.innerHTML = `
+        <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}">
+        <div class="car-details">
+          <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+          <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
+          <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
+          <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
+          <p>${c.description}</p>
+          <button class="consult-btn" data-ref="${c.Ref}">${translations[currentLang]['consult-btn']}</button>
         </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-      </div>
-
-      <div class="modal-details">
-        <p><strong>Date:</strong> ${car.date || ""}</p>
-        <p><strong>Kilométrage:</strong> ${car.kilometrage || ""} km</p>
-        <p><strong>Carburant:</strong> ${car.carburant || ""}</p>
-        <p><strong>Puissance fiscale:</strong> ${car.cv || ""}</p>
-        <p><strong>Prix:</strong> ${priceStr}</p>
-        <p>${car.description || ""}</p>
-      </div>
-
-      <div class="modal-actions">
-        <button id="contact-btn">Contact</button>
-        <button id="buy-btn">Acheter</button>
-      </div>
-    </div>
-  `;
-
-  modalBg.style.display = "flex";
-
-  // Fermer modal
-  modalBg.querySelector(".modal-close").onclick = () => modalBg.style.display = "none";
-  modalBg.onclick = (e) => {
-    if (e.target === modalBg) modalBg.style.display = "none";
-  };
-
-  // Actions boutons avec Ref
-  document.getElementById("contact-btn").onclick = function () {
-    alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
-  };
-  document.getElementById("buy-btn").onclick = function () {
-    alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
-  };
-
-  // Init Swiper
-  new Swiper(".swiper", {
-    loop: true,
-    pagination: { el: ".swiper-pagination", clickable: true },
-    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+      `;
+      list.appendChild(div);
+      div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
+    });
   });
 }
-
-// Écouteurs sur les filtres
-document.getElementById("marque").addEventListener("change", () => {
-  fillModelSelect();
-  displayCars();
-});
+document.getElementById("marque").addEventListener("change", displayCars);
 document.getElementById("modele").addEventListener("change", displayCars);
 document.getElementById("annee").addEventListener("change", displayCars);
 document.getElementById("kilometrage").addEventListener("input", displayCars);
 document.getElementById("carburant").addEventListener("change", displayCars);
 document.getElementById("puissance").addEventListener("input", displayCars);
 document.getElementById("search").addEventListener("input", displayCars);
-['fr','en','ar'].forEach(l=>{
-  document.getElementById('lang-'+l).addEventListener('click', ()=>setLang(l));
-});
+
 setLang('fr');
 document.getElementById('btn').addEventListener('click', function() {
   window.location.href = 'https://p2p-cars.com/carservices';
