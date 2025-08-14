@@ -1030,17 +1030,30 @@ function fallbackDisplayCars(page) {
         ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
         : ["datatof/default.jpg"];
 
-      div.innerHTML = `
-        <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}">
-        <div class="car-details">
-          <h3>${c.marque} ${c.modele} (${c.annee})</h3>
-          <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
-          <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
-          <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
-          <p>${c.description}</p>
-          <button class="consult-btn" data-ref="${c.Ref}">${translations[currentLang]['consult-btn']}</button>
-        </div>
-      `;
+        div.innerHTML = `
+          <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}"
+              onerror="
+                const exts = ['jpeg','jpg','png','webp'];
+                for(let i=0;i<exts.length;i++){
+                  if(this.src.includes(exts[i])) continue;
+                  const newSrc = this.src.replace(/\\.[a-z]+$/i,'.'+exts[i]);
+                  const imgTest = new Image();
+                  imgTest.onload=()=>{ this.src=newSrc; return true; };
+                  imgTest.onerror=()=>{};
+                  imgTest.src=newSrc;
+                }
+                this.onerror=null;
+                this.src='datatof/default.jpg';
+              ">
+          <div class="car-details">
+            <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+            <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
+            <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
+            <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
+            <p>${c.description}</p>
+            <button class="consult-btn" data-ref="${c.Ref}">${translations[currentLang]['consult-btn']}</button>
+          </div>
+        `;
       list.appendChild(div);
       div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
     });
