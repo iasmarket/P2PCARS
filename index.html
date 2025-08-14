@@ -501,7 +501,7 @@
     </button>
 
     <button id="page" class="btn-circle">
-        <span>1</span>
+        <span>0</span>
     </button>
 
     <button id="next" class="btn-circle">
@@ -521,7 +521,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-  const page =  0; 
+  const page = document.querySelector("#page span").textContent; 
   fallbackDisplayCars(page);
 });
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
@@ -1057,35 +1057,35 @@ function setLang(lang) {
 }
 ;
 
-let currentPage=0;
+
 
 
 function displayCars() {
-  
+  const page = document.querySelector("#page span").textContent;
   fallbackDisplayCars(page);
 }
 
 
     function nextPage() {
+              let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+              fallbackDisplayCars(currentPage + 1);
         
-            fallbackDisplayCars(currentPage + 1);;
-  
     }
 
     function prevPage() {
-        
-            fallbackDisplayCars(currentPage - 1);
-        
+              let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+              fallbackDisplayCars(currentPage - 1);
+       
     }
 
 
 function loadCarsFromJS(page, callback) {
   const script = document.createElement("script");
-
+  const scriptt = document.createElement("script");
    let cont=page+1;
-  script.src = `https://p2p-cars.com/cars-${cont}.js?nocache=${Date.now()}`;
+  scriptt.src = `https://p2p-cars.com/cars-${cont}.js?nocache=${Date.now()}`;
  
-  script.onload = function () {
+  scriptt.onload = function () {
     if (typeof cars !== "undefined") {      
       document.getElementById("next").classList.toggle("hidden", true);
     } else {
