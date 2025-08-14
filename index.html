@@ -338,7 +338,7 @@
   align-items: center;
 }
 .modal {
-  background: rgb(71, 10, 141);
+  background: rgba(42, 7, 82, 0.466);
   padding: 20px;
   max-width: 800px;
   width: 90%;
@@ -374,6 +374,76 @@
   gap: 10px;
   margin-top: 15px;
 }
+       main {
+        flex: 1;
+        padding: 40px;
+        color: white;
+    }
+
+    /* Conteneur pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+    }
+
+    .btn-circle {
+        position: relative;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .btn-circle:hover {
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .btn-circle:active::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 255, 255, 0.4);
+        border-radius: 50%;
+        animation: ripple 0.5s ease;
+    }
+
+    @keyframes ripple {
+        from { transform: scale(0); opacity: 0.8; }
+        to { transform: scale(2); opacity: 0; }
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .hidden {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+    }
+
+    footer {
+        background: rgba(255,255,255,0.05);
+        text-align: center;
+        padding: 20px;
+        color: white;
+    }
   </style>
 </head>
 <body>
@@ -423,6 +493,23 @@
 <section class="car-list" id="carList">
   <!-- Car listings will be dynamically added here -->
 </section>
+<div class="pagination">
+    <button id="prev" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <button id="page" class="btn-circle">
+        <span>1</span>
+    </button>
+
+    <button id="next" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
+</div>
 <footer>
   &copy; 2025 IASMarket Services. Tous droits réservés.
 </footer>
@@ -970,6 +1057,7 @@ function setLang(lang) {
 }
 ;
 
+let currentPage=0;
 
 
 function displayCars() {
@@ -978,12 +1066,40 @@ function displayCars() {
 }
 
 
+    function nextPage() {
+        if (currentPage < maxPage) {
+            fallbackDisplayCars(currentPage + 1);;
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            fallbackDisplayCars(currentPage - 1);
+        }
+    }
+
+
 function loadCarsFromJS(page, callback) {
   const script = document.createElement("script");
+
+   let cont=page+1;
+  script.src = `https://p2p-cars.com/cars-${cont}.js?nocache=${Date.now()}`;
+ 
+  script.onload = function () {
+    if (typeof cars !== "undefined") {      
+      document.getElementById("next").classList.toggle("hidden", true);
+    } else {
+      document.getElementById("next").classList.toggle("hidden", false);
+    }
+  };
+
+
   script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
   script.onload = function () {
     if (typeof cars !== "undefined") {
       callback(cars);
+      document.querySelector("#page span").textContent = page;
+      document.getElementById("prev").classList.toggle("hidden", page === 0);
     } else {
       console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
       callback([]);
