@@ -1,4 +1,4 @@
-const cars0 = [
+window.cars0 = [
     {
         Ref:"P2P-Cars20250813221543408",
         marque: "Renault",
@@ -34,5 +34,6 @@ const cars0 = [
     }
     //suite de la liste 
 ];
+
 
 
