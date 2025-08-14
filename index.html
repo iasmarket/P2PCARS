@@ -1122,13 +1122,20 @@ async function prevPage() {
 
 
  function loadCarsFromJS(page, callback) {
-  
+    // Supprimer tout ancien script "cars-X.js"
+  document.querySelectorAll("script[data-carfile]").forEach(s => s.remove());
+
+  // Supprimer la variable globale "cars" si elle existe
+  if (window.cars) {
+    delete window.cars;
+  }
   const script = document.createElement("script");
-  script.src = `https://p2p-cars.com/cars-${page}.js`;
+  script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
   script.onload = async function () {
     if (typeof cars !== "undefined") {
       callback(cars);
-        
+              // Supprimer la variable globale après utilisation pour éviter le conflit
+      delete window.cars;
     } else {
       console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
       callback([]);
