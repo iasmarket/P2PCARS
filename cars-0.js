@@ -7,7 +7,7 @@ const cars = [
         kilometrage: 120000,
         carburant: "Essence",
         puissance: 5,
-        images: ["images/clio.jpg", "images/clio2.jpg"],
+        images: ["datatof/Sans qqtitre.jpeg", "datatof/Sanqqs titre.jpeg"],
         description: "Petite citadine fiable et économique."
     },
     {
@@ -18,7 +18,7 @@ const cars = [
         kilometrage: 90000,
         carburant: "Diesel",
         puissance: 4,
-        images: ["images/peugeot208.jpg", "images/peugeot208-2.jpg"],
+        images: ["datatof/Sansq titre.jpeg", "datatof/imagesq.jpeg"],
         description: "Compacte, confortable et bien entretenue."
     },
     {
@@ -29,8 +29,9 @@ const cars = [
         kilometrage: 60000,
         carburant: "Hybride",
         puissance: 4,
-        images: ["images/yaris.jpg", "images/yaris2.jpg"],
+        images: ["datatof/Sans titreq.jpeg", "datatof/Sans titre.jpeg"],
         description: "Hybride très économique, faible kilométrage."
     }
     //suite de la liste 
 ];
+
