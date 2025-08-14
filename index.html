@@ -1057,6 +1057,28 @@ function setLang(lang) {
 }
 ;
 
+async function countExistingCarFiles() {
+  let page = 0;
+  let exists = true;
+  let count = 0;
+
+  while (exists) {
+    try {
+      const response = await fetch(`https://p2p-cars.com/cars-${page}.js`);
+      if (response.ok) {
+        count++;
+        page++;
+      } else {
+        exists = false;
+      }
+    } catch (error) {
+      exists = false;
+    }
+  }
+
+  return count;
+}
+
 
 
 function displayCars() {
@@ -1076,18 +1098,16 @@ function displayCars() {
 
     }
 
-function loadCarsFromJS(page, callback) {
+async function loadCarsFromJS(page, callback) {
+  const maxPage= await countExistingCarFiles();
   const script = document.createElement("script");
-  script.src = `https://p2p-cars.com/cars-${page+1}.js?nocache=${Date.now()}`;
-  script.onload = function () {
-    if (typeof cars !== "undefined") { document.getElementById("next").classList.toggle("hidden", true); } else { } };
   script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
   script.onload = function () {
     if (typeof cars !== "undefined") {
       callback(cars);
       document.querySelector("#page span").textContent = page;
       document.getElementById("prev").classList.toggle("hidden", page === 0);
-
+      document.getElementById("next").classList.toggle("hidden", page === maxPage-1);
     } else {
       console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
       callback([]);
@@ -1098,6 +1118,7 @@ function loadCarsFromJS(page, callback) {
     callback([]);
   };
   document.body.appendChild(script);
+  
 }
 
 function fallbackDisplayCars(page) {
