@@ -1,38 +1,1345 @@
-const cars = [
-    {
-        Ref:"P2P-Cars20250813221543408",
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2P-CARS - Trouvez Votre Voiture d'Occasion Idéale</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <style>
+    body {
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
+      url('arier.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #e2e8f0;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px 10px 20px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      gap: 40px;
+    }
+    header img {
+      max-height: 110px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.3s;
+    }
+    header img:hover { transform: scale(1.05);}
+    header .header-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #e98a1e;
+      margin-bottom: 0.3em;
+    }
+    header .text-h {
+      font-size: 1.1rem;
+      color: #effafa;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%;}
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    .lang-btns {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .lang-btns button {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: 2px solid #3b82f6;
+      background: #1e293b;
+      color: #3b82f6;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s;
+      font-size: 1rem;
+    }
+    .lang-btns button.active, .lang-btns button:hover { background: #3b82f6; color: #fff;}
+    .home-btn {
+      margin-left: 0.7rem;
+      background: #fff;
+      color: #1e293b;
+      border-radius: 20px;
+      padding: 8px 16px;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+      transition: background 0.2s, color 0.2s;
+    }
+    .home-btn:hover { background: #3b82f6; color: #fff;}
+    footer {
+      text-align:center;
+      margin: 20px 0 0 0;
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.06);
+      border-radius: 15px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      padding: 16px;
+      font-size: 0.97rem;
+    }
+    .header-nav {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .header-nav a {
+      color: #3bf6e6;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    .header-nav a:hover {
+      background: rgba(115, 59, 246, 0.562);
+    }
+    .welcome-section {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      padding: 40px 30px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    .welcome-section:hover {
+      transform: translateY(-5px);
+    }
+    .welcome-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 15px;
+    }
+    .welcome-section p {
+      font-size: 1.2rem;
+      color: #eaecf0;
+      margin-bottom: 25px;
+    }
+    .welcome-section button {
+      background: #3b82f6;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .welcome-section button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+    .filters {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+      color: #e2e8f0;
+    }
+    .filters label {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .filters input,
+    .filters select {
+      padding: 10px;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    .filters input:focus,
+    .filters select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    .car-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    .car {
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+    .car:hover {
+      transform: scale(1.02);
+    }
+    .car img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .car-details {
+      padding: 20px;
+    }
+    .car h3 {
+      font-size: 1.4rem;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .car p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .car button {
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .car button:hover {
+      background: #2563eb;
+    }
+    /* Modal styles */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.3s;
+    }
+    .modal {
+      background: #1e293b;
+      border-radius: 18px;
+      max-width: 800px;
+      width: 97vw;
+      max-height: 95vh;
+      overflow-y: auto;
+      padding: 30px 24px 20px 24px;
+      position: relative;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #f87171;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    .modal-images {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+    .modal-images img {
+      height: 160px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+      object-fit: cover;
+      background: #222;
+    }
+    .modal-details {
+      margin-bottom: 18px;
+    }
+    .modal-details p {
+      margin: 6px 0;
+      font-size: 1.08rem;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .modal-actions button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .modal-actions button:hover {
+      background: #2563eb;
+    }
+    @media (max-width: 768px) {
+      header { flex-direction: column; text-align: center;}
+      header img { max-width: 68%;}
+      .header-nav { flex-direction: column; gap: 10px;}
+      .filters { grid-template-columns: 1fr; }
+      .car img { height: 160px; }
+      .modal { padding: 15px 7px 10px 7px; }
+      .modal-actions button { padding: 10px 8px; font-size: 1rem;}
+    }
+#modal-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+.modal {
+  background: rgba(42, 7, 82, 0.466);
+  padding: 20px;
+  max-width: 800px;
+  width: 90%;
+  border-radius: 10px;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+    .modal-images img {
+      max-width: 100%;
+      margin: 5px 0;
+    }
+.swiper {
+  width: 100%;
+  height: 400px;
+}
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Actions */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+       main {
+        flex: 1;
+        padding: 40px;
+        color: white;
+    }
+
+    /* Conteneur pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+    }
+
+    .btn-circle {
+        position: relative;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .btn-circle:hover {
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .btn-circle:active::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 255, 255, 0.4);
+        border-radius: 50%;
+        animation: ripple 0.5s ease;
+    }
+
+    @keyframes ripple {
+        from { transform: scale(0); opacity: 0.8; }
+        to { transform: scale(2); opacity: 0; }
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .hidden {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+    }
+
+    footer {
+        background: rgba(255,255,255,0.05);
+        text-align: center;
+        padding: 20px;
+        color: white;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img src="logo1.png" alt="Logo société mère">
+  <div class="header-center">
+    <h1>P2P-CARS</h1>
+    <p class="text-h">Plateforme de Voitures d'Occasion</p>
+  </div>
+  <img src="logo4.png" alt="Logo plateforme">
+</header>
+<div class="navbar">
+  <div class="lang-btns">
+    <button id="lang-fr" aria-label="Français">FR</button>
+    <button id="lang-en" aria-label="English">EN</button>
+    <button id="lang-ar" aria-label="العربية">AR</button>
+  </div>
+  <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
+</div>
+<nav class="header-nav">
+  <a href="https://p2p-cars.com" id="nav-accueil">Accueil</a>
+  <a href="https://p2p-cars.com/esprix" id="nav-simulateur">Simulateur Prix</a>
+  <a href="https://p2p-cars.com/carservices" id="nav-services">Services P2P-Cars</a>
+  <a href="https://p2p-cars.com/login" id="nav-login">Espace personnel </a>
+</nav>
+<section class="welcome-section" id="welcome-section">
+  <h2 id="welcome-title">Bienvenue sur P2P-CARS</h2>
+  <p id="welcome-desc">Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins...</p>
+  <button id="btn">Envoyer une demande</button>
+</section>
+<section class="filters">
+  <label for="search" id="filter-search-label">Rechercher:</label>
+  <input type="text" id="search" placeholder="Rechercher...">
+  <label for="marque" id="filter-marque-label">Marque:</label>
+  <select id="marque"></select>
+  <label for="modele" id="filter-modele-label">Modèle:</label>
+  <select id="modele"></select>
+  <label for="annee" id="filter-annee-label">Année:</label>
+  <select id="annee"></select>
+  <label for="kilometrage" id="filter-kilometrage-label">Kilométrage max:</label>
+  <input type="number" id="kilometrage" placeholder="Kilométrage max">
+  <label for="carburant" id="filter-carburant-label">Carburant:</label>
+  <select id="carburant"></select>
+  <label for="puissance" id="filter-puissance-label">Puissance max (CV):</label>
+  <input type="number" id="puissance" placeholder="Puissance max (CV)">
+</section>
+<section class="car-list" id="carList">
+  <!-- Car listings will be dynamically added here -->
+</section>
+<div class="pagination">
+    <button id="prev" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <button id="page" class="btn-circle">
+        <span>0</span>
+    </button>
+
+    <button id="next" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
+</div>
+<footer>
+  &copy; 2025 IASMarket Services. Tous droits réservés.
+</footer>
+<!-- Modal structure -->
+<div id="modal-bg" style="display:none"></div>
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    await initMaxPage(); // calcule maxPage une seule fois
+    document.querySelector("#page span").textContent = 0;
+  document.getElementById("prev").classList.add("hidden");
+    displayCars(0);
+
+});
+
+
+const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
+const imgBase = "https://apicars.p2p-cars.com/";
+
+const translations = {
+  fr: {
+    'welcome-title': "Bienvenue sur P2P-CARS",
+    'welcome-desc': "Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins. Profitez également d’un service complet, avant et après la vente ou l’achat, entièrement adapté à vos attentes. Et pour faciliter votre acquisition, bénéficiez de plans de paiement flexibles, le tout dans un cadre de confiance entre particuliers.",
+    'btn': "Envoyer une demande",
+    'filter-search-label': "Rechercher:",
+    'filter-search-ph': "Rechercher...",
+    'filter-marque-label': "Marque:",
+    'filter-marque-ph': "Choisir une marque",
+    'filter-modele-label': "Modèle:",
+    'filter-modele-ph': "Choisir un modèle",
+    'filter-annee-label': "Année:",
+    'filter-annee-ph': "Année",
+    'filter-kilometrage-label': "Kilométrage max:",
+    'filter-kilometrage-ph': "Kilométrage max",
+    'filter-carburant-label': "Carburant:",
+    'filter-carburant-ph': "Carburant",
+    'filter-puissance-label': "Puissance max (CV):",
+    'filter-puissance-ph': "Puissance max (CV)",
+    'home': "Accueil",
+    'nav-accueil': "Accueil",
+    'nav-simulateur': "Simulateur Prix",
+    'nav-services': "Services P2P-Cars",
+    'nav-login':"Espace personnel",
+    'brands': ["Acura","Aixam","Alfa Romeo","Aptera","Ariel","Arrinera","Aston Martin","Audi","BAIC","Baojun","Bentley","BMW","Bollinger","Brilliance","Bugatti","Buick","BYD","Cadi lac","Callaway","Canoo","Changan","Chery","Chevrolet","Chrysler","Citroën","Cupra","Dacia","Daewoo","Daihatsu","Dartz","De Tomaso","Denza","Derways","Dodge","Donkervoort","Drako Motors","Eagle","Elaris","Exeed","Faraday Future","Ferrari","Fiat","Fisker","Ford","GAC","Geely","Genesis","GMC","Great Wall","Haval","HiPhi","Honda","Hongqi","Hummer","Hyundai","Infiniti","Iran Khodro","Isdera","Isuzu","Jaguar","Jeep","Kia","Koenigsegg","Lada","Lamborghini","Lancia","Land Rover","Lexus","Lincoln","Lotus","Lucid Motors","Mahindra","Maserati","Mazda","McLaren","Mercedes-Benz","Mini","Mitsubishi","Nio","Nissan","Oldsmobile","Opel","Peugeot","Polestar","Pontiac","Porsche","Proton","Ram","Renault","Rimac","Rivian","Roewe","Rolls-Royce","Saab","SEAT","Škoda","Smart","SsangYong","Subaru","Suzuki","Tata Motors","Tesla","Toyota","Volkswagen","Volvo","Wuling"],
+    'models': {
+"Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
+"Alfa Romeo": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "Alfasud", "Alfetta", "Arna", "Brera", "Dauphine", "Disco Volante", "Giulia", "Giulietta", "GT", "GTA", "GTV", "Matta", "Mito", "Montreal", "Romeo", "RZ", "Spider", "Sprint", "Stelvio", "SZ", "Tonale"],
+"Aston Martin": ["Atom", "Bulldog", "Cygnet", "DB1", "DB2", "DB3", "DB4", "DB5", "DB6", "DB7", "DB9", "DB11", "DB12", "DBS", "DBX", "Lagonda", "One-77", "Rapide", "Rapide E", "Valhalla", "Valkyrie", "Valour", "Vanquish", "Vantage", "Victor", "Virage", "Vulcan"],
+"Audi": ["50", "60", "72", "75", "80", "90", "100", "200", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "Cabriolet", "Coupé", "e-tron", "e-tron GT", "F103", "Q2", "Q3", "Q4 e-tron", "Q5", "Q6 e-tron", "Q7", "Q8", "Quattro", "R8", "RS2 Avant", "RS3", "RS4", "RS5", "RS6", "RS7", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "V8"],
+"Bentley": ["3 Litre", "4½ Litre", "6½ Litre", "8 Litre", "Arnage", "Azure", "Batur", "Bentayga", "Brooklands", "Continental", "Continental Flying Spur", "Continental GT", "Corniche", "Derby", "Flying Spur", "Mark V", "Mark VI", "Mulsanne", "R Type", "S1", "S2", "S3", "T1", "T2", "Turbo R"],
+"BMW": ["1 Series", "2 Series", "3 Series", "4 Series", "5 Series", "6 Series", "7 Series", "8 Series", "3/15", "3/20", "303", "328", "501", "502", "503", "507", "600", "700", "Dixi", "E3", "E9", "i3", "i4", "i5", "i7", "i8", "iX", "iX1", "iX2", "iX3", "Isetta", "M1", "M2", "M3", "M4", "M5", "M6", "M8", "New Class", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z1", "Z3", "Z4", "Z8"],
+"Bugatti": ["Bolide", "Centodieci", "Chiron", "Divo", "EB 110", "EB 112", "EB 118", "EB 218", "Galibier", "La Voiture Noire", "Mistral", "Tourbillon", "Type 13", "Type 35", "Type 41 Royale", "Type 57", "Veyron"],
+"Buick": ["Apollo", "Cascada", "Centurion", "Century", "Electra", "Enclave", "Encore", "Encore GX", "Envision", "Estate", "Gran Sport", "GSX", "Invicta", "LaCrosse", "LeSabre", "Limited", "Lucerne", "Park Avenue", "Rainier", "Reatta", "Regal", "Rendezvous", "Riviera", "Roadmaster", "Skyhawk", "Skylark", "Somerset", "Special", "Super", "Terraza", "Verano", "Wildcat"],
+"Cadillac": ["Allanté", "ATS", "BLS", "Brougham", "Calais", "Catera", "Celestiq", "Cimarron", "Coupe de Ville", "CT4", "CT5", "CT6", "CTS", "DeVille", "DTS", "Eldorado", "ELR", "Escalade", "Fleetwood", "LSE", "Lyriq", "Series 60", "Series 61", "Series 62", "Seville", "Sixty Special", "SLS", "SRX", "STS", "Trump", "V-16", "XLR", "XT4", "XT5", "XT6", "XTS"],
+"Changan": ["Alsvin", "Benni", "CS15", "CS35", "CS55", "CS75", "CS85", "CS95", "Eado", "Hunter", "Lumin", "Raeton", "Star", "UNI-K", "UNI-T", "UNI-V", "Z-Shine"],
+"Chevrolet": ["150", "210", "454 SS", "APV", "Astro", "Avalanche", "Aveo", "Bel Air", "Beretta", "Biscayne", "Blazer", "Bolt", "Brookwood", "Camaro", "Caprice", "Captiva", "Cavalier", "Celebrity", "Celta", "Chevelle", "Chevette", "Chevy II", "Citation", "Cobalt", "Colorado", "Corsica", "Corvair", "Corvette", "Cruze", "Delray", "El Camino", "Epica", "Equinox", "Express", "Fleetline", "Forrester", "HHR", "Impala", "K5 Blazer", "Kingswood", "Kodiak", "Lumina", "LUV", "Malibu", "Master", "Metro", "Monte Carlo", "Monza", "Nomad", "Nova", "Niva", "Optra", "Orlando", "Prizm", "Rezzo", "S-10", "Silverado", "Sonic", "Spark", "Spectrum", "Sprint", "SSR", "Suburban", "Tahoe", "Tavera", "Tracker", "TrailBlazer", "Traverse", "Trax", "Uplander", "Vega", "Venture", "Volt"],
+"Chrysler": ["200", "300", "300M", "Airflow", "Airstream", "Aspen", "Caravan", "Cirrus", "Concorde", "Conquest", "Cordoba", "Crossfire", "Daytona", "Dynasty", "E-Class", "Executive", "Fifth Avenue", "Grand Voyager", "Imperial", "Laser", "LeBaron", "LHS", "Nassau", "New Yorker", "Newport", "Pacifica", "Prowler", "PT Cruiser", "Royal", "Saratoga", "Sebring", "TC by Maserati", "Town & Country", "Turbine Car", "Valiant", "Viper", "Voyager", "Windsor"],
+"Citroën": ["2CV", "Activa", "Ami", "AX", "Axel", "Berlingo", "BX", "C-Crosser", "C-Elysée", "C-Métisse", "C-Triomphe", "C1", "C2", "C3", "C3 Aircross", "C4", "C4 Aircross", "C4 Cactus", "C4 Picasso", "C4 SpaceTourer", "C4 X", "C5", "C5 Aircross", "C5 X", "C6", "C8", "CX", "DS", "Dyane", "E-Méhari", "Evasion", "GS", "GSA", "H Van", "ID", "Jumper", "Jumpy", "Karin", "LNA", "M35", "Méhari", "Nemo", "Oltcit", "Pluriel", "Rosalie", "Saxo", "SM", "SpaceTourer", "Traction Avant", "Type A", "Visa", "Xantia", "XM", "Xsara", "Xsara Picasso", "ZX"],
+"Dacia": ["1100", "1300", "1310", "1410", "500 Lăstun", "Dokker", "Duster", "Jogger", "Lodgy", "Logan", "Nova", "Sandero", "Solenza", "Spring", "SuperNova"],
+"Daewoo": ["Arcadia", "Chairman", "Damas", "Espero", "Evanda", "G2X", "Gentra", "Kalos", "Korando", "Lacetti", "Lanos", "Leganza", "LeMans", "Lublin", "Magnus", "Matiz", "Musso", "Nexia", "Nubira", "Prince", "Racer", "Rezzo", "Statesman", "Super Salon", "Tacuma", "Tico", "Tosca", "Winstorm"],
+"Daihatsu": ["Altis", "Applause", "Atrai", "Bee", "Be-go", "Boon", "Ceria", "Charade", "Charmant", "Copen", "Consorte", "Cuore", "Delta", "Esse", "Fellow", "Feroza", "Gran Max", "Hijet", "Leeza", "Luxio", "Materia", "Max", "Mebius", "Midget", "Mira", "Move", "Naked", "Opti", "Pyzar", "Rocky", "Rugger", "Sirion", "Sonica", "Storia", "Taft", "Tanto", "Terios", "Thor", "Trevis", "Wake", "Xenia", "YRV"],
+"Dodge": ["400", "600", "Aries", "Aspen", "Avenger", "Caliber", "Caravan", "Challenger", "Charger", "Colt", "Conquest", "Coronet", "Dakota", "Dart", "Daytona", "Diplomat", "Durango", "Dynasty", "Grand Caravan", "Hornet", "Intrepid", "Journey", "La Femme", "Lancer", "Magnum", "Mirada", "Monaco", "Neon", "Nitro", "Omni", "Polara", "Power Wagon", "Raider", "Ram", "Ram 50", "Rampage", "Shadow", "Spirit", "Sprinter", "Stealth", "Stratus", "Super Bee", "Viper"],
+"Exeed": ["LX", "RX", "Stellar", "TX", "TXL", "VX"],
+"Eagle": ["Medallion", "Premier", "Summit", "Talon", "Vision", "Vista"],
+"Ferrari": ["12Cilindri", "208", "250", "275", "288 GTO", "296 GTB", "308", "328", "330", "348", "360", "365", "400", "412", "456", "458 Italia", "488", "512", "550", "575M", "599", "612 Scaglietti", "812 Superfast", "California", "Daytona", "Dino", "Enzo", "F8 Tributo", "F12berlinetta", "F355", "F40", "F430", "F50", "FF", "GTC4Lusso", "LaFerrari", "Mondial", "Monza", "Portofino", "Purosangue", "Roma", "SF90 Stradale", "Superamerica", "Testarossa"],
+"Fiat": ["124", "124 Spider", "125", "126", "127", "128", "130", "131", "132", "133", "500", "500L", "500X", "508", "600", "850", "Albea", "Argenta", "Barchetta", "Brava", "Bravo", "Campagnola", "Cinquecento", "Coupe", "Croma", "Dino", "Doblo", "Ducato", "Duna", "Fiorino", "Freemont", "Fullback", "Grande Punto", "Idea", "Linea", "Marea", "Multipla", "Palio", "Panda", "Punto", "Qubo", "Regata", "Ritmo", "Scudo", "Sedici", "Seicento", "Siena", "Stilo", "Strada", "Tempra", "Tipo", "Topolino", "Ulysse", "Uno", "X1/9"],
+"Fisker": ["Karma", "Latigo CS", "Ocean", "Tramonto"],
+"Ford": ["Aerostar", "Anglia", "Aspire", "B-Max", "Bronco", "Bronco II", "C-Max", "Capri", "Consul", "Contour", "Corsair", "Cortina", "Cougar", "Courier", "Crown Victoria", "Custom", "Del Rio", "EcoSport", "Edge", "Escape", "Escort", "Everest", "Excursion", "Expedition", "Explorer", "F-100", "F-150", "Fairlane", "Fairmont", "Falcon", "Festiva", "Fiesta", "Figo", "Five Hundred", "Flex", "Focus", "Freda", "Freestar", "Freestyle", "Fusion", "Galaxie", "Granada", "GT", "GT40", "Ka", "Kuga", "LTD", "Maverick", "Model A", "Model T", "Mondeo", "Mustang", "Mustang Mach-E", "Orion", "Pinto", "Probe", "Puma", "Ranchero", "Ranger", "S-Max", "Scorpio", "Sierra", "Taunus", "Taurus", "Tempo", "Territory", "Thunderbird", "Torino", "Transit", "Windstar", "Zephyr", "Zodiac"],
+"Geely": ["Atlas", "Beauty Leopard", "Binrui", "Binyue", "Borui", "Boyue", "CK", "Coolray", "Emgrand", "Farizon", "GC6", "Geometry", "Haoqing", "Icon", "Jiaji", "Kingkong", "Maple", "MK", "Monjaro", "Panda", "Preface", "Tugella", "Vision", "Xingyue"],
+"Genesis": ["G70", "G80", "G90", "GV60", "GV70", "GV80", "GV90", "Mint Concept", "X Concept"],
+"GMC": ["Acadia", "Caballero", "Canyon", "Envoy", "Graphyte", "Hummer EV", "Jimmy", "Safari", "Savana", "Sierra", "Sonoma", "Sprint", "Suburban", "Syclone", "Terrain", "TopKick", "Tracker", "Typhoon", "Vandura", "Yukon"],
+"Great Wall": ["Coolbear", "Cowry", "Deer", "Florid", "Haval", "Hover", "M4", "Pao", "Peri", "Poer", "Safe", "Sing", "Socool", "Steed", "Tank", "Voleex", "Wingle"],
+"Honda": ["1300", "145", "Accord", "Acty", "Airwave", "Ascot", "Avancier", "Ballade", "Beat", "Brio", "Capa", "City", "Civic", "Clarity", "Concerto", "CR-V", "CR-X", "CR-Z", "Crossroad", "Crosstour", "Domani", "e", "Edix", "Element", "Elysion", "FCX Clarity", "Fit", "FR-V", "Freed", "Grace", "HR-V", "Insight", "Inspire", "Integra", "Jade", "Jazz", "Lagreat", "Legend", "Life", "Logo", "Mobilio", "N-Box", "N-One", "N-WGN", "NSX", "Odyssey", "Orthia", "Partner", "Passport", "Pilot", "Prelude", "Quint", "Rafaga", "Ridgeline", "S-MX", "S2000", "S500", "S600", "S660", "Saber", "Shuttle", "Stepwgn", "Stream", "Today", "Torneo", "Vamos", "Vezel", "Vigor", "Z", "Zest"],
+"Hummer": ["H1", "H2", "H3", "H3T", "EV"],
+"Hyundai": ["Accent", "Aslan", "Atos", "Azera", "Bayon", "Casper", "Celesta", "Centennial", "Coupe", "Creta", "Dynasty", "Elantra", "Entourage", "Eon", "Equus", "Excel", "Galloper", "Genesis", "Getz", "Grace", "Grandeur", "H-1", "i10", "i20", "i30", "i40", "Ioniq", "ix20", "ix35", "ix55", "Kona", "Lantra", "Lavita", "Marcia", "Matrix", "Maxcruz", "Mistra", "Nexo", "Palisade", "Pony", "Porter", "Santa Cruz", "Santa Fe", "Santamo", "Scoupe", "Sonata", "Starex", "Stellar", "Terracan", "Tiburon", "Trajet", "Tucson", "Veloster", "Venue", "Veracruz", "Verna", "Xcent", "XG"],
+"Infiniti": ["ESQ", "EX", "FX", "G", "I", "J", "JX", "M", "Q", "Q30", "Q40", "Q45", "Q50", "Q60", "Q70", "QX", "QX30", "QX4", "QX50", "QX55", "QX60", "QX70", "QX80"],
+"Jaguar": ["420", "C-Type", "D-Type", "E-Pace", "E-Type", "F-Pace", "F-Type", "I-Pace", "Mark 1", "Mark 2", "Mark V", "Mark VII", "Mark VIII", "Mark IX", "Mark X", "S-Type", "SS 100", "X-Type", "XE", "XF", "XJ", "XJ220", "XJR", "XJS", "XK", "XKSS"],
+"Jeep": ["Cherokee", "CJ", "Comanche", "Commander", "Compass", "Dispatcher", "DJ", "FC", "Gladiator", "Grand Cherokee", "Grand Wagoneer", "Honcho", "Jeepster", "Liberty", "Meridian", "Patriot", "Recon", "Renegade", "Scrambler", "Wagoneer", "Willys", "Wrangler"],
+"Kia": ["Amanti", "Avella", "Bongo", "Borrego", "Brisa", "Cadenza", "Capital", "Carens", "Carnival", "Ceed", "Cerato", "Clarus", "Concord", "Credos", "Elan", "Enterprise", "EV3", "EV4", "EV5", "EV6", "EV9", "Forte", "Joice", "K3", "K4", "K5", "K7", "K8", "K9", "K900", "Magentis", "Mohave", "Morning", "Niro", "Opirus", "Optima", "Pegas", "Picanto", "Potentia", "Pregio", "Pride", "ProCeed", "Ray", "Retona", "Rio", "Rondo", "Sedona", "Seltos", "Sephia", "Shuma", "Sonet", "Sorento", "Soul", "Spectra", "Sportage", "Stinger", "Stonic", "Telluride", "Towner", "Venga", "Visto", "X-Trek", "XCeed"],
+"Koenigsegg": ["Agera", "CC", "CC8S", "CCR", "CCX", "CCXR", "Gemera", "Jesko", "One:1", "Regera", "Trevita"],
+"Lada": ["110", "111", "112", "Aura", "C-Cross", "Granta", "Iskra", "Kalina", "Largus", "Nadezhda", "Niva", "Oka", "Priora", "Revolution", "Riva", "Samara", "Sputnik", "Vesta", "X-Code", "Xray"],
+"Lamborghini": ["350 GT", "400 GT", "Aventador", "Centenario", "Countach", "Diablo", "Espada", "Gallardo", "Huracán", "Islero", "Jalpa", "Jarama", "LM002", "Miura", "Murciélago", "Reventón", "Revuelto", "Sesto Elemento", "Sián", "Silhouette", "Urus", "Urraco", "Veneno"],
+"Lancia": ["Appia", "Aprilia", "Ardea", "Augusta", "Aurelia", "Autobianchi A112", "Beta", "Dedra", "Delta", "Dialogos", "Flaminia", "Flavia", "Fulvia", "Gamma", "Hyena", "Kappa", "Lambda", "Lybra", "Montecarlo", "Musa", "Phedra", "Prisma", "Stratos", "Thema", "Thesis", "Trevi", "Voyager", "Y10", "Ypsilon", "Zeta"],
+"Land Rover": ["Defender", "Discovery", "Discovery Sport", "Freelander", "LR2", "LR3", "LR4", "Range Rover", "Range Rover Evoque", "Range Rover Sport", "Range Rover Velar", "Series I", "Series II", "Series III"],
+"Lexus": ["CT", "ES", "GS", "GX", "HS", "IS", "LC", "LFA", "LM", "LS", "LX", "NX", "RC", "RX", "RZ", "SC", "TX", "UX"],
+"Lincoln": ["Aviator", "Blackwood", "Capri", "Continental", "Corsair", "Cosmopolitan", "Custom", "KB", "L-series", "LS", "Mark II", "Mark III", "Mark IV", "Mark V", "Mark VI", "Mark VII", "Mark VIII", "MKS", "MKT", "MKX", "MKZ", "Nautilus", "Navigator", "Premiere", "Sport", "Town Car", "Versailles", "Zephyr"],
+"Lotus": ["2-Eleven", "3-Eleven", "340R", "Carlton", "Cortina", "Elan", "Eletre", "Elise", "Elite", "Emeya", "Emira", "Esprit", "Europa", "Evora", "Excel", "Exige", "Evija", "Omega", "Sunbeam", "Talbot"],
+"Lucid Motors": ["Air", "Gravity"],
+"Mahindra": ["Alturas G4", "Armada", "Bolero", "e2o", "Genio", "Jeep", "KUV100", "Marazzo", "Nuvosport", "Quanto", "Reva", "Scorpio", "Thar", "TUV300", "Verito", "XUV300", "XUV500", "XUV700", "Xylo"],
+"Maserati": ["228", "3200 GT", "3500 GT", "4200 GT", "5000 GT", "Barchetta", "Biturbo", "Bora", "Chubasco", "Folgor", "Ghibli", "GranCabrio", "GranSport", "GranTurismo", "Grecale", "Indy", "Karif", "Khamsin", "Kyalami", "Levante", "MC12", "MC20", "Merak", "Mexico", "Mistral", "Quattroporte", "Sebring", "Shamal", "Spyder"],
+"Mazda": ["121", "2", "3", "323", "5", "6", "616", "626", "929", "Atenza", "Autozam", "Axela", "AZ-1", "B-Series", "Biante", "Bongo", "BT-50", "Carol", "Chantez", "Cosmo", "Cronos", "CX-3", "CX-30", "CX-4", "CX-5", "CX-50", "CX-60", "CX-7", "CX-8", "CX-80", "CX-9", "CX-90", "Demio", "Eunos", "Familia", "Flair", "Lantis", "Luce", "Mazda6", "Millenia", "MPV", "MX-3", "MX-5", "MX-6", "MX-30", "Navajo", "Persona", "Premacy", "Proceed", "Protegé", "R100", "Revue", "Roadster", "RX-2", "RX-3", "RX-4", "RX-5", "RX-7", "RX-8", "Savanna", "Scrum", "Sentia", "Spiano", "Tribute", "Verisa", "Xedos"],
+"McLaren": ["540C", "570S", "600LT", "620R", "650S", "675LT", "720S", "750S", "765LT", "Artura", "Elva", "F1", "GT", "GTS", "MP4-12C", "P1", "Senna", "Solus GT", "Speedtail"],
+"Mercedes-Benz": ["190", "240D", "300D", "300SL", "A-Class", "AMG GT", "B-Class", "C-Class", "Citan", "CL-Class", "CLA", "CLC", "CLE", "CLK", "CLS", "E-Class", "EQA", "EQB", "EQC", "EQE", "EQG", "EQS", "EQT", "EQV", "G-Class", "GL-Class", "GLA", "GLB", "GLC", "GLE", "GLK", "GLS", "M-Class", "Maybach", "Metris", "R-Class", "S-Class", "SL-Class", "SLC", "SLK", "SLR McLaren", "SLS AMG", "Sprinter", "T-Class", "V-Class", "Vaneo", "Viano", "Vito", "W110", "W114", "W115", "W123", "W124", "X-Class"],
+"Mini": ["Aceman", "Clubman", "Convertible", "Cooper", "Countryman", "Coupe", "Electric", "Paceman", "Roadster"],
+"Mitsubishi": ["3000GT", "500", "Airtrek", "Aspire", "ASX", "Attrage", "Bravo", "Carisma", "Celeste", "Challenger", "Champ", "Chariot", "Colt", "Cordia", "Debonair", "Delica", "Diamante", "Dignity", "Dingo", "Dion", "Eclipse", "Eclipse Cross", "eK", "Emeraude", "Endeavor", "FTO", "Galant", "Grandis", "GTO", "i", "i-MiEV", "Jeep", "L200", "Lancer", "Lancer Evolution", "Legnum", "Libero", "Magna", "Minica", "Mirage", "Montero", "Outlander", "Pajero", "Pajero iO", "Pajero Junior", "Pajero Mini", "Pajero Pinin", "Pajero Sport", "Pistachio", "Precis", "Proudia", "Raider", "RVR", "Sapporo", "Sigma", "Space Gear", "Space Runner", "Space Star", "Space Wagon", "Starion", "Strada", "Tredia", "Triton", "Verada", "Virage", "Xpander"],
+"Nissan": ["100NX", "180SX", "200SX", "240SX", "240Z", "280ZX", "300C", "300ZX", "350Z", "370Z", "AD", "Almera", "Altima", "Ariya", "Armada", "Auster", "Avenir", "Bassara", "Be-1", "Bluebird", "Cedric", "Cefiro", "Cherry", "Cima", "Clipper", "Crew", "Cube", "Datsun", "Dayz", "Dualis", "Elgrand", "Evalia", "Exa", "Expert", "Fairlady Z", "Figaro", "Frontier", "Fuga", "Gloria", "GT-R", "Hypermini", "Juke", "Kicks", "Kix", "Lafesta", "Langley", "Largo", "Latio", "Laurel", "Leaf", "Leopard", "Liberta Villa", "Liberty", "Livina", "Lucino", "Magnite", "March", "Maxima", "Micra", "Moco", "Murano", "Navara", "Note", "NP300", "NV200", "NV400", "Otti", "Pao", "Pathfinder", "Patrol", "Pino", "Pixo", "Platina", "Prairie", "Presage", "Presea", "President", "Primastar", "Primera", "Pulsar", "Qashqai", "Quest", "R'nessa", "Rasheen", "Rogue", "Roox", "S-Cargo", "Safari", "Sentra", "Serena", "Silvia", "Skyline", "Stagea", "Stanza", "Sunny", "Sylphy", "Teana", "Terrano", "Tiida", "Tino", "Titan", "Vanette", "Versa", "Violet", "Wingroad", "X-Trail", "Xterra", "Z"],
+"Nio": ["EC6", "EC7", "EL6", "EL7", "ES6", "ES7", "ES8", "ET5", "ET7", "ET9", "Eve", "EP9"],
+"Opel": ["Adam", "Admiral", "Agila", "Ampera", "Antara", "Ascona", "Astra", "Calibra", "Campo", "Cascada", "Combo", "Commodore", "Corsa", "Crossland", "Diplomat", "Frontera", "Grandland", "GT", "Insignia", "Kadett", "Kapitän", "Karl", "Manta", "Meriva", "Mokka", "Monterey", "Monza", "Movano", "Olympia", "Omega", "Rekord", "Rocks-e", "Senator", "Signum", "Sintra", "Speedster", "Super 6", "Tigra", "Vectra", "Vivaro", "Zafira"],
+"Oldsmobile": ["442", "88", "98", "Achieva", "Alero", "Aurora", "Bravada", "Calais", "Custom Cruiser", "Cutlass", "Delta 88", "Dynamic 88", "F-85", "Firenza", "Intrigue", "Jetstar", "Omega", "Regency", "Silhouette", "Starfire", "Toronado", "Vista Cruiser"],
+"Peugeot": ["104", "106", "107", "108", "201", "202", "203", "204", "205", "206", "207", "208", "2008", "301", "302", "304", "305", "306", "307", "308", "309", "3008", "401", "402", "403", "404", "405", "406", "407", "408", "4007", "4008", "504", "505", "508", "5008", "601", "604", "605", "607", "806", "807", "Bipper", "Boxer", "Expert", "Hoggar", "iOn", "J5", "Partner", "P4", "RCZ", "Rifter", "Traveller"],
+"Polestar": ["1", "2", "3", "4", "5", "6", "Precept"],
+"Pontiac": ["1000", "2000 Sunbird", "6000", "Acadian", "Astre", "Aztek", "Bonneville", "Catalina", "Chieftain", "Fiero", "Firebird", "Firefly", "G3", "G4", "G5", "G6", "G8", "Grand Am", "Grand Prix", "Grand Ville", "GTO", "J2000", "LeMans", "Matiz", "Montana", "Parisienne", "Phoenix", "Pursuit", "Safari", "Solstice", "Star Chief", "Streamliner", "Sunbird", "Sunfire", "Super Chief", "T1000", "Tempest", "Torrent", "Trans Am", "Trans Sport", "Ventura", "Vibe", "Wave"],
+"Porsche": ["356", "550 Spyder", "718", "911", "912", "914", "918 Spyder", "924", "928", "944", "959", "968", "Boxster", "Carrera GT", "Cayenne", "Cayman", "Macan", "Panamera", "Taycan"],
+"Proton": ["Arena", "Chancellor", "Citra", "Ertiga", "Exora", "Gen-2", "Inspira", "Iriz", "Juara", "Perdana", "Persona", "Preve", "Putra", "Saga", "Satria", "Savvy", "Suprima S", "Tiara", "Waja", "Wira", "X50", "X70", "X90"],
+"Ram": ["1500", "2500", "3500", "700", "C/V Tradesman", "Dakota", "ProMaster", "ProMaster City"],
+"Renault": ["4", "4CV", "5", "6", "8", "9", "10", "11", "12", "14", "15", "16", "17", "18", "19", "20", "21", "25", "30", "Alliance", "Arkana", "Austral", "Avantime", "Captur", "Caravelle", "Clio", "Dauphine", "Duster", "Espace", "Express", "Floride", "Fluence", "Fuego", "Grand Scénic", "Kadjar", "Kangoo", "Kaptur", "Kardian", "Kiger", "Koleos", "Kwid", "Laguna", "Latitude", "Le Car", "Logan", "Master", "Megane", "Modus", "Ondine", "Oroch", "Pulse", "Rafale", "Rodeo", "Safrane", "Sandero", "Scala", "Scenic", "Spider", "Symbol", "Symbioz", "Taliant", "Talisman", "Thalia", "Trafic", "Twingo", "Twizy", "Vel Satis", "Wind", "Zoe"],
+"Rimac": ["Concept_One", "C_Two", "Nevera"],
+"Rivian": ["R1S", "R1T", "R2", "R3"],
+"Rolls-Royce": ["20/25", "25/30", "Camargue", "Corniche", "Cullinan", "Dawn", "Ghost", "Park Ward", "Phantom", "Silver Cloud", "Silver Dawn", "Silver Ghost", "Silver Seraph", "Silver Shadow", "Silver Spirit", "Silver Spur", "Spectre", "Sweptail", "Wraith"],
+"Roewe": ["350", "360", "550", "750", "950", "Clever", "D7", "E50", "Ei5", "ERX5", "i5", "i6", "iMAX8", "Lomemo", "Marvel R", "Marvel X", "RX3", "RX5", "RX8", "W5"],
+"Saab": ["600", "9-2X", "9-3", "9-4X", "9-5", "9-7X", "90", "92", "93", "95", "96", "99", "900", "9000", "Sonett"],
+"SEAT": ["124 Sport", "127", "131", "133", "600", "850", "Alhambra", "Altea", "Arona", "Arosa", "Ateca", "Born", "Cordoba", "Cupra GT", "Exeo", "Fura", "Ibiza", "Inca", "Leon", "Malaga", "Marbella", "Mii", "Panda", "Ritmo", "Ronda", "Tarraco", "Terra", "Toledo"],
+"Škoda": ["100", "105", "110", "120", "130", "1000 MB", "Citigo", "Enyaq", "Fabia", "Favorit", "Felicia", "Forman", "Kamiq", "Karoq", "Kodiaq", "Kushaq", "Octavia", "Popular", "Praktik", "Rapid", "Roomster", "Scala", "Slavia", "Superb", "Tudor", "Yeti"],
+"Smart": ["#1", "#3", "City-Coupé", "Crossblade", "Forfour", "Fortwo", "Roadster"],
+"SsangYong": ["Actyon", "Chairman", "Istana", "Kallista", "Korando", "Kyron", "Musso", "Rexton", "Rodius", "Stavic", "Tivoli", "Torres", "XLV"],
+"Subaru": ["1000", "360", "Alcyone", "Ascent", "Baja", "Bighorn", "BRZ", "Brat", "Crosstrek", "Dex", "Domingo", "Exiga", "FF-1", "Forester", "G", "Impreza", "Justy", "L-Series", "Leone", "Levorg", "Legacy", "Libero", "Lucra", "Outback", "Pleo", "R1", "R2", "Rex", "Sambar", "Solterra", "Stella", "SVX", "Traviq", "Trezia", "Tribeca", "Vivio", "WRX", "XT", "XV"],
+"Suzuki": ["A-Star", "Across", "Aerio", "Alto", "APV", "Baleno", "Cappuccino", "Cara", "Carry", "Celerio", "Cervo", "Cultus", "DZire", "Equator", "Ertiga", "Escudo", "Esteem", "Every", "Forenza", "Fronte", "Grand Vitara", "Hustler", "Ignis", "Jimny", "Kei", "Kizashi", "Landy", "Lapin", "Liana", "MR Wagon", "Palette", "Reno", "S-Cross", "Samurai", "Sidekick", "Solio", "Spacia", "Splash", "Swift", "Swace", "SX4", "Twin", "Verona", "Vitara", "Wagon R", "X-90", "XL7"],
+"Tata Motors": ["Ace", "Altroz", "Aria", "Bolt", "Estate", "Harrier", "Hexa", "Indica", "Indigo", "Magic", "Manza", "Mobile", "Nano", "Nexon", "Punch", "Safari", "Sierra", "Spacio", "Sumo", "Tiago", "Tigor", "Winger", "Xenon", "Zest"],
+"Tesla": ["Cybertruck", "Model 3", "Model S", "Model X", "Model Y", "Roadster", "Semi"],
+"Toyota": ["2000GT", "4Runner", "86", "Agya", "Allion", "Alphard", "Altezza", "Aqua", "Aristo", "Aurion", "Auris", "Avalon", "Avanza", "Avensis", "Aygo", "bZ3", "bZ4X", "C-HR", "Caldina", "Cami", "Camry", "Carina", "Celica", "Celsior", "Century", "Chaser", "Comfort", "Copen", "Corolla", "Corona", "Corsa", "Cressida", "Cresta", "Crown", "Curren", "Cynos", "Duet", "Echo", "eCom", "Esquire", "Estima", "Etios", "Fielder", "FJ Cruiser", "Fortuner", "FunCargo", "Gaia", "Grand Highlander", "Grande", "GR86", "Harrier", "HiAce", "Highlander", "Hilux", "Innova", "Ipsum", "iQ", "Isis", "Ist", "Kluger", "Land Cruiser", "LiteAce", "Majesta", "Mark II", "Mark X", "MasterAce", "Matrix", "Mega Cruiser", "Mirai", "MR2", "Nadia", "Noah", "Opa", "Origin", "Paseo", "Passo", "Pickup", "Pixis", "Platz", "Porte", "Prado", "Premio", "Previa", "Prius", "Probox", "Progrès", "Pronard", "Publica", "Raize", "Raum", "RAV4", "Roomy", "Rush", "SAI", "Scepter", "Sequoia", "Sera", "Sienna", "Sienta", "Soarer", "Solara", "Soluna", "Sparky", "Sports 800", "Sprinter", "Starlet", "Stout", "Succeed", "Supra", "Tacoma", "Tank", "Tercel", "TownAce", "ToyoAce", "Tundra", "Urban Cruiser", "Van", "Vanguard", "Vellfire", "Veloz", "Venza", "Verossa", "Verso", "Vienta", "Vios", "Vista", "Vitz", "Voltz", "Voxy", "WiLL", "Windom", "Wigo", "Wish", "Yaris", "Yaris Cross", "Zelas"],
+"Volkswagen": ["181", "411", "412", "Amarok", "Ameo", "Apollo", "Arteon", "Atlas", "Beetle", "Bora", "Brasilia", "C-Trek", "Caddy", "CC", "Corrado", "Dasher", "Derby", "Eos", "Fox", "Gol", "Golf", "ID.2", "ID.3", "ID.4", "ID.5", "ID.6", "ID.7", "ID. Buzz", "Iltis", "Jetta", "K70", "Karmann Ghia", "Käfer", "Lamando", "Lavida", "Logus", "Lupo", "Magotan", "Multivan", "New Beetle", "Parati", "Passat", "Phaeton", "Phideon", "Pointer", "Polo", "Quantum", "Rabbit", "Routan", "Santana", "Saveiro", "Scirocco", "Sharan", "SP2", "Suran", "T-Cross", "T-Roc", "Taigo", "Taigun", "Taro", "Tayron", "Teramont", "Tharu", "Thing", "Tiguan", "Touareg", "Touran", "Transporter", "Type 1", "Type 2", "Type 3", "Type 4", "Up!", "Vento", "Virtus", "Voyage", "XL1"],
+"Volvo": ["66", "122", "140", "164", "240", "260", "340", "360", "440", "460", "480", "740", "760", "780", "850", "940", "960", "Amazon", "C30", "C40", "C70", "Duett", "EX30", "EX90", "L3314", "P1800", "P1900", "PV444", "PV544", "S40", "S60", "S70", "S80", "S90", "Sugga", "V40", "V50", "V60", "V70", "V90", "XC40", "XC60", "XC70", "XC90"],
+"Wuling": ["Almaz", "Baojun", "Confero", "Cortez", "Formo", "Hongguang", "Jiachen", "Victory", "Zhengtu"],
+"Aixam": ["City", "Coupé", "Crossline", "Crossover", "GTO", "Minauto", "Scouty"],
+"Aptera": ["2e", "3", "4"],
+"Arrinera": ["Hussarya"],
+"Ariel": ["Atom", "Hipercar", "Nomad"],
+"Baojun": ["310", "330", "360", "510", "530", "560", "610", "630", "730", "E100", "E200", "Kiwi EV", "Lechi", "RC-5", "RC-6", "RM-5", "RS-3", "RS-5", "RS-7", "Yep"],
+"BAIC": ["Arcfox", "BJ20", "BJ40", "BJ80", "BJ90", "Changhe", "D20", "E-Series", "EU-Series", "EX-Series", "Huansu", "Luba", "Magic Speed", "Ruiling", "Senova", "Weiwang", "X3", "X5", "X7", "X25", "X35", "X55", "X65"],
+"Bollinger": ["B1", "B2"],
+"Brilliance": ["BS2", "BS4", "BS6", "Dolphin", "FRV", "FSV", "Grandeur", "H220", "H230", "H3", "H320", "H330", "H530", "M1", "M2", "M3", "V3", "V5", "V6", "V7", "Zhonghua"],
+"BYD": ["Corvette 07", "Destroyer 05", "Dolphin", "e1", "e2", "e3", "e5", "e6", "F0", "F3", "F6", "Flyer", "Frigate 07", "G3", "G5", "G6", "Han", "L3", "M6", "Qin", "S6", "S7", "S8", "Seal", "Sirui", "Song", "Surui", "Tang", "Yuan"],
+"Callaway": ["C12", "C16", "Camaro", "Corvette", "Impala", "Malibu"],
+"Canoo": ["Lifestyle Vehicle", "MPDV", "Pickup"],
+"Chery": ["A1", "A3", "A5", "Amulet", "Arrizo", "Cowin", "Eastar", "eQ", "eQ1", "eQ5", "Fulwin", "Higgo", "Karry", "Kimo", "Omoda", "QQ", "Riich", "Tiggo", "Windcloud"],
+"Cupra": ["Ateca", "Born", "Formentor", "Leon", "Tavascan", "Terramar", "UrbanRebel"],
+"Dartz": ["Black Alligator", "Black Stallion", "Freze", "Prombron", "White Horse"],
+"De Tomaso": ["Deauville", "Guarà", "Longchamp", "Mangusta", "P72", "Pantera", "Vallelunga"],
+"Denza": ["D9", "N7", "N8", "X"],
+"Derways": ["Antelope", "Aurora", "Cowboy", "Land Crown", "Plutus", "Shuttle"],
+"Donkervoort": ["D8", "D10", "S7", "S8"],
+"Drako Motors": ["Dragon", "GTE"],
+"Elaris": ["Beo", "Dyo", "Finn", "Leo"],
+"Faraday Future": ["FF 91"],
+"GAC": ["Aion", "Emkoo", "Empow", "Enpulse", "Entranze", "Enverge", "E-jet", "GA3", "GA4", "GA5", "GA6", "GA8", "GE3", "GM6", "GM8", "GS3", "GS4", "GS5", "GS7", "GS8", "Gonow", "Trumpchi"],
+"Haval": ["Chitu", "Chulian", "Dagou", "F5", "F7", "H1", "H2", "H4", "H5", "H6", "H7", "H8", "H9", "Jolion", "M6", "Shenshou", "Veyron", "XY"],
+"HiPhi": ["A", "X", "Y", "Z"],
+"Hongqi": ["Century", "E-HS3", "E-HS9", "E-QM5", "Guoyao", "Guoya", "Guoli", "H5", "H6", "H7", "H9", "HS3", "HS5", "HS7", "HQ9", "L5", "LS7", "Mingshi", "Qijian"],
+"Iran Khodro": ["Arisun", "Bardo", "Dena", "Paykan", "Runna", "Samand", "Sarir", "Soren", "Tara"],
+"Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
+"Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
+
+    },
+    
+    'fuels': ["Essence", "Diesel", "Hybride", "Électrique"],
+    'cars': [
+      {
         marque: "Renault",
         modele: "Clio",
         annee: "2015",
         kilometrage: 120000,
         carburant: "Essence",
         puissance: 5,
-        images: ["datatof/Sansqqtitre.jpeg", "datatof/Sanqqstitre.jpeg"],
+        image: "images/clio.jpg",
         description: "Petite citadine fiable et économique."
+      }
+    ],
+    'consult-btn': "Consulter",
+    'modal-title': "Détails de la voiture",
+    'modal-close': "Fermer",
+    'modal-contact': "Contacter le vendeur",
+    'modal-buy': "Demander l'achat P2P",
+    'modal-date': "Date de mise en ligne",
+    'modal-marque': "Marque",
+    'modal-modele': "Modèle",
+    'modal-annee': "Année",
+    'modal-puissance': "Puissance fiscale",
+    'modal-kilometrage': "Kilométrage",
+    'modal-carburant': "Carburant",
+    'modal-transmission': "Transmission",
+    'modal-desc': "Description",
+    'modal-price': "Prix"
+  },
+  en: {
+    'welcome-title': "Welcome to P2P-CARS",
+    'welcome-desc': "Discover the best offers for used cars here, easily announce the sale of your vehicle, or request to find and purchase the exact used car that meets your needs. Enjoy comprehensive services before and after the sale or purchase, fully tailored to your expectations. And to make your acquisition easier, benefit from flexible payment plans, all within a trusted private-to-private environment.",
+    'btn': "Send a request",
+    'filter-search-label': "Search:",
+    'filter-search-ph': "Search...",
+    'filter-marque-label': "Brand:",
+    'filter-marque-ph': "Choose a brand",
+    'filter-modele-label': "Model:",
+    'filter-modele-ph': "Choose a model",
+    'filter-annee-label': "Year:",
+    'filter-annee-ph': "Year",
+    'filter-kilometrage-label': "Max mileage:",
+    'filter-kilometrage-ph': "Max mileage",
+    'filter-carburant-label': "Fuel:",
+    'filter-carburant-ph': "Fuel",
+    'filter-puissance-label': "Max power (HP):",
+    'filter-puissance-ph': "Max power (HP)",
+    'home': "Home",
+    'nav-accueil': "Home",
+    'nav-simulateur': "Price calculator",
+    'nav-services': "P2P-Cars Services",
+    'nav-login':"Personal Space",
+    'brands': ["Acura","Aixam","Alfa Romeo","Aptera","Ariel","Arrinera","Aston Martin","Audi","BAIC","Baojun","Bentley","BMW","Bollinger","Brilliance","Bugatti","Buick","BYD","Cadi lac","Callaway","Canoo","Changan","Chery","Chevrolet","Chrysler","Citroën","Cupra","Dacia","Daewoo","Daihatsu","Dartz","De Tomaso","Denza","Derways","Dodge","Donkervoort","Drako Motors","Eagle","Elaris","Exeed","Faraday Future","Ferrari","Fiat","Fisker","Ford","GAC","Geely","Genesis","GMC","Great Wall","Haval","HiPhi","Honda","Hongqi","Hummer","Hyundai","Infiniti","Iran Khodro","Isdera","Isuzu","Jaguar","Jeep","Kia","Koenigsegg","Lada","Lamborghini","Lancia","Land Rover","Lexus","Lincoln","Lotus","Lucid Motors","Mahindra","Maserati","Mazda","McLaren","Mercedes-Benz","Mini","Mitsubishi","Nio","Nissan","Oldsmobile","Opel","Peugeot","Polestar","Pontiac","Porsche","Proton","Ram","Renault","Rimac","Rivian","Roewe","Rolls-Royce","Saab","SEAT","Škoda","Smart","SsangYong","Subaru","Suzuki","Tata Motors","Tesla","Toyota","Volkswagen","Volvo","Wuling"],
+    'models': {
+"Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
+"Alfa Romeo": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "Alfasud", "Alfetta", "Arna", "Brera", "Dauphine", "Disco Volante", "Giulia", "Giulietta", "GT", "GTA", "GTV", "Matta", "Mito", "Montreal", "Romeo", "RZ", "Spider", "Sprint", "Stelvio", "SZ", "Tonale"],
+"Aston Martin": ["Atom", "Bulldog", "Cygnet", "DB1", "DB2", "DB3", "DB4", "DB5", "DB6", "DB7", "DB9", "DB11", "DB12", "DBS", "DBX", "Lagonda", "One-77", "Rapide", "Rapide E", "Valhalla", "Valkyrie", "Valour", "Vanquish", "Vantage", "Victor", "Virage", "Vulcan"],
+"Audi": ["50", "60", "72", "75", "80", "90", "100", "200", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "Cabriolet", "Coupé", "e-tron", "e-tron GT", "F103", "Q2", "Q3", "Q4 e-tron", "Q5", "Q6 e-tron", "Q7", "Q8", "Quattro", "R8", "RS2 Avant", "RS3", "RS4", "RS5", "RS6", "RS7", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "V8"],
+"Bentley": ["3 Litre", "4½ Litre", "6½ Litre", "8 Litre", "Arnage", "Azure", "Batur", "Bentayga", "Brooklands", "Continental", "Continental Flying Spur", "Continental GT", "Corniche", "Derby", "Flying Spur", "Mark V", "Mark VI", "Mulsanne", "R Type", "S1", "S2", "S3", "T1", "T2", "Turbo R"],
+"BMW": ["1 Series", "2 Series", "3 Series", "4 Series", "5 Series", "6 Series", "7 Series", "8 Series", "3/15", "3/20", "303", "328", "501", "502", "503", "507", "600", "700", "Dixi", "E3", "E9", "i3", "i4", "i5", "i7", "i8", "iX", "iX1", "iX2", "iX3", "Isetta", "M1", "M2", "M3", "M4", "M5", "M6", "M8", "New Class", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z1", "Z3", "Z4", "Z8"],
+"Bugatti": ["Bolide", "Centodieci", "Chiron", "Divo", "EB 110", "EB 112", "EB 118", "EB 218", "Galibier", "La Voiture Noire", "Mistral", "Tourbillon", "Type 13", "Type 35", "Type 41 Royale", "Type 57", "Veyron"],
+"Buick": ["Apollo", "Cascada", "Centurion", "Century", "Electra", "Enclave", "Encore", "Encore GX", "Envision", "Estate", "Gran Sport", "GSX", "Invicta", "LaCrosse", "LeSabre", "Limited", "Lucerne", "Park Avenue", "Rainier", "Reatta", "Regal", "Rendezvous", "Riviera", "Roadmaster", "Skyhawk", "Skylark", "Somerset", "Special", "Super", "Terraza", "Verano", "Wildcat"],
+"Cadillac": ["Allanté", "ATS", "BLS", "Brougham", "Calais", "Catera", "Celestiq", "Cimarron", "Coupe de Ville", "CT4", "CT5", "CT6", "CTS", "DeVille", "DTS", "Eldorado", "ELR", "Escalade", "Fleetwood", "LSE", "Lyriq", "Series 60", "Series 61", "Series 62", "Seville", "Sixty Special", "SLS", "SRX", "STS", "Trump", "V-16", "XLR", "XT4", "XT5", "XT6", "XTS"],
+"Changan": ["Alsvin", "Benni", "CS15", "CS35", "CS55", "CS75", "CS85", "CS95", "Eado", "Hunter", "Lumin", "Raeton", "Star", "UNI-K", "UNI-T", "UNI-V", "Z-Shine"],
+"Chevrolet": ["150", "210", "454 SS", "APV", "Astro", "Avalanche", "Aveo", "Bel Air", "Beretta", "Biscayne", "Blazer", "Bolt", "Brookwood", "Camaro", "Caprice", "Captiva", "Cavalier", "Celebrity", "Celta", "Chevelle", "Chevette", "Chevy II", "Citation", "Cobalt", "Colorado", "Corsica", "Corvair", "Corvette", "Cruze", "Delray", "El Camino", "Epica", "Equinox", "Express", "Fleetline", "Forrester", "HHR", "Impala", "K5 Blazer", "Kingswood", "Kodiak", "Lumina", "LUV", "Malibu", "Master", "Metro", "Monte Carlo", "Monza", "Nomad", "Nova", "Niva", "Optra", "Orlando", "Prizm", "Rezzo", "S-10", "Silverado", "Sonic", "Spark", "Spectrum", "Sprint", "SSR", "Suburban", "Tahoe", "Tavera", "Tracker", "TrailBlazer", "Traverse", "Trax", "Uplander", "Vega", "Venture", "Volt"],
+"Chrysler": ["200", "300", "300M", "Airflow", "Airstream", "Aspen", "Caravan", "Cirrus", "Concorde", "Conquest", "Cordoba", "Crossfire", "Daytona", "Dynasty", "E-Class", "Executive", "Fifth Avenue", "Grand Voyager", "Imperial", "Laser", "LeBaron", "LHS", "Nassau", "New Yorker", "Newport", "Pacifica", "Prowler", "PT Cruiser", "Royal", "Saratoga", "Sebring", "TC by Maserati", "Town & Country", "Turbine Car", "Valiant", "Viper", "Voyager", "Windsor"],
+"Citroën": ["2CV", "Activa", "Ami", "AX", "Axel", "Berlingo", "BX", "C-Crosser", "C-Elysée", "C-Métisse", "C-Triomphe", "C1", "C2", "C3", "C3 Aircross", "C4", "C4 Aircross", "C4 Cactus", "C4 Picasso", "C4 SpaceTourer", "C4 X", "C5", "C5 Aircross", "C5 X", "C6", "C8", "CX", "DS", "Dyane", "E-Méhari", "Evasion", "GS", "GSA", "H Van", "ID", "Jumper", "Jumpy", "Karin", "LNA", "M35", "Méhari", "Nemo", "Oltcit", "Pluriel", "Rosalie", "Saxo", "SM", "SpaceTourer", "Traction Avant", "Type A", "Visa", "Xantia", "XM", "Xsara", "Xsara Picasso", "ZX"],
+"Dacia": ["1100", "1300", "1310", "1410", "500 Lăstun", "Dokker", "Duster", "Jogger", "Lodgy", "Logan", "Nova", "Sandero", "Solenza", "Spring", "SuperNova"],
+"Daewoo": ["Arcadia", "Chairman", "Damas", "Espero", "Evanda", "G2X", "Gentra", "Kalos", "Korando", "Lacetti", "Lanos", "Leganza", "LeMans", "Lublin", "Magnus", "Matiz", "Musso", "Nexia", "Nubira", "Prince", "Racer", "Rezzo", "Statesman", "Super Salon", "Tacuma", "Tico", "Tosca", "Winstorm"],
+"Daihatsu": ["Altis", "Applause", "Atrai", "Bee", "Be-go", "Boon", "Ceria", "Charade", "Charmant", "Copen", "Consorte", "Cuore", "Delta", "Esse", "Fellow", "Feroza", "Gran Max", "Hijet", "Leeza", "Luxio", "Materia", "Max", "Mebius", "Midget", "Mira", "Move", "Naked", "Opti", "Pyzar", "Rocky", "Rugger", "Sirion", "Sonica", "Storia", "Taft", "Tanto", "Terios", "Thor", "Trevis", "Wake", "Xenia", "YRV"],
+"Dodge": ["400", "600", "Aries", "Aspen", "Avenger", "Caliber", "Caravan", "Challenger", "Charger", "Colt", "Conquest", "Coronet", "Dakota", "Dart", "Daytona", "Diplomat", "Durango", "Dynasty", "Grand Caravan", "Hornet", "Intrepid", "Journey", "La Femme", "Lancer", "Magnum", "Mirada", "Monaco", "Neon", "Nitro", "Omni", "Polara", "Power Wagon", "Raider", "Ram", "Ram 50", "Rampage", "Shadow", "Spirit", "Sprinter", "Stealth", "Stratus", "Super Bee", "Viper"],
+"Exeed": ["LX", "RX", "Stellar", "TX", "TXL", "VX"],
+"Eagle": ["Medallion", "Premier", "Summit", "Talon", "Vision", "Vista"],
+"Ferrari": ["12Cilindri", "208", "250", "275", "288 GTO", "296 GTB", "308", "328", "330", "348", "360", "365", "400", "412", "456", "458 Italia", "488", "512", "550", "575M", "599", "612 Scaglietti", "812 Superfast", "California", "Daytona", "Dino", "Enzo", "F8 Tributo", "F12berlinetta", "F355", "F40", "F430", "F50", "FF", "GTC4Lusso", "LaFerrari", "Mondial", "Monza", "Portofino", "Purosangue", "Roma", "SF90 Stradale", "Superamerica", "Testarossa"],
+"Fiat": ["124", "124 Spider", "125", "126", "127", "128", "130", "131", "132", "133", "500", "500L", "500X", "508", "600", "850", "Albea", "Argenta", "Barchetta", "Brava", "Bravo", "Campagnola", "Cinquecento", "Coupe", "Croma", "Dino", "Doblo", "Ducato", "Duna", "Fiorino", "Freemont", "Fullback", "Grande Punto", "Idea", "Linea", "Marea", "Multipla", "Palio", "Panda", "Punto", "Qubo", "Regata", "Ritmo", "Scudo", "Sedici", "Seicento", "Siena", "Stilo", "Strada", "Tempra", "Tipo", "Topolino", "Ulysse", "Uno", "X1/9"],
+"Fisker": ["Karma", "Latigo CS", "Ocean", "Tramonto"],
+"Ford": ["Aerostar", "Anglia", "Aspire", "B-Max", "Bronco", "Bronco II", "C-Max", "Capri", "Consul", "Contour", "Corsair", "Cortina", "Cougar", "Courier", "Crown Victoria", "Custom", "Del Rio", "EcoSport", "Edge", "Escape", "Escort", "Everest", "Excursion", "Expedition", "Explorer", "F-100", "F-150", "Fairlane", "Fairmont", "Falcon", "Festiva", "Fiesta", "Figo", "Five Hundred", "Flex", "Focus", "Freda", "Freestar", "Freestyle", "Fusion", "Galaxie", "Granada", "GT", "GT40", "Ka", "Kuga", "LTD", "Maverick", "Model A", "Model T", "Mondeo", "Mustang", "Mustang Mach-E", "Orion", "Pinto", "Probe", "Puma", "Ranchero", "Ranger", "S-Max", "Scorpio", "Sierra", "Taunus", "Taurus", "Tempo", "Territory", "Thunderbird", "Torino", "Transit", "Windstar", "Zephyr", "Zodiac"],
+"Geely": ["Atlas", "Beauty Leopard", "Binrui", "Binyue", "Borui", "Boyue", "CK", "Coolray", "Emgrand", "Farizon", "GC6", "Geometry", "Haoqing", "Icon", "Jiaji", "Kingkong", "Maple", "MK", "Monjaro", "Panda", "Preface", "Tugella", "Vision", "Xingyue"],
+"Genesis": ["G70", "G80", "G90", "GV60", "GV70", "GV80", "GV90", "Mint Concept", "X Concept"],
+"GMC": ["Acadia", "Caballero", "Canyon", "Envoy", "Graphyte", "Hummer EV", "Jimmy", "Safari", "Savana", "Sierra", "Sonoma", "Sprint", "Suburban", "Syclone", "Terrain", "TopKick", "Tracker", "Typhoon", "Vandura", "Yukon"],
+"Great Wall": ["Coolbear", "Cowry", "Deer", "Florid", "Haval", "Hover", "M4", "Pao", "Peri", "Poer", "Safe", "Sing", "Socool", "Steed", "Tank", "Voleex", "Wingle"],
+"Honda": ["1300", "145", "Accord", "Acty", "Airwave", "Ascot", "Avancier", "Ballade", "Beat", "Brio", "Capa", "City", "Civic", "Clarity", "Concerto", "CR-V", "CR-X", "CR-Z", "Crossroad", "Crosstour", "Domani", "e", "Edix", "Element", "Elysion", "FCX Clarity", "Fit", "FR-V", "Freed", "Grace", "HR-V", "Insight", "Inspire", "Integra", "Jade", "Jazz", "Lagreat", "Legend", "Life", "Logo", "Mobilio", "N-Box", "N-One", "N-WGN", "NSX", "Odyssey", "Orthia", "Partner", "Passport", "Pilot", "Prelude", "Quint", "Rafaga", "Ridgeline", "S-MX", "S2000", "S500", "S600", "S660", "Saber", "Shuttle", "Stepwgn", "Stream", "Today", "Torneo", "Vamos", "Vezel", "Vigor", "Z", "Zest"],
+"Hummer": ["H1", "H2", "H3", "H3T", "EV"],
+"Hyundai": ["Accent", "Aslan", "Atos", "Azera", "Bayon", "Casper", "Celesta", "Centennial", "Coupe", "Creta", "Dynasty", "Elantra", "Entourage", "Eon", "Equus", "Excel", "Galloper", "Genesis", "Getz", "Grace", "Grandeur", "H-1", "i10", "i20", "i30", "i40", "Ioniq", "ix20", "ix35", "ix55", "Kona", "Lantra", "Lavita", "Marcia", "Matrix", "Maxcruz", "Mistra", "Nexo", "Palisade", "Pony", "Porter", "Santa Cruz", "Santa Fe", "Santamo", "Scoupe", "Sonata", "Starex", "Stellar", "Terracan", "Tiburon", "Trajet", "Tucson", "Veloster", "Venue", "Veracruz", "Verna", "Xcent", "XG"],
+"Infiniti": ["ESQ", "EX", "FX", "G", "I", "J", "JX", "M", "Q", "Q30", "Q40", "Q45", "Q50", "Q60", "Q70", "QX", "QX30", "QX4", "QX50", "QX55", "QX60", "QX70", "QX80"],
+"Jaguar": ["420", "C-Type", "D-Type", "E-Pace", "E-Type", "F-Pace", "F-Type", "I-Pace", "Mark 1", "Mark 2", "Mark V", "Mark VII", "Mark VIII", "Mark IX", "Mark X", "S-Type", "SS 100", "X-Type", "XE", "XF", "XJ", "XJ220", "XJR", "XJS", "XK", "XKSS"],
+"Jeep": ["Cherokee", "CJ", "Comanche", "Commander", "Compass", "Dispatcher", "DJ", "FC", "Gladiator", "Grand Cherokee", "Grand Wagoneer", "Honcho", "Jeepster", "Liberty", "Meridian", "Patriot", "Recon", "Renegade", "Scrambler", "Wagoneer", "Willys", "Wrangler"],
+"Kia": ["Amanti", "Avella", "Bongo", "Borrego", "Brisa", "Cadenza", "Capital", "Carens", "Carnival", "Ceed", "Cerato", "Clarus", "Concord", "Credos", "Elan", "Enterprise", "EV3", "EV4", "EV5", "EV6", "EV9", "Forte", "Joice", "K3", "K4", "K5", "K7", "K8", "K9", "K900", "Magentis", "Mohave", "Morning", "Niro", "Opirus", "Optima", "Pegas", "Picanto", "Potentia", "Pregio", "Pride", "ProCeed", "Ray", "Retona", "Rio", "Rondo", "Sedona", "Seltos", "Sephia", "Shuma", "Sonet", "Sorento", "Soul", "Spectra", "Sportage", "Stinger", "Stonic", "Telluride", "Towner", "Venga", "Visto", "X-Trek", "XCeed"],
+"Koenigsegg": ["Agera", "CC", "CC8S", "CCR", "CCX", "CCXR", "Gemera", "Jesko", "One:1", "Regera", "Trevita"],
+"Lada": ["110", "111", "112", "Aura", "C-Cross", "Granta", "Iskra", "Kalina", "Largus", "Nadezhda", "Niva", "Oka", "Priora", "Revolution", "Riva", "Samara", "Sputnik", "Vesta", "X-Code", "Xray"],
+"Lamborghini": ["350 GT", "400 GT", "Aventador", "Centenario", "Countach", "Diablo", "Espada", "Gallardo", "Huracán", "Islero", "Jalpa", "Jarama", "LM002", "Miura", "Murciélago", "Reventón", "Revuelto", "Sesto Elemento", "Sián", "Silhouette", "Urus", "Urraco", "Veneno"],
+"Lancia": ["Appia", "Aprilia", "Ardea", "Augusta", "Aurelia", "Autobianchi A112", "Beta", "Dedra", "Delta", "Dialogos", "Flaminia", "Flavia", "Fulvia", "Gamma", "Hyena", "Kappa", "Lambda", "Lybra", "Montecarlo", "Musa", "Phedra", "Prisma", "Stratos", "Thema", "Thesis", "Trevi", "Voyager", "Y10", "Ypsilon", "Zeta"],
+"Land Rover": ["Defender", "Discovery", "Discovery Sport", "Freelander", "LR2", "LR3", "LR4", "Range Rover", "Range Rover Evoque", "Range Rover Sport", "Range Rover Velar", "Series I", "Series II", "Series III"],
+"Lexus": ["CT", "ES", "GS", "GX", "HS", "IS", "LC", "LFA", "LM", "LS", "LX", "NX", "RC", "RX", "RZ", "SC", "TX", "UX"],
+"Lincoln": ["Aviator", "Blackwood", "Capri", "Continental", "Corsair", "Cosmopolitan", "Custom", "KB", "L-series", "LS", "Mark II", "Mark III", "Mark IV", "Mark V", "Mark VI", "Mark VII", "Mark VIII", "MKS", "MKT", "MKX", "MKZ", "Nautilus", "Navigator", "Premiere", "Sport", "Town Car", "Versailles", "Zephyr"],
+"Lotus": ["2-Eleven", "3-Eleven", "340R", "Carlton", "Cortina", "Elan", "Eletre", "Elise", "Elite", "Emeya", "Emira", "Esprit", "Europa", "Evora", "Excel", "Exige", "Evija", "Omega", "Sunbeam", "Talbot"],
+"Lucid Motors": ["Air", "Gravity"],
+"Mahindra": ["Alturas G4", "Armada", "Bolero", "e2o", "Genio", "Jeep", "KUV100", "Marazzo", "Nuvosport", "Quanto", "Reva", "Scorpio", "Thar", "TUV300", "Verito", "XUV300", "XUV500", "XUV700", "Xylo"],
+"Maserati": ["228", "3200 GT", "3500 GT", "4200 GT", "5000 GT", "Barchetta", "Biturbo", "Bora", "Chubasco", "Folgor", "Ghibli", "GranCabrio", "GranSport", "GranTurismo", "Grecale", "Indy", "Karif", "Khamsin", "Kyalami", "Levante", "MC12", "MC20", "Merak", "Mexico", "Mistral", "Quattroporte", "Sebring", "Shamal", "Spyder"],
+"Mazda": ["121", "2", "3", "323", "5", "6", "616", "626", "929", "Atenza", "Autozam", "Axela", "AZ-1", "B-Series", "Biante", "Bongo", "BT-50", "Carol", "Chantez", "Cosmo", "Cronos", "CX-3", "CX-30", "CX-4", "CX-5", "CX-50", "CX-60", "CX-7", "CX-8", "CX-80", "CX-9", "CX-90", "Demio", "Eunos", "Familia", "Flair", "Lantis", "Luce", "Mazda6", "Millenia", "MPV", "MX-3", "MX-5", "MX-6", "MX-30", "Navajo", "Persona", "Premacy", "Proceed", "Protegé", "R100", "Revue", "Roadster", "RX-2", "RX-3", "RX-4", "RX-5", "RX-7", "RX-8", "Savanna", "Scrum", "Sentia", "Spiano", "Tribute", "Verisa", "Xedos"],
+"McLaren": ["540C", "570S", "600LT", "620R", "650S", "675LT", "720S", "750S", "765LT", "Artura", "Elva", "F1", "GT", "GTS", "MP4-12C", "P1", "Senna", "Solus GT", "Speedtail"],
+"Mercedes-Benz": ["190", "240D", "300D", "300SL", "A-Class", "AMG GT", "B-Class", "C-Class", "Citan", "CL-Class", "CLA", "CLC", "CLE", "CLK", "CLS", "E-Class", "EQA", "EQB", "EQC", "EQE", "EQG", "EQS", "EQT", "EQV", "G-Class", "GL-Class", "GLA", "GLB", "GLC", "GLE", "GLK", "GLS", "M-Class", "Maybach", "Metris", "R-Class", "S-Class", "SL-Class", "SLC", "SLK", "SLR McLaren", "SLS AMG", "Sprinter", "T-Class", "V-Class", "Vaneo", "Viano", "Vito", "W110", "W114", "W115", "W123", "W124", "X-Class"],
+"Mini": ["Aceman", "Clubman", "Convertible", "Cooper", "Countryman", "Coupe", "Electric", "Paceman", "Roadster"],
+"Mitsubishi": ["3000GT", "500", "Airtrek", "Aspire", "ASX", "Attrage", "Bravo", "Carisma", "Celeste", "Challenger", "Champ", "Chariot", "Colt", "Cordia", "Debonair", "Delica", "Diamante", "Dignity", "Dingo", "Dion", "Eclipse", "Eclipse Cross", "eK", "Emeraude", "Endeavor", "FTO", "Galant", "Grandis", "GTO", "i", "i-MiEV", "Jeep", "L200", "Lancer", "Lancer Evolution", "Legnum", "Libero", "Magna", "Minica", "Mirage", "Montero", "Outlander", "Pajero", "Pajero iO", "Pajero Junior", "Pajero Mini", "Pajero Pinin", "Pajero Sport", "Pistachio", "Precis", "Proudia", "Raider", "RVR", "Sapporo", "Sigma", "Space Gear", "Space Runner", "Space Star", "Space Wagon", "Starion", "Strada", "Tredia", "Triton", "Verada", "Virage", "Xpander"],
+"Nissan": ["100NX", "180SX", "200SX", "240SX", "240Z", "280ZX", "300C", "300ZX", "350Z", "370Z", "AD", "Almera", "Altima", "Ariya", "Armada", "Auster", "Avenir", "Bassara", "Be-1", "Bluebird", "Cedric", "Cefiro", "Cherry", "Cima", "Clipper", "Crew", "Cube", "Datsun", "Dayz", "Dualis", "Elgrand", "Evalia", "Exa", "Expert", "Fairlady Z", "Figaro", "Frontier", "Fuga", "Gloria", "GT-R", "Hypermini", "Juke", "Kicks", "Kix", "Lafesta", "Langley", "Largo", "Latio", "Laurel", "Leaf", "Leopard", "Liberta Villa", "Liberty", "Livina", "Lucino", "Magnite", "March", "Maxima", "Micra", "Moco", "Murano", "Navara", "Note", "NP300", "NV200", "NV400", "Otti", "Pao", "Pathfinder", "Patrol", "Pino", "Pixo", "Platina", "Prairie", "Presage", "Presea", "President", "Primastar", "Primera", "Pulsar", "Qashqai", "Quest", "R'nessa", "Rasheen", "Rogue", "Roox", "S-Cargo", "Safari", "Sentra", "Serena", "Silvia", "Skyline", "Stagea", "Stanza", "Sunny", "Sylphy", "Teana", "Terrano", "Tiida", "Tino", "Titan", "Vanette", "Versa", "Violet", "Wingroad", "X-Trail", "Xterra", "Z"],
+"Nio": ["EC6", "EC7", "EL6", "EL7", "ES6", "ES7", "ES8", "ET5", "ET7", "ET9", "Eve", "EP9"],
+"Opel": ["Adam", "Admiral", "Agila", "Ampera", "Antara", "Ascona", "Astra", "Calibra", "Campo", "Cascada", "Combo", "Commodore", "Corsa", "Crossland", "Diplomat", "Frontera", "Grandland", "GT", "Insignia", "Kadett", "Kapitän", "Karl", "Manta", "Meriva", "Mokka", "Monterey", "Monza", "Movano", "Olympia", "Omega", "Rekord", "Rocks-e", "Senator", "Signum", "Sintra", "Speedster", "Super 6", "Tigra", "Vectra", "Vivaro", "Zafira"],
+"Oldsmobile": ["442", "88", "98", "Achieva", "Alero", "Aurora", "Bravada", "Calais", "Custom Cruiser", "Cutlass", "Delta 88", "Dynamic 88", "F-85", "Firenza", "Intrigue", "Jetstar", "Omega", "Regency", "Silhouette", "Starfire", "Toronado", "Vista Cruiser"],
+"Peugeot": ["104", "106", "107", "108", "201", "202", "203", "204", "205", "206", "207", "208", "2008", "301", "302", "304", "305", "306", "307", "308", "309", "3008", "401", "402", "403", "404", "405", "406", "407", "408", "4007", "4008", "504", "505", "508", "5008", "601", "604", "605", "607", "806", "807", "Bipper", "Boxer", "Expert", "Hoggar", "iOn", "J5", "Partner", "P4", "RCZ", "Rifter", "Traveller"],
+"Polestar": ["1", "2", "3", "4", "5", "6", "Precept"],
+"Pontiac": ["1000", "2000 Sunbird", "6000", "Acadian", "Astre", "Aztek", "Bonneville", "Catalina", "Chieftain", "Fiero", "Firebird", "Firefly", "G3", "G4", "G5", "G6", "G8", "Grand Am", "Grand Prix", "Grand Ville", "GTO", "J2000", "LeMans", "Matiz", "Montana", "Parisienne", "Phoenix", "Pursuit", "Safari", "Solstice", "Star Chief", "Streamliner", "Sunbird", "Sunfire", "Super Chief", "T1000", "Tempest", "Torrent", "Trans Am", "Trans Sport", "Ventura", "Vibe", "Wave"],
+"Porsche": ["356", "550 Spyder", "718", "911", "912", "914", "918 Spyder", "924", "928", "944", "959", "968", "Boxster", "Carrera GT", "Cayenne", "Cayman", "Macan", "Panamera", "Taycan"],
+"Proton": ["Arena", "Chancellor", "Citra", "Ertiga", "Exora", "Gen-2", "Inspira", "Iriz", "Juara", "Perdana", "Persona", "Preve", "Putra", "Saga", "Satria", "Savvy", "Suprima S", "Tiara", "Waja", "Wira", "X50", "X70", "X90"],
+"Ram": ["1500", "2500", "3500", "700", "C/V Tradesman", "Dakota", "ProMaster", "ProMaster City"],
+"Renault": ["4", "4CV", "5", "6", "8", "9", "10", "11", "12", "14", "15", "16", "17", "18", "19", "20", "21", "25", "30", "Alliance", "Arkana", "Austral", "Avantime", "Captur", "Caravelle", "Clio", "Dauphine", "Duster", "Espace", "Express", "Floride", "Fluence", "Fuego", "Grand Scénic", "Kadjar", "Kangoo", "Kaptur", "Kardian", "Kiger", "Koleos", "Kwid", "Laguna", "Latitude", "Le Car", "Logan", "Master", "Megane", "Modus", "Ondine", "Oroch", "Pulse", "Rafale", "Rodeo", "Safrane", "Sandero", "Scala", "Scenic", "Spider", "Symbol", "Symbioz", "Taliant", "Talisman", "Thalia", "Trafic", "Twingo", "Twizy", "Vel Satis", "Wind", "Zoe"],
+"Rimac": ["Concept_One", "C_Two", "Nevera"],
+"Rivian": ["R1S", "R1T", "R2", "R3"],
+"Rolls-Royce": ["20/25", "25/30", "Camargue", "Corniche", "Cullinan", "Dawn", "Ghost", "Park Ward", "Phantom", "Silver Cloud", "Silver Dawn", "Silver Ghost", "Silver Seraph", "Silver Shadow", "Silver Spirit", "Silver Spur", "Spectre", "Sweptail", "Wraith"],
+"Roewe": ["350", "360", "550", "750", "950", "Clever", "D7", "E50", "Ei5", "ERX5", "i5", "i6", "iMAX8", "Lomemo", "Marvel R", "Marvel X", "RX3", "RX5", "RX8", "W5"],
+"Saab": ["600", "9-2X", "9-3", "9-4X", "9-5", "9-7X", "90", "92", "93", "95", "96", "99", "900", "9000", "Sonett"],
+"SEAT": ["124 Sport", "127", "131", "133", "600", "850", "Alhambra", "Altea", "Arona", "Arosa", "Ateca", "Born", "Cordoba", "Cupra GT", "Exeo", "Fura", "Ibiza", "Inca", "Leon", "Malaga", "Marbella", "Mii", "Panda", "Ritmo", "Ronda", "Tarraco", "Terra", "Toledo"],
+"Škoda": ["100", "105", "110", "120", "130", "1000 MB", "Citigo", "Enyaq", "Fabia", "Favorit", "Felicia", "Forman", "Kamiq", "Karoq", "Kodiaq", "Kushaq", "Octavia", "Popular", "Praktik", "Rapid", "Roomster", "Scala", "Slavia", "Superb", "Tudor", "Yeti"],
+"Smart": ["#1", "#3", "City-Coupé", "Crossblade", "Forfour", "Fortwo", "Roadster"],
+"SsangYong": ["Actyon", "Chairman", "Istana", "Kallista", "Korando", "Kyron", "Musso", "Rexton", "Rodius", "Stavic", "Tivoli", "Torres", "XLV"],
+"Subaru": ["1000", "360", "Alcyone", "Ascent", "Baja", "Bighorn", "BRZ", "Brat", "Crosstrek", "Dex", "Domingo", "Exiga", "FF-1", "Forester", "G", "Impreza", "Justy", "L-Series", "Leone", "Levorg", "Legacy", "Libero", "Lucra", "Outback", "Pleo", "R1", "R2", "Rex", "Sambar", "Solterra", "Stella", "SVX", "Traviq", "Trezia", "Tribeca", "Vivio", "WRX", "XT", "XV"],
+"Suzuki": ["A-Star", "Across", "Aerio", "Alto", "APV", "Baleno", "Cappuccino", "Cara", "Carry", "Celerio", "Cervo", "Cultus", "DZire", "Equator", "Ertiga", "Escudo", "Esteem", "Every", "Forenza", "Fronte", "Grand Vitara", "Hustler", "Ignis", "Jimny", "Kei", "Kizashi", "Landy", "Lapin", "Liana", "MR Wagon", "Palette", "Reno", "S-Cross", "Samurai", "Sidekick", "Solio", "Spacia", "Splash", "Swift", "Swace", "SX4", "Twin", "Verona", "Vitara", "Wagon R", "X-90", "XL7"],
+"Tata Motors": ["Ace", "Altroz", "Aria", "Bolt", "Estate", "Harrier", "Hexa", "Indica", "Indigo", "Magic", "Manza", "Mobile", "Nano", "Nexon", "Punch", "Safari", "Sierra", "Spacio", "Sumo", "Tiago", "Tigor", "Winger", "Xenon", "Zest"],
+"Tesla": ["Cybertruck", "Model 3", "Model S", "Model X", "Model Y", "Roadster", "Semi"],
+"Toyota": ["2000GT", "4Runner", "86", "Agya", "Allion", "Alphard", "Altezza", "Aqua", "Aristo", "Aurion", "Auris", "Avalon", "Avanza", "Avensis", "Aygo", "bZ3", "bZ4X", "C-HR", "Caldina", "Cami", "Camry", "Carina", "Celica", "Celsior", "Century", "Chaser", "Comfort", "Copen", "Corolla", "Corona", "Corsa", "Cressida", "Cresta", "Crown", "Curren", "Cynos", "Duet", "Echo", "eCom", "Esquire", "Estima", "Etios", "Fielder", "FJ Cruiser", "Fortuner", "FunCargo", "Gaia", "Grand Highlander", "Grande", "GR86", "Harrier", "HiAce", "Highlander", "Hilux", "Innova", "Ipsum", "iQ", "Isis", "Ist", "Kluger", "Land Cruiser", "LiteAce", "Majesta", "Mark II", "Mark X", "MasterAce", "Matrix", "Mega Cruiser", "Mirai", "MR2", "Nadia", "Noah", "Opa", "Origin", "Paseo", "Passo", "Pickup", "Pixis", "Platz", "Porte", "Prado", "Premio", "Previa", "Prius", "Probox", "Progrès", "Pronard", "Publica", "Raize", "Raum", "RAV4", "Roomy", "Rush", "SAI", "Scepter", "Sequoia", "Sera", "Sienna", "Sienta", "Soarer", "Solara", "Soluna", "Sparky", "Sports 800", "Sprinter", "Starlet", "Stout", "Succeed", "Supra", "Tacoma", "Tank", "Tercel", "TownAce", "ToyoAce", "Tundra", "Urban Cruiser", "Van", "Vanguard", "Vellfire", "Veloz", "Venza", "Verossa", "Verso", "Vienta", "Vios", "Vista", "Vitz", "Voltz", "Voxy", "WiLL", "Windom", "Wigo", "Wish", "Yaris", "Yaris Cross", "Zelas"],
+"Volkswagen": ["181", "411", "412", "Amarok", "Ameo", "Apollo", "Arteon", "Atlas", "Beetle", "Bora", "Brasilia", "C-Trek", "Caddy", "CC", "Corrado", "Dasher", "Derby", "Eos", "Fox", "Gol", "Golf", "ID.2", "ID.3", "ID.4", "ID.5", "ID.6", "ID.7", "ID. Buzz", "Iltis", "Jetta", "K70", "Karmann Ghia", "Käfer", "Lamando", "Lavida", "Logus", "Lupo", "Magotan", "Multivan", "New Beetle", "Parati", "Passat", "Phaeton", "Phideon", "Pointer", "Polo", "Quantum", "Rabbit", "Routan", "Santana", "Saveiro", "Scirocco", "Sharan", "SP2", "Suran", "T-Cross", "T-Roc", "Taigo", "Taigun", "Taro", "Tayron", "Teramont", "Tharu", "Thing", "Tiguan", "Touareg", "Touran", "Transporter", "Type 1", "Type 2", "Type 3", "Type 4", "Up!", "Vento", "Virtus", "Voyage", "XL1"],
+"Volvo": ["66", "122", "140", "164", "240", "260", "340", "360", "440", "460", "480", "740", "760", "780", "850", "940", "960", "Amazon", "C30", "C40", "C70", "Duett", "EX30", "EX90", "L3314", "P1800", "P1900", "PV444", "PV544", "S40", "S60", "S70", "S80", "S90", "Sugga", "V40", "V50", "V60", "V70", "V90", "XC40", "XC60", "XC70", "XC90"],
+"Wuling": ["Almaz", "Baojun", "Confero", "Cortez", "Formo", "Hongguang", "Jiachen", "Victory", "Zhengtu"],
+"Aixam": ["City", "Coupé", "Crossline", "Crossover", "GTO", "Minauto", "Scouty"],
+"Aptera": ["2e", "3", "4"],
+"Arrinera": ["Hussarya"],
+"Ariel": ["Atom", "Hipercar", "Nomad"],
+"Baojun": ["310", "330", "360", "510", "530", "560", "610", "630", "730", "E100", "E200", "Kiwi EV", "Lechi", "RC-5", "RC-6", "RM-5", "RS-3", "RS-5", "RS-7", "Yep"],
+"BAIC": ["Arcfox", "BJ20", "BJ40", "BJ80", "BJ90", "Changhe", "D20", "E-Series", "EU-Series", "EX-Series", "Huansu", "Luba", "Magic Speed", "Ruiling", "Senova", "Weiwang", "X3", "X5", "X7", "X25", "X35", "X55", "X65"],
+"Bollinger": ["B1", "B2"],
+"Brilliance": ["BS2", "BS4", "BS6", "Dolphin", "FRV", "FSV", "Grandeur", "H220", "H230", "H3", "H320", "H330", "H530", "M1", "M2", "M3", "V3", "V5", "V6", "V7", "Zhonghua"],
+"BYD": ["Corvette 07", "Destroyer 05", "Dolphin", "e1", "e2", "e3", "e5", "e6", "F0", "F3", "F6", "Flyer", "Frigate 07", "G3", "G5", "G6", "Han", "L3", "M6", "Qin", "S6", "S7", "S8", "Seal", "Sirui", "Song", "Surui", "Tang", "Yuan"],
+"Callaway": ["C12", "C16", "Camaro", "Corvette", "Impala", "Malibu"],
+"Canoo": ["Lifestyle Vehicle", "MPDV", "Pickup"],
+"Chery": ["A1", "A3", "A5", "Amulet", "Arrizo", "Cowin", "Eastar", "eQ", "eQ1", "eQ5", "Fulwin", "Higgo", "Karry", "Kimo", "Omoda", "QQ", "Riich", "Tiggo", "Windcloud"],
+"Cupra": ["Ateca", "Born", "Formentor", "Leon", "Tavascan", "Terramar", "UrbanRebel"],
+"Dartz": ["Black Alligator", "Black Stallion", "Freze", "Prombron", "White Horse"],
+"De Tomaso": ["Deauville", "Guarà", "Longchamp", "Mangusta", "P72", "Pantera", "Vallelunga"],
+"Denza": ["D9", "N7", "N8", "X"],
+"Derways": ["Antelope", "Aurora", "Cowboy", "Land Crown", "Plutus", "Shuttle"],
+"Donkervoort": ["D8", "D10", "S7", "S8"],
+"Drako Motors": ["Dragon", "GTE"],
+"Elaris": ["Beo", "Dyo", "Finn", "Leo"],
+"Faraday Future": ["FF 91"],
+"GAC": ["Aion", "Emkoo", "Empow", "Enpulse", "Entranze", "Enverge", "E-jet", "GA3", "GA4", "GA5", "GA6", "GA8", "GE3", "GM6", "GM8", "GS3", "GS4", "GS5", "GS7", "GS8", "Gonow", "Trumpchi"],
+"Haval": ["Chitu", "Chulian", "Dagou", "F5", "F7", "H1", "H2", "H4", "H5", "H6", "H7", "H8", "H9", "Jolion", "M6", "Shenshou", "Veyron", "XY"],
+"HiPhi": ["A", "X", "Y", "Z"],
+"Hongqi": ["Century", "E-HS3", "E-HS9", "E-QM5", "Guoyao", "Guoya", "Guoli", "H5", "H6", "H7", "H9", "HS3", "HS5", "HS7", "HQ9", "L5", "LS7", "Mingshi", "Qijian"],
+"Iran Khodro": ["Arisun", "Bardo", "Dena", "Paykan", "Runna", "Samand", "Sarir", "Soren", "Tara"],
+"Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
+"Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
+
     },
-    {
-        Ref:"P2P-Cars2025081322108",
-        marque: "Peugeot",
-        modele: "208",
-        annee: "2019",
-        kilometrage: 90000,
-        carburant: "Diesel",
-        puissance: 4,
-        images: ["datatof/Sansqtitre.jpeg", "datatof/imagesq.jpeg"],
-        description: "Compacte, confortable et bien entretenue."
+    
+    'fuels': ["Petrol", "Diesel", "Hybrid", "Electric"],
+    'cars': [
+      {
+        marque: "Renault",
+        modele: "Clio",
+        annee: "2015",
+        kilometrage: 120000,
+        carburant: "Petrol",
+        puissance: 5,
+        image: "images/clio.jpg",
+        description: "Reliable and economical city car."
+      }
+    ],
+    'consult-btn': "View details",
+    'modal-title': "Car details",
+    'modal-close': "Close",
+    'modal-contact': "Contact seller",
+    'modal-buy': "Request P2P purchase",
+    'modal-date': "Online since",
+    'modal-marque': "Brand",
+    'modal-modele': "Model",
+    'modal-annee': "Year",
+    'modal-puissance': "Fiscal power",
+    'modal-kilometrage': "Mileage",
+    'modal-carburant': "Fuel",
+    'modal-transmission': "Transmission",
+    'modal-desc': "Description",
+    'modal-price': "Price"
+  },
+  ar: {
+    'welcome-title': "مرحبا بكم في P2P-CARS",
+    'welcome-desc': "اكتشف أفضل عروض السيارات المستعملة هنا، أعلن عن بيع سيارتك بكل سهولة، أو اطلب العثور على وشراء السيارة المستعملة التي تناسب احتياجاتك بدقة. استمتع بخدمات شاملة قبل وبعد البيع أو الشراء، مصممة بالكامل لتلبية توقعاتك. ولتسهيل عملية الشراء، استفد من خطط دفع مرنة، وكل ذلك في بيئة موثوقة بين الأفراد.",
+    'btn': "إرسال طلب",
+    'filter-search-label': "بحث:",
+    'filter-search-ph': "بحث...",
+    'filter-marque-label': "الماركة:",
+    'filter-marque-ph': "اختر ماركة",
+    'filter-modele-label': "الموديل:",
+    'filter-modele-ph': "اختر موديل",
+    'filter-annee-label': "السنة:",
+    'filter-annee-ph': "السنة",
+    'filter-kilometrage-label': "الحد الأقصى للكيلومترات:",
+    'filter-kilometrage-ph': "أقصى كيلومترات",
+    'filter-carburant-label': "الوقود:",
+    'filter-carburant-ph': "الوقود",
+    'filter-puissance-label': "أقصى قوة (CV):",
+    'filter-puissance-ph': "أقصى قوة (CV)",
+    'home': "الرئيسية",
+    'nav-accueil': "الرئيسية",
+    'nav-simulateur': "حساب السعر",
+    'nav-services': "خدمات P2P-Cars",
+    'nav-login':"الفضاء الشخصي",
+    'brands': ["أكورا","إكزام","ألفا روميو","أبتيرا","أرييل","أرينيرا","أستون مارتن","أودي","بايك","باوجون","بينتلي","بي إم دبليو","بولينجر","بريليانس","بوغاتي","بيوك","بي واي دي","كاديلاك","كالواي","كانو","تشانجان","تشيري","شيفروليه","كرايسلر","سيتروين","كوبرا","داسيا","دايوو","دايهاتسو","دارتز","دي توماسو","دينزا","ديروايز","دودج","دونكيرفورت","دراكو موتورز","إيغل","إلاريس","إكسيد","فارادي فيوتشر","فيراري","فيات","فيسكر","فورد","جي إيه سي","جيلي","جينيسيس","جي إم سي","جريت وول","هافال","هيفي","هوندا","هونغتشي","هامر","هيونداي","إنفينيتي","إيران خودرو","إسديرا","إيسوزو","جاجوار","جيب","كيا","كوينغسيغ","لادا","لامبورغيني","لانشيا","لاند روفر","لكزس","لينكولن","لوتس","لوسيد موتورز","ماهيندرا","مازيراتي","مازدا","مكلارين","مرسيدس-بنز","ميني","ميتسوبيشي","نيو","نيسان","أولدزموبيل","أوبل","بيجو","بولستار","بونتيك","بورشه","بروتون","رام","رينو","ريماك","ريفان","رووي","رولز-رويس","صعب","سيات","شكودا","سمارت","سانغيونغ","سوبارو","سوزوكي","تاتا موتورز","تسلا","تويوتا","فولكس فاجن","فولفو","ولينغ"]
+,
+    'models': {
+      "ديروايز": ["أنتيلوب", "أورورا", "كاوبوي", "لاند كراون", "بلوتوس", "شاتل"],
+      "دونكيرفورت": ["D8", "D10", "S7", "S8"],
+      "دراكو موتورز": ["دراغون", "GTE"],
+      "إلاريس": ["بيو", "ديو", "فين", "ليو"],
+      "فارداي فيوتشر": ["FF 91"],
+      "GAC": ["آيون", "إيمكو", "إمباو", "إنبولس", "إنترانز", "إنفيرج", "E-jet", "GA3", "GA4", "GA5", "GA6", "GA8", "GE3", "GM6", "GM8", "GS3", "GS4", "GS5", "GS7", "GS8", "جونوف", "ترامبشي"],
+      "هافال": ["تشيتو", "تشوليان", "داجو", "F5", "F7", "H1", "H2", "H4", "H5", "H6", "H7", "H8", "H9", "جوليون", "M6", "شينشو", "فايرون", "XY"],
+      "هاي في": ["A", "X", "Y", "Z"],
+      "هونجتشي": ["سينشري", "E-HS3", "E-HS9", "E-QM5", "جواو", "جوايا", "جولي", "H5", "H6", "H7", "H9", "HS3", "HS5", "HS7", "HQ9", "L5", "LS7", "مينغشي", "قيجيان"],
+      "إيران خودرو": ["أريسون", "باردو", "دينا", "بايكان", "رونا", "ساماند", "سارير", "سورين", "تارا"],
+      "إيسديرا": ["أوتوباهنكوريير 116i", "كومنداتوري 112i", "إمبيراتور 108i", "سبايدر 036i"],
+      "إيسوزو": ["117 كوبيه", "أميجو", "أسيندر", "أسكا", "أكسيوم", "بيلت", "بيغورن", "كومو", "دي-ماكس", "فارغو", "فاستر", "فلوريان", "جيميني", "هومبر", "آي-سيريس", "إمبالس", "KB", "ميدي", "MU", "MU-X", "أوايسيس", "بانثر", "بيازا", "بيك أب", "روديو", "ستايلس", "تروبر", "فيهيكروس", "فيرتكس", "واسب", "ويزارد"],
+      "برليانس": ["BS2", "BS4", "BS6", "دولفين", "FRV", "FSV", "جرانديور", "H220", "H230", "H3", "H320", "H330", "H530", "M1", "M2", "M3", "V3", "V5", "V6", "V7", "تشونغهوا"],
+      "BYD": ["كورفيت 07", "ديسترويير 05", "دولفين", "e1", "e2", "e3", "e5", "e6", "F0", "F3", "F6", "فلاير", "فريغيت 07", "G3", "G5", "G6", "هان", "L3", "M6", "تشين", "S6", "S7", "S8", "سيل", "سيروي", "سونغ", "سوروي", "تانغ", "يوان"],
+      "كالواي": ["C12", "C16", "كامارو", "كورفيت", "إمبالا", "ماليبو"],
+      "كانو": ["مركبة الحياة اليومية", "MPDV", "بيك أب"],
+      "تشيري": ["A1", "A3", "A5", "أموليت", "أريزو", "كووين", "إيستار", "eQ", "eQ1", "eQ5", "فولوين", "هيجو", "كاري", "كيمو", "أومودا", "QQ", "ريتش", "تيغو", "ويند كلاود"],
+      "كوپرا": ["أتكا", "بورن", "فورمينتور", "ليون", "تافاسكان", "تيرامار", "أوربان ريبيل"],
+      "دارتز": ["بلاك أليغيتور", "بلاك ستاليون", "فريز", "برومبرون", "وايت هورس"],
+      "دي توماسو": ["ديوفيل", "غوارا", "لونغشامب", "مانجوستا", "P72", "بانتيرا", "فالي لونغا"],
+      "دينزا": ["D9", "N7", "N8", "X"],
+      "فولفو": ["66", "122", "140", "164", "240", "260", "340", "360", "440", "460", "480", "740", "760", "780", "850", "940", "960", "أمازون", "C30", "C40", "C70", "ديوت", "EX30", "EX90", "L3314", "P1800", "P1900", "PV444", "PV544", "S40", "S60", "S70", "S80", "S90", "سوغا", "V40", "V50", "V60", "V70", "V90", "XC40", "XC60", "XC70", "XC90"],
+      "ولينغ": ["ألماز", "باوجون", "كونفيرو", "كورتيز", "فورمو", "هونغغوانغ", "جياشين", "فيكتوري", "تشنغتو"],
+      "إيكسام": ["سيتي", "كوبيه", "كروسلاين", "كروس أوفر", "GTO", "ميناوتو", "سكوتي"],
+      "أبتيرا": ["2e", "3", "4"],
+      "أرينا": ["هوساريا"],
+      "أرييل": ["أتوم", "هيبركار", "نوماد"],
+      "باوجون": ["310", "330", "360", "510", "530", "560", "610", "630", "730", "E100", "E200", "كيوي EV", "ليتشي", "RC-5", "RC-6", "RM-5", "RS-3", "RS-5", "RS-7", "ييب"],
+      "بايك": ["آركفوكس", "BJ20", "BJ40", "BJ80", "BJ90", "تشانغه", "D20", "سلسلة E", "سلسلة EU", "سلسلة EX", "هوانسو", "لووبا", "ماجيك سبيد", "رولينغ", "سينوفا", "وييوانغ", "X3", "X5", "X7", "X25", "X35", "X55", "X65"],
+      "بولينغر": ["B1", "B2"],
+      "تويوتا": ["2000GT", "4رنر", "86", "أجيا", "أليون", "ألفارد", "ألتزا", "أكوا", "أريستو", "أوريون", "أوريس", "أفالون", "أفانزا", "أفينسيس", "أيغو", "bZ3", "bZ4X", "C-HR", "كالديينا", "كامي", "كامري", "كارينا", "سيليكا", "سيلسيور", "سينشوري", "تشيسر", "كومفورت", "كوبن", "كورولا", "كورونا", "كورسا", "كريسيدا", "كريستا", "كراون", "كرين", "سينوس", "ديوت", "إيكو", "eCom", "إسكواير", "إستيما", "إتيوس", "فيلدر", "FJ كروزر", "فورتشنر", "فن كارجو", "غايا", "جراند هايلاندر", "غراند", "GR86", "هارير", "هاي إيس", "هايلاندر", "هيلكس", "إنوفا", "إيبسوم", "iQ", "إيسيس", "إيست", "كلوجر", "لاند كروزر", "لايت إيس", "ماجيستا", "مارك II", "مارك X", "ماستر إيس", "ماتريكس", "ميجا كروزر", "ميراي", "MR2", "ناديا", "نواه", "أوبا", "أوريجن", "باسيو", "باسو", "بيك أب", "بيكسس", "بلاتز", "بورت", "برادو", "بريمو", "بريفيا", "بريوس", "بروبوكس", "بروغريس", "برونارد", "بوبليكا", "رايز", "راوم", "RAV4", "رومي", "راش", "SAI", "سيبتر", "سيكويا", "سيرا", "سيينا", "سيينتا", "سوارر", "سولارا", "سولونا", "سباركي", "سبورتس 800", "سبرينتر", "ستارلت", "ستاووت", "سكسيد", "سوبرا", "تاكوما", "تانك", "تيرسيل", "تاون إيس", "تويو إيس", "توندر", "أربان كروزر", "فان", "فانجارد", "فيلفاير", "فيلوز", "فينزا", "فيروسا", "فيرسو", "فيينتا", "فيوس", "فيستا", "فيتز", "فولتز", "فوكسى", "ويل", "ويندوم", "ويغو", "ويش", "ياريس", "ياريس كروس", "زيلاس"],
+      "فولكس واجن": ["181", "411", "412", "أماروك", "أمييو", "أبولو", "أرتيون", "أتلس", "بيتل", "بورا", "برازيليا", "C-Trek", "كادي", "CC", "كورادو", "داشر", "دربي", "إوس", "فوكس", "جول", "جولف", "ID.2", "ID.3", "ID.4", "ID.5", "ID.6", "ID.7", "ID. بوزز", "إلتيس", "جيتا", "K70", "كارمان غيا", "كافر", "لاماندو", "لافيدا", "لوغوس", "لوبو", "ماجوتان", "مولتيفان", "نيو بيتل", "باراتى", "باسات", "فيتون", "فيديون", "بوينتر", "بولو", "كوانتوم", "رابيت", "روتان", "سانتانا", "سافيرو", "سكيروكو", "شاران", "SP2", "سوران", "T-Cross", "T-Roc", "تايغو", "تايغون", "تارو", "تايرون", "تيرامونت", "ثارو", "ثينج", "تيغوان", "طوارق", "توران", "ترانسبورتر", "تايب 1", "تايب 2", "تايب 3", "تايب 4", "أب!", "فينتو", "فيرتوس", "فويج", "XL1"],
+      "سوزوكي": ["إيه-ستار", "أكروس", "آيريو", "ألتو", "APV", "بالينو", "كابتشينو", "كارا", "كاري", "سيليريو", "سيرفو", "كولتوس", "ديزاير", "إيكواتور", "إرتيغا", "إسكودو", "إستيم", "إفري", "فورنزا", "فرونتي", "جراند فيتارا", "هاستلر", "إيغنيس", "جمني", "كي", "كيزاشي", "لاندي", "لابين", "ليانا", "MR واغون", "باليت", "رينو", "إس-كروس", "ساموراي", "سايدكك", "سوليو", "سباشيا", "سبلاش", "سويفت", "سوايس", "SX4", "توين", "فيرونا", "فيتارا", "واجن آر", "X-90", "XL7"],
+      "تاتا موتورز": ["آيس", "ألتروز", "أريا", "بولت", "إستيت", "هارير", "هيكسا", "إنديكا", "إنديغو", "ماجيك", "مانزا", "موبايل", "نانو", "نيكسون", "بونش", "سفاري", "سييرا", "سباسيو", "سومو", "تياغو", "تيغور", "وينغر", "زينون", "زيست"],
+      "تسلا": ["سايبرترك", "موديل 3", "موديل S", "موديل X", "موديل Y", "رودستر", "سيمي"],
+      "رووي": ["350", "360", "550", "750", "950", "كليفر", "D7", "E50", "Ei5", "ERX5", "i5", "i6", "iMAX8", "لوميمو", "مارفل R", "مارفل X", "RX3", "RX5", "RX8", "W5"],
+      "صعب": ["600", "9-2X", "9-3", "9-4X", "9-5", "9-7X", "90", "92", "93", "95", "96", "99", "900", "9000", "سونيت"],
+      "سيت": ["124 سبورت", "127", "131", "133", "600", "850", "الأهَمبرا", "ألتيه", "أرونا", "أروسا", "أتيكا", "بورن", "كوردوبا", "كوبرا GT", "إكسيوا", "فورا", "إيبيزا", "إنكا", "ليون", "مالاغا", "ماربيلا", "ميي", "باندا", "ريتمو", "روندا", "تاراكو", "تيرا", "توليدو"],
+      "سكودا": ["100", "105", "110", "120", "130", "1000 MB", "سيتجو", "إنياك", "فابيا", "فافوريت", "فيليشيا", "فورمان", "كاميِق", "كاروك", "كودياك", "كوشاك", "أوكتافيا", "بوبولار", "براكتك", "رابيد", "رومستر", "سكالا", "سلاڤيا", "سوبرب", "تودور", "يتي"],
+      "سمارت": ["#1", "#3", "سيتي-كوبيه", "كروس بليد", "فورفور", "فورتو", "رودستر"],
+      "صانغ يونغ": ["أكتون", "تشايرمان", "إستانا", "كالليستا", "كوراندو", "كايرون", "موسو", "ريكسون", "روديوس", "ستافيك", "تيفولي", "توريس", "XLV"],
+      "سوبارو": ["1000", "360", "ألسيون", "أسنت", "باخا", "بيغ هورن", "BRZ", "برات", "كروستريك", "ديكس", "دومينغو", "إكسِيغا", "FF-1", "فوريستر", "G", "إمبريزا", "جوستي", "سلسلة L", "ليون", "ليفورغ", "ليجاسي", "ليبيرو", "لوكرا", "آوتباك", "بليو", "R1", "R2", "ريكس", "سامبار", "سولتيرا", "ستيلا", "SVX", "ترافيك", "تريزيا", "تريبكا", "فيفيو", "WRX", "XT", "XV"],
+      "بروتون": ["أرينا", "تشانسيلور", "سيترا", "إرتيغا", "إكسورا", "جين-2", "إنسبيرا", "إيريز", "جوارا", "بيردانا", "بيرسونا", "بريف", "بوترا", "ساجا", "ساتريا", "سافي", "سوبريما S", "تيارا", "واجا", "ويرا", "X50", "X70", "X90"],
+      "رام": ["1500", "2500", "3500", "700", "C/V تريدسمان", "داكوتا", "بروماستر", "بروماستر سيتي"],
+      "رينو": ["4", "4CV", "5", "6", "8", "9", "10", "11", "12", "14", "15", "16", "17", "18", "19", "20", "21", "25", "30", "أليانس", "أركانا", "أسترال", "أفانتيم", "كابتشر", "كارافيل", "كليو", "دوفين", "داستر", "إسباس", "إكسبرس", "فلوريد", "فلوانس", "فويغو", "جراند سينك", "كادجار", "كانغو", "كابتور", "كارديان", "كيجر", "كوليوس", "كوايد", "لاغونا", "لاتيتود", "لو كار", "لوغان", "ماستر", "ميجان", "مودوس", "أوندين", "أوروك", "بولس", "رافال", "روديو", "سافران", "سانديرو", "سكالا", "سينيك", "سبايدر", "سيمبول", "سيمبيوز", "تاليانت", "تاليسمان", "ثاليا", "ترافيك", "توينغو", "تويزي", "فيل ساتيس", "ويند", "زوي"],
+      "ريماك": ["كونسبت_ون", "سي_تو", "نيفيرا"],
+      "ريفان": ["R1S", "R1T", "R2", "R3"],
+      "رولز-رويس": ["20/25", "25/30", "كامارج", "كورنيش", "كولينان", "دون", "جوست", "بارك وارد", "فانتوم", "سيلفر كلاود", "سيلفر دون", "سيلفر جوست", "سيلفر سيراف", "سيلفر شادو", "سيلفر سبيريت", "سيلفر سبور", "سبيكتر", "سويبتيل", "رث"],
+      "أولدسموبيل": ["442", "88", "98", "آشيفا", "أليرو", "أورورا", "برافادا", "كاليه", "كستم كروزير", "كتلاس", "دلتا 88", "دايناميك 88", "F-85", "فيرينزا", "إنتريج", "جيت ستار", "أوميغا", "ريجنسي", "سيلويت", "ستارفاير", "تورونادو", "فيستا كروزير"],
+      "بيجو": ["104", "106", "107", "108", "201", "202", "203", "204", "205", "206", "207", "208", "2008", "301", "302", "304", "305", "306", "307", "308", "309", "3008", "401", "402", "403", "404", "405", "406", "407", "408", "4007", "4008", "504", "505", "508", "5008", "601", "604", "605", "607", "806", "807", "بيبر", "بوكسير", "إكسبرت", "هوغار", "آي أون", "J5", "بارتنر", "P4", "RCZ", "ريفتير", "ترافيلر"],
+      "بولستار": ["1", "2", "3", "4", "5", "6", "بريسيبت"],
+      "بونتيك": ["1000", "2000 صن بيرد", "6000", "أكاديان", "أستري", "أزتك", "بونفيل", "كاتالينا", "تشيفتين", "فيرو", "فايربيرد", "فايرفلاي", "G3", "G4", "G5", "G6", "G8", "جراند آم", "جراند بريكس", "جراند فيل", "GTO", "J2000", "ليمانس", "ماتيز", "مونتانا", "باريزين", "فينكس", "بورسوت", "سفاري", "سولستيس", "ستار تشيف", "ستريملينر", "صن بيرد", "صنفاير", "سوبر تشيف", "T1000", "تمبست", "تورنت", "ترانس آم", "ترانس سبورت", "فينتورا", "فايب", "ويف"],
+      "بورش": ["356", "550 سبايدر", "718", "911", "912", "914", "918 سبايدر", "924", "928", "944", "959", "968", "بوكستر", "كاريرا جي تي", "كاين", "كايمان", "ماكان", "باناميرا", "تايكان"],
+      "نيسان": ["100NX", "180SX", "200SX", "240SX", "240Z", "280ZX", "300C", "300ZX", "350Z", "370Z", "AD", "ألمايرا", "ألتيما", "أريا", "أرمادا", "أوستر", "أفينير", "باسارا", "بي-1", "بلو بيرد", "سيدريك", "سيفيرو", "تشيري", "سيما", "كليبر", "كرو", "كيوب", "داتسون", "ديز", "ديواليس", "إلغران", "إيفاليا", "إكسا", "إكسبرت", "فيرليدي زد", "فيغارو", "فرونتير", "فوجا", "غلوريا", "جي تي-آر", "هايبر ميني", "جوك", "كيكس", "كيكس", "لافستا", "لانغلي", "لارغو", "لاتيو", "لوريل", "ليف", "ليوبارد", "ليبرتا فيلا", "ليبرتي", "ليفينا", "لوسينو", "مجنات", "مارش", "ماكسيما", "ميكرا", "موكو", "مورانو", "نافارا", "نوت", "NP300", "NV200", "NV400", "أوتي", "باو", "باثفايندر", "باترول", "بينو", "بيكسو", "بلاتينا", "برايري", "بريسيج", "بريزيا", "بريزيدنت", "بريماستار", "بريميرا", "بولسار", "كاشكاي", "كويست", "آر نيسا", "راشين", "روغ", "روكس", "إس-كارغو", "سفاري", "سنترا", "سيرينا", "سيلفيا", "سكالاين", "ستيغا", "ستانزا", "ساني", "سيلفي", "تيانا", "تيرانو", "تييدا", "تينو", "تيتان", "فانيت", "فيرسا", "فايوليت", "وينغ رود", "إكس-تريل", "إكستيرا", "زد"],
+      "نيو": ["EC6", "EC7", "EL6", "EL7", "ES6", "ES7", "ES8", "ET5", "ET7", "ET9", "إيف", "EP9"],
+      "أوبل": ["آدم", "أدميرال", "أجيلا", "أمبيرا", "أنتارا", "أسكونا", "أسترا", "كاليبرا", "كامبو", "كاسكادا", "كومبو", "كومودور", "كورسا", "كروس لاند", "ديبلومايت", "فرونتيرا", "جراندلاند", "جي تي", "إنسينيا", "كاديت", "كابتن", "كارل", "مانتا", "مريفا", "موكا", "مونتيري", "مونزا", "موفانو", "أوليمبيا", "أوميغا", "ريكورد", "روكس-إي", "سيناتور", "سيجنوم", "سينترا", "سبيدستر", "سوبر 6", "تيغرا", "فيكترا", "فيفارو", "زافيرا"],
+      "ماكلارين": ["540C", "570S", "600LT", "620R", "650S", "675LT", "720S", "750S", "765LT", "أرتورا", "إلفا", "F1", "GT", "GTS", "MP4-12C", "P1", "سينا", "سولوس GT", "سبيدتيل"],
+      "مرسيدس-بنز": ["190", "240D", "300D", "300SL", "الفئة A", "AMG GT", "الفئة B", "الفئة C", "سيتان", "الفئة CL", "CLA", "CLC", "CLE", "CLK", "CLS", "الفئة E", "EQA", "EQB", "EQC", "EQE", "EQG", "EQS", "EQT", "EQV", "الفئة G", "الفئة GL", "GLA", "GLB", "GLC", "GLE", "GLK", "GLS", "الفئة M", "مايباخ", "ميتريس", "الفئة R", "الفئة S", "الفئة SL", "SLC", "SLK", "SLR ماكلارين", "SLS AMG", "سبريينتر", "الفئة T", "الفئة V", "فانيو", "فيانو", "فيتو", "W110", "W114", "W115", "W123", "W124", "X-Class"],
+      "ميني": ["أسيمان", "كلوبمان", "كونفيرتيبل", "كوبر", "كانتريمان", "كوبيه", "كهربائي", "باسيمان", "رودستر"],
+      "ميتسوبيشي": ["3000GT", "500", "إيرتريك", "أسباير", "ASX", "أتراج", "برافو", "كاريسما", "سيلست", "تشالنجر", "تشامب", "تشاريت", "كولت", "كورديا", "ديبونير", "ديليكا", "ديامانتي", "ديجنيتي", "دينغو", "ديون", "إكليبس", "إكليبس كروس", "eK", "إيميرود", "إنديفور", "FTO", "غالانت", "جرانديس", "GTO", "i", "i-MiEV", "جيب", "L200", "لانسر", "لانسر إيفوليوشن", "ليجنوم", "ليبيرو", "ماجنا", "مينيكا", "ميراج", "مونتيرو", "أوتلاندر", "باجيرو", "باجيرو iO", "باجيرو جونيور", "باجيرو ميني", "باجيرو بينين", "باجيرو سبورت", "بيستاشيو", "بريسيس", "بروديا", "رايدر", "RVR", "سابورو", "سيغما", "سبيس جير", "سبيس رنر", "سبيس ستار", "سبيس واجون", "ستاريون", "سترادا", "تريديا", "تريتون", "فيرادا", "فيراج", "إكسباندر"],
+      "لينكولن": ["أفيتور", "بلاك وود", "كابري", "كونتيننتال", "كورساير", "كوزموبوليتان", "كوستوم", "KB", "سلسلة L", "LS", "مارك II", "مارك III", "مارك IV", "مارك V", "مارك VI", "مارك VII", "مارك VIII", "MKS", "MKT", "MKX", "MKZ", "نوتيلوس", "نافيجيتر", "بريميير", "سبورت", "تاون كار", "فيرساي"],
+      "لوتس": ["2-إليفن", "3-إليفن", "340R", "كارلتون", "كورتينا", "إيلان", "إليتري", "إليز", "إيليت", "إيميا", "إيميرا", "إسبريت", "يوروبا", "إيفورا", "إكسل", "إكسيج", "إيفيجا", "أوميغا", "صنبيم", "تالبوت"],
+      "لوسيد موتورز": ["إير", "جرافيتي"],
+      "ماهيندرا": ["ألتوراس G4", "أرمادا", "بوليرو", "e2o", "جينو", "جيب", "KUV100", "مارازو", "نوفوسبورت", "كوينتو", "ريفا", "سكوربيو", "ثار", "TUV300", "فيريتو", "XUV300", "XUV500", "XUV700", "زيلو"],
+      "مازيراتي": ["228", "3200 GT", "3500 GT", "4200 GT", "5000 GT", "بارشيتا", "بيتوربو", "بورا", "تشوباسكو", "فولغور", "جيبلي", "غرانكابريو", "غران سبورت", "غران توريزمو", "غريكالي", "إندي", "كريف", "خمسين", "كيالامي", "ليفانتي", "MC12", "MC20", "ميراك", "مكسيكو", "ميسترال", "كواتروبورتي", "سيبرينغ", "شامال", "سبايدر"],
+      "مازدا": ["121", "2", "3", "323", "5", "6", "616", "626", "929", "أتنزا", "أوتوزام", "أكسلا", "AZ-1", "سلسلة B", "بيانتي", "بونغو", "BT-50", "كارول", "شانتز", "كوزمو", "كرونوس", "CX-3", "CX-30", "CX-4", "CX-5", "CX-50", "CX-60", "CX-7", "CX-8", "CX-80", "CX-9", "CX-90", "ديميو", "يونوس", "فاميليا", "فلاير", "لانتيس", "لوس", "مازدا6", "ميلينيا", "MPV", "MX-3", "MX-5", "MX-6", "MX-30", "نفاخو", "بيرسونا", "بريماسي", "بروسيد", "بروتيجيه", "R100", "ريفيو", "رودستر", "RX-2", "RX-3", "RX-4", "RX-5", "RX-7", "RX-8", "سافانا", "سكرام", "سينتيا", "سبياانو", "تريبيوت", "فيريسا", "Xedos"],
+      "كوينيجسيج": ["أجيرا", "CC", "CC8S", "CCR", "CCX", "CCXR", "جيميرا", "يسكو", "One:1", "ريجيرا", "تريفينا"],
+      "لادا": ["110", "111", "112", "أورا", "C-Cross", "غرنتا", "إيسكرا", "كالينا", "لارجوس", "ناديجدا", "نيفا", "أوكا", "بريورا", "ريفوليوشن", "ريفا", "سامارا", "سبوتنيك", "فيستا", "X-Code", "Xray"],
+      "لامبورغيني": ["350 GT", "400 GT", "أفينتادور", "سينتيناريو", "كونتاش", "ديابلو", "إسبادا", "غالاردو", "هوركان", "إسليرو", "جالبا", "جاراما", "LM002", "ميورا", "مورسيلاجو", "ريفينتون", "ريفويلتو", "سيستو إيليمنتو", "سيان", "سيلويت", "أوروس", "أوراكو", "فينينو"],
+      "لانشيا": ["أبيا", "أبريليا", "أرديا", "أوغوستا", "أوريليا", "أوتوبيانكي A112", "بيتا", "ديدرا", "دلتا", "ديالوجوس", "فلامينيا", "فلافيا", "فولفيا", "غاما", "هايينا", "كابا", "لامبدا", "ليبرا", "مونتيكارلو", "موسا", "فيدرا", "بريزما", "ستراتوس", "ثيما", "ثيسيس", "تريفي", "فويجر", "Y10", "Ypsilon", "زيتا"],
+      "لاند روفر": ["ديفندر", "ديسكفري", "ديسكفري سبورت", "فريلاندر", "LR2", "LR3", "LR4", "رينج روفر", "رينج روفر إيفوك", "رينج روفر سبورت", "رينج روفر فيلار", "السلسلة الأولى", "السلسلة الثانية", "السلسلة الثالثة"],
+      "ليكزس": ["CT", "ES", "GS", "GX", "HS", "IS", "LC", "LFA", "LM", "LS", "LX", "NX", "RC", "RX", "RZ", "SC", "TX", "UX"],
+      "هيونداي": ["أكسنت", "أسلان", "أتوس", "أزيرا", "بايون", "كاسبر", "سيليستا", "سنتينيال", "كوبيه", "كريتا", "دايناستي", "إلانترا", "إنتوراج", "إيون", "إيكوس", "إكسل", "جالوبر", "جينيسيس", "جيتز", "غريس", "غراندور", "H-1", "i10", "i20", "i30", "i40", "أيونيك", "ix20", "ix35", "ix55", "كونا", "لانتر", "لافيتا", "مارسيا", "ماتريكس", "ماكسكروز", "ميسترا", "نيكسو", "باليسيد", "بوني", "بورتر", "سانتا كروز", "سانتا فيه", "سانتامو", "سكوب", "سوناتا", "ستاريكس", "ستيلار", "تيراكاني", "تيبورون", "تراجيت", "توسان", "فيلوستر", "فينيو", "فيراكروز", "فيرنا", "إكسنت", "XG"],
+      "إنفينيتي": ["ESQ", "EX", "FX", "G", "I", "J", "JX", "M", "Q", "Q30", "Q40", "Q45", "Q50", "Q60", "Q70", "QX", "QX30", "QX4", "QX50", "QX55", "QX60", "QX70", "QX80"],
+      "جاكوار": ["420", "C-Type", "D-Type", "E-Pace", "E-Type", "F-Pace", "F-Type", "I-Pace", "مارك 1", "مارك 2", "مارك V", "مارك VII", "مارك VIII", "مارك IX", "مارك X", "S-Type", "SS 100", "X-Type", "XE", "XF", "XJ", "XJ220", "XJR", "XJS", "XK", "XKSS"],
+      "جيب": ["تشي روكي", "CJ", "كومانش", "كوماندير", "كومباس", "ديسباتشر", "DJ", "FC", "غلادييتور", "جراند تشيروكي", "جراند واجونير", "هونشو", "جيبستر", "ليبرتي", "ميريديان", "باتريوت", "ريكوم", "رينيغيد", "سكرامبلر", "واجونير", "ويليس", "راندجلر"],
+      "كيا": ["أمانتي", "أفيلا", "بونجو", "بورريغو", "بريسا", "كادنزا", "كابيتال", "كارينس", "كارنيفال", "سيد", "سيراتو", "كلاروس", "كونكورد", "كريدوس", "إيلان", "إنتربرايز", "EV3", "EV4", "EV5", "EV6", "EV9", "فورت", "جويس", "K3", "K4", "K5", "K7", "K8", "K9", "K900", "ماجنتيس", "موهافي", "مورنينج", "نيرو", "أوبيروس", "أوبتيما", "بيغاس", "بيكانتو", "بوتينشيا", "بريجيو", "برايد", "بروسيد", "راي", "ريتونا", "ريو", "روندو", "سيدونا", "سيلتوس", "سيفيا", "شومه", "سونيت", "سورينتو", "سول", "سبكترا", "سبورتاج", "ستنجر", "ستونيك", "تيلورايد", "تاونر", "فينغا", "فيستو", "X-Trek", "XCeed"],
+      "جيلي": ["أتلس", "بيوتي ليوبارد", "بينروي", "بينيي", "بوروي", "بويي", "CK", "كولراي", "إمجراند", "فاريزون", "GC6", "جيومتري", "هاوكينغ", "أيقونة", "جياجي", "كينغ كونغ", "مابل", "MK", "مونجارو", "باندا", "بريفاس", "توجيلا", "فيجن", "شينغيوي"],
+      "جينيسيس": ["G70", "G80", "G90", "GV60", "GV70", "GV80", "GV90", "مينت كونسبت", "X كونسبت"],
+      "جي إم سي": ["أكاديا", "كاباليرو", "كانيون", "إنفوي", "جرافيت", "همر EV", "جيمي", "سفاري", "سافانا", "سيرا", "سونوم", "سبرينت", "سابربان", "سايكلون", "تيرين", "توب كيك", "تراكر", "تايفون", "فاندورا", "يوكون"],
+      "جريت وول": ["كولبير", "كاوري", "دير", "فلوريد", "هافال", "هوفر", "M4", "باو", "بيري", "بوير", "سيف", "سينغ", "سوكول", "ستيد", "تانك", "فوليكس", "وينغل"],
+      "هوندا": ["1300", "145", "أكورد", "أكتي", "إيرويف", "أسكوت", "أفانسيير", "بالاد", "بيت", "بريو", "كابا", "سيتي", "سيفيك", "كلاريتي", "كونسيرتو", "CR-V", "CR-X", "CR-Z", "كروس رود", "كروس تور", "دوماني", "e", "إديكس", "إليمنت", "إليسيون", "FCX كلاريتي", "فيت", "FR-V", "فريد", "غريس", "HR-V", "إنسايت", "إنسباير", "إنتيجرا", "جاد", "جاز", "لاجريت", "ليجند", "لايف", "لوجو", "موبيليو", "N-بوكس", "N-وان", "N-WGN", "NSX", "أوديسي", "أورثيا", "بارتنر", "باسبورت", "بايلوت", "بريلود", "كوينت", "رافاجا", "ريدجلاين", "S-MX", "S2000", "S500", "S600", "S660", "سيبر", "شاتل", "ستيب واغن", "ستريم", "توداي", "تورينيو", "فاموس", "فيزيل", "فيجور", "Z", "زيست"],
+      "همر": ["H1", "H2", "H3", "H3T", "EV"],
+      "فيراري": ["12 سلندر", "208", "250", "275", "288 GTO", "296 GTB", "308", "328", "330", "348", "360", "365", "400", "412", "456", "458 إيطاليا", "488", "512", "550", "575M", "599", "612 سكاجليتي", "812 سوبرفاست", "كاليفورنيا", "دايتونا", "دينو", "إنزو", "F8 تريبوتو", "F12 برلينيتا", "F355", "F40", "F430", "F50", "FF", "GTC4لوسو", "لافيراري", "مونديال", "مونزا", "بورتوفينو", "بوروسانجوي", "روما", "SF90 سترادالي", "سوبرأمريكا", "تيستاروسا"],
+      "فيات": ["124", "124 سبايدر", "125", "126", "127", "128", "130", "131", "132", "133", "500", "500L", "500X", "508", "600", "850", "ألبيا", "أرجنتا", "بارشيتا", "برافا", "برافو", "كامبانيولا", "تشينكو تشينتو", "كوبيه", "كروميا", "دينو", "دوبلو", "دوكاتو", "دونا", "فيورينو", "فري مونت", "فولباك", "جراندي بونتو", "أيديا", "لينيا", "ماريا", "متبلا", "باليوا", "باندا", "بونتو", "كوبو", "ريغاتا", "ريتمو", "سكودو", "سيديشي", "سيشينتو", "سيينا", "ستييلو", "سترادا", "تمبرا", "تيبو", "توبولينو", "يوليس", "أونو", "X1/9"],
+      "فيسكر": ["كارما", "لاتيجو CS", "أوشن", "ترامونتو"],
+      "فورد": ["إير ستار", "أنغليا", "أسباير", "B-Max", "برونكو", "برونكو II", "C-Max", "كابري", "كونسول", "كونتور", "كورساير", "كورتينا", "كوغار", "كوريير", "كراون فيكتوريا", "كستم", "دل ريو", "إيكوسبورت", "إيدج", "إسكيب", "إسكوترت", "إيفريست", "إكزكيورشن", "إكسبيديشن", "إكسبلورر", "F-100", "F-150", "فيرلين", "فيرمونت", "فاكون", "فيستيفا", "فييستا", "فيغو", "فايف هندرد", "فليكس", "فوكاس", "فريدا", "فري ستار", "فري ستايل", "فيوجن", "جالاكسي", "غرناطة", "GT", "GT40", "كا", "كوغا", "LTD", "مافريك", "موديل A", "موديل T", "مونديو", "موستانج", "موستانج ماك-إي", "أوريون", "بينتو", "بروب", "بوما", "رانشيرو", "رانجر", "S-Max", "سكوربيو", "سيرا", "تاونوس", "طوروس", "تمبو", "تيريتوري", "ثندربيرد", "تورينو", "ترانزيت", "ويندستار", "زيفير", "زودياك"],
+      "داسيا": ["1100", "1300", "1310", "1410", "500 لاستون", "دوكر", "داستر", "جوغر", "لودجي", "لوغان", "نوفا", "سانديرو", "سولينزا", "سبرينغ", "سوبرنوفا"],
+      "دايو": ["أركاديا", "تشيرمان", "داماس", "إسبيرو", "إفاندا", "G2X", "جينترا", "كالوس", "كوراندو", "لاستيتي", "لانوس", "ليجانزا", "ليمانس", "لوبلين", "ماجنوس", "ماتيز", "موسو", "نيكسيا", "نوبيرا", "برينس", "رايسر", "ريزو", "ستيتسمان", "سوبر سالون", "تاكوما", "تيكو", "توسكا", "وينستورم"],
+      "دايهاتسو": ["ألتيس", "أبلاوز", "أتراي", "بي", "بي-جو", "بون", "سيريا", "شاراد", "شارمانت", "كوبن", "كونسورت", "كوير", "دلتا", "إسي", "فيلو", "فيروزا", "جران ماكس", "هيجيت", "ليزي", "لوكشيو", "ماتيريا", "ماكس", "ميبيوس", "ميدجيت", "ميرا", "موف", "نيكيد", "أوبتي", "بايزار", "روكي", "راجير", "سيريون", "سونيكا", "ستوريا", "تافت", "تانتو", "تيريوس", "ثور", "تريفيس", "ويك", "كسينيا", "YRV"],
+      "دودج": ["400", "600", "أريز", "آسبن", "أفينجر", "كاليبر", "كارافان", "تشالنجر", "تشارجر", "كولت", "كونكوست", "كورونيت", "داكوتا", "دارت", "دايتونا", "ديبلومات", "دورانجو", "داينستي", "جراند كارافان", "هورنيت", "إنتربريد", "جورني", "لا فام", "لانسر", "ماجنوم", "ميرادا", "موناكو", "نيون", "نيترو", "أومني", "بولارا", "باور واجن", "رايدر", "رام", "رام 50", "رامبيج", "شادоу", "سبيريت", "سبرينتر", "ستيلث", "ستراتوس", "سوبر بي", "فايبر"],
+      "إكسيد": ["LX", "RX", "ستيلر", "TX", "TXL", "VX"],
+      "إيجل": ["ميداليون", "بريميير", "سميت", "تالون", "فيجن", "فيستا"],
+      "تشانغان": ["ألزفين", "بيني", "CS15", "CS35", "CS55", "CS75", "CS85", "CS95", "إيادو", "هانتر", "لومين", "رايتون", "ستار", "يوني-كي", "يوني-تي", "يوني-في", "زد-شاين"],
+      "شيفروليه": ["150", "210", "454 SS", "APV", "أسترو", "أفالانش", "أفيو", "بيل إير", "بيريتا", "بيسكين", "بلازر", "بولت", "بروكوود", "كامارو", "كابريس", "كابتيفا", "كافاليير", "سيلبرتي", "سيلتا", "شيفيل", "شيفيت", "شيفي II", "سيتايشن", "كوبالت", "كولورادو", "كورسيكا", "كورفير", "كورفيت", "كروز", "ديلراي", "إل كامينو", "إبيكا", "إكوينوكس", "إكسبريس", "فليت لاين", "فوريستر", "HHR", "إمبالا", "K5 بلازر", "كينغسوود", "كودياك", "لومينا", "LUV", "ماليبو", "ماستر", "مترو", "مونتي كارلو", "مونزا", "نوماد", "نوفا", "نيفا", "أوبترا", "أورلاندو", "بريزم", "ريزو", "S-10", "سيلفرادو", "سونيك", "سبارك", "سبكتروم", "سبيرنت", "SSR", "سوبربان", "تاهو", "تافيرا", "تراكر", "تريل بلازر", "ترافيرس", "تراكس", "أبلاندر", "فيغا", "فينتشر", "فولت"],
+      "كرايسلر": ["200", "300", "300M", "إيرفلو", "إيرستريم", "آسبن", "كارافان", "سيروس", "كونكورد", "كونكوست", "كوردوبا", "كروسفاير", "دايتونا", "داينستي", "الفئة E", "تنفيذي", "فيفث أفينيو", "جراند فوييجر", "إمبيريال", "ليزر", "ليبارون", "LHS", "ناساو", "نيويوركر", "نيو بورت", "باسيفيكا", "براولر", "PT كروزر", "رويال", "ساراتوجا", "سيبرينغ", "TC من مازيراتي", "تاون آند كانتري", "تيربين كار", "فاليانت", "فايبر", "فوييجر", "ويندسور"],
+      "سيتروين": ["2CV", "أكتيفا", "آمي", "AX", "أكسل", "بيرلينجو", "BX", "C-Crosser", "C-إليزيه", "C-Métisse", "C-Triomphe", "C1", "C2", "C3", "C3 إيركروس", "C4", "C4 إيركروس", "C4 كاكتوس", "C4 بيكاسو", "C4 سبيستوريير", "C4 X", "C5", "C5 إيركروس", "C5 X", "C6", "C8", "CX", "DS", "ديان", "E-Méhari", "إيفيجان", "GS", "GSA", "H فان", "ID", "جامبر", "جامبي", "كارين", "LNA", "M35", "ميهاري", "نيمو", "أولتسيت", "بلورييل", "روزالي", "ساكسو", "SM", "سبيستوريير", "تراكشون أڤانت", "النوع A", "فيزا", "زانتيا", "XM", "كسارا", "كسارا بيكاسو", "ZX"],
+      "بي إم دبليو": ["السلسلة 1", "السلسلة 2", "السلسلة 3", "السلسلة 4", "السلسلة 5", "السلسلة 6", "السلسلة 7", "السلسلة 8", "3/15", "3/20", "303", "328", "501", "502", "503", "507", "600", "700", "ديكسي", "E3", "E9", "i3", "i4", "i5", "i7", "i8", "iX", "iX1", "iX2", "iX3", "إسيطا", "M1", "M2", "M3", "M4", "M5", "M6", "M8", "الفئة الجديدة", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z1", "Z3", "Z4", "Z8"],
+      "بوغاتي": ["بوليد", "تشينتوديتشي", "شيرون", "ديفو", "EB 110", "EB 112", "EB 118", "EB 218", "جاليبيير", "لا فواتور نوار", "ميسترال", "توربيلون", "النوع 13", "النوع 35", "النوع 41 رويال", "النوع 57", "فيرون"],
+      "بيوك": ["أبولو", "كاسكادا", "سينتوريون", "سينشري", "إليكترا", "إنكليف", "إنكور", "إنكور جي إكس", "إنفيجن", "إستيت", "جران سبورت", "GSX", "إنفيكتا", "لاكروس", "لي سابر", "ليميتد", "لوسيرن", "بارك أفينيو", "رينير", "ريتا", "ريغال", "رانديفو", "ريفييرا", "رودماستر", "سكاي هوك", "سكاي لارك", "سومرست", "سبشال", "سوبر", "تيرازا", "فيرانو", "وايلدكات"],
+      "كاديلاك": ["ألانتي", "ATS", "BLS", "بروهام", "كاليس", "كاتيرا", "سيليستيك", "سيمارون", "كوبيه دي فيل", "CT4", "CT5", "CT6", "CTS", "دي فيل", "DTS", "إلدورادو", "ELR", "إسكاليد", "فليتوود", "LSE", "ليريك", "السلسلة 60", "السلسلة 61", "السلسلة 62", "سيفيل", "سيكستي سبشال", "SLS", "SRX", "STS", "ترامب", "V-16", "XLR", "XT4", "XT5", "XT6", "XTS"],
+      "أكورا": ["CL", "CSX", "EL", "ILX", "إنتيغرا", "ليجند", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "فيغور", "ZDX"],
+      "ألفا روميو": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "ألفاسود", "ألفيتا", "آرنا", "برييرا", "دوفين", "ديسكو فولانتي", "جوليا", "جولييتا", "GT", "GTA", "GTV", "ماتا", "ميتو", "مونتريال", "روميو", "RZ", "سبايدر", "سبيرينت", "ستيلفيو", "SZ", "تونالي"],
+      "أستون مارتن": ["أتوم", "بولدوغ", "سيغنيت", "DB1", "DB2", "DB3", "DB4", "DB5", "DB6", "DB7", "DB9", "DB11", "DB12", "DBS", "DBX", "لاجوندا", "One-77", "رابيد", "رابيد إي", "فالهالا", "فالكيري", "فالور", "فانكويش", "فانتج", "فيكتور", "فيراج", "فولكان"],
+      "أودي": ["50", "60", "72", "75", "80", "90", "100", "200", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "كابريوليه", "كوبيه", "e-tron", "e-tron GT", "F103", "Q2", "Q3", "Q4 e-tron", "Q5", "Q6 e-tron", "Q7", "Q8", "كواترو", "R8", "RS2 أفانت", "RS3", "RS4", "RS5", "RS6", "RS7", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "V8"],
+      "بينتلي": ["3 لتر", "4½ لتر", "6½ لتر", "8 لتر", "آرناج", "أزور", "باتور", "بينتايغا", "بروكلاندز", "كونتيننتال", "كونتيننتال فلاينغ سبور", "كونتيننتال GT", "كورنيش", "ديربي", "فلاينغ سبور", "مارك 5", "مارك 6", "مولسان", "R نوع", "S1", "S2", "S3", "T1", "T2", "توربو R"]
+
     },
-    {
-        Ref:"P2P-Cars20813221543408",
-        marque: "Toyota",
-        modele: "Yaris",
-        annee: "2021",
-        kilometrage: 60000,
-        carburant: "Hybride",
-        puissance: 4,
-        images: ["datatof/Sanstitreq.jpeg", "datatof/Sanstitre.jpeg"],
-        description: "Hybride très économique, faible kilométrage."
+    'fuels': ["بنزين", "ديزل", "هايبرد", "كهرباء"],
+    'cars': [
+      {
+        marque: "رينو",
+        modele: "كليو",
+        annee: "2015",
+        kilometrage: 120000,
+        carburant: "بنزين",
+        puissance: 5,
+        image: "images/clio.jpg",
+        description: "سيارة مدينة موثوقة واقتصادية."
+      }
+    ],
+    'consult-btn': "معاينة التفاصيل",
+    'modal-title': "تفاصيل السيارة",
+    'modal-close': "إغلاق",
+    'modal-contact': "اتصل بالبائع",
+    'modal-buy': "طلب شراء P2P",
+    'modal-date': "تاريخ النشر",
+    'modal-marque': "الماركة",
+    'modal-modele': "الموديل",
+    'modal-annee': "السنة",
+    'modal-puissance': "القوة الجبائية",
+    'modal-kilometrage': "الكيلومترات",
+    'modal-carburant': "الوقود",
+    'modal-transmission': "ناقل الحركة",
+    'modal-desc': "الوصف",
+    'modal-price': "السعر"
+  }
+};
+
+let currentLang = "fr";
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+  [
+    'welcome-title','welcome-desc','btn','filter-search-label','filter-marque-label',
+    'filter-modele-label','filter-annee-label','filter-kilometrage-label',
+    'filter-carburant-label','filter-puissance-label',
+    'nav-accueil','nav-simulateur','nav-services','nav-login'
+  ].forEach(id => {
+    let el = document.getElementById(id);
+    if (el && translations[lang][id]) el.textContent = translations[lang][id];
+  });
+  document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
+  ['fr','en','ar'].forEach(l=>{
+    document.getElementById('lang-'+l).classList.remove('active');
+  });
+  document.getElementById('lang-'+lang).classList.add('active');
+  document.getElementById('search').placeholder = translations[lang]['filter-search-ph'];
+  document.getElementById('kilometrage').placeholder = translations[lang]['filter-kilometrage-ph'];
+  document.getElementById('puissance').placeholder = translations[lang]['filter-puissance-ph'];
+  let marqueSel = document.getElementById('marque');
+  marqueSel.innerHTML = `<option value="">${translations[lang]['filter-marque-ph']}</option>` +
+    translations[lang]['brands'].map(m=>`<option value="${m}">${m}</option>`).join('');
+  fillModelSelect();
+  let anneeSel = document.getElementById('annee');
+  anneeSel.innerHTML = `<option value="">${translations[lang]['filter-annee-ph']}</option>`;
+  for (let y = new Date().getFullYear(); y >= 2000; y--) {
+    anneeSel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  let carburantSel = document.getElementById('carburant');
+  carburantSel.innerHTML = `<option value="">${translations[lang]['filter-carburant-ph']}</option>` +
+    translations[lang]['fuels'].map(f=>`<option value="${f}">${f}</option>`).join('');
+  
+}
+;
+
+async function countExistingCarFiles() {
+  let page = 0;
+  let exists = true;
+  let count = 0;
+
+  while (exists) {
+    try {
+      const response = await fetch(`https://p2p-cars.com/cars-${page}.js`);
+      if (response.ok) {
+        count++;
+        page++;
+      } else {
+        exists = false;
+      }
+    } catch (error) {
+      exists = false;
     }
-    //suite de la liste 
-];
+  }
+
+  return count;
+}
+
+let maxPage = null;
+
+async function initMaxPage() {
+    if (maxPage === null) {
+        maxPage = await countExistingCarFiles();
+    }
+    return maxPage;
+}
+function displayCars(page) {
+  
+  fallbackDisplayCars(page);
+}
+
+document.getElementById('next').addEventListener('click', nextPage);
+document.getElementById('prev').addEventListener('click', prevPage);
+
+async function nextPage() {
+    const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    if(currentPag===max ){return;}
+     currentPag++;
+    
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
+}
+
+async function prevPage() {
+    const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    if(currentPag === 0){return;}
+    currentPag--;
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
+}
 
 
+async function loadCarsFromJS(page, callback) {
+  const max = await initMaxPage();
+  console.log("la page est "+page);
+
+  // Supprimer anciens scripts
+  document.querySelectorAll("script[data-carfile]").forEach(s => s.remove());
+
+  // Supprimer ancienne variable
+  if (window.cars) {
+    delete window.cars;
+  }
+
+  const script = document.createElement("script");
+  script.src = `https://p2p-cars.com/cars-${page}.js`;
+  script.setAttribute("data-carfile", page);
+
+  script.onload = function () {
+    if (typeof cars !== "undefined") {
+      callback(cars);
+      delete window.cars; // on nettoie pour éviter la redéclaration
+    } else {
+      console.error(`Variable 'cars' non trouvée dans cars-${page}.js`);
+      callback([]);
+    }
+  };
+
+  script.onerror = function () {
+    console.error(`Impossible de charger cars-${page}.js`);
+    callback([]);
+  };
+
+  document.body.appendChild(script);
+}
+
+
+function fallbackDisplayCars(page) {
+
+  loadCarsFromJS(page, function(cars) {
+      document.body.setAttribute("data-page", page);
+    const list = document.getElementById("carList");
+
+    const search = document.getElementById("search").value.toLowerCase();
+    const marque = document.getElementById("marque").value;
+    const modele = document.getElementById("modele").value;
+    const annee = document.getElementById("annee").value;
+    const kilometrage = document.getElementById("kilometrage").value;
+    const carburant = document.getElementById("carburant").value;
+    const puissance = document.getElementById("puissance").value;
+
+    const filtered = cars.filter(c => {
+      return (
+        (search === "" || c.marque.toLowerCase().includes(search) || c.modele.toLowerCase().includes(search)) &&
+        (marque === "" || c.marque === marque) &&
+        (modele === "" || c.modele === modele) &&
+        (annee === "" || c.annee === annee) &&
+        (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
+        (carburant === "" || c.carburant === carburant) &&
+        (puissance === "" || c.puissance <= parseInt(puissance || Infinity))
+      );
+    });
+
+    list.innerHTML = "";
+
+    filtered.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "car";
+
+      let imagesArr = Array.isArray(c.images)
+        ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+        : ["datatof/default.jpg"];
+
+        div.innerHTML = `
+          <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}"
+              onerror="
+                const exts = ['jpeg','jpg','png','webp'];
+                for(let i=0;i<exts.length;i++){
+                  if(this.src.includes(exts[i])) continue;
+                  const newSrc = this.src.replace(/\\.[a-z]+$/i,'.'+exts[i]);
+                  const imgTest = new Image();
+                  imgTest.onload=()=>{ this.src=newSrc; return true; };
+                  imgTest.onerror=()=>{};
+                  imgTest.src=newSrc;
+                }
+                this.onerror=null;
+                this.src='datatof/default.jpg';
+              ">
+          <div class="car-details">
+            <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+            <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
+            <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
+            <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
+            <p>${c.description}</p>
+            <button class="consult-btn" data-ref="${c.Ref}">${translations[currentLang]['consult-btn']}</button>
+          </div>
+        `;
+      list.appendChild(div);
+      div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
+    });
+  });
+}
+document.getElementById("marque").addEventListener("change", displayCars);
+document.getElementById("modele").addEventListener("change", displayCars);
+document.getElementById("annee").addEventListener("change", displayCars);
+document.getElementById("kilometrage").addEventListener("input", displayCars);
+document.getElementById("carburant").addEventListener("change", displayCars);
+document.getElementById("puissance").addEventListener("input", displayCars);
+document.getElementById("search").addEventListener("input", displayCars);
+
+
+
+
+function fillModelSelect() {
+  let marque = document.getElementById('marque').value;
+  let modeleSel = document.getElementById('modele');
+  modeleSel.innerHTML = `<option value="">${translations[currentLang]['filter-modele-ph']}</option>`;
+  if (translations[currentLang]['models'][marque]) {
+    translations[currentLang]['models'][marque].forEach(m => {
+      modeleSel.innerHTML += `<option value="${m}">${m}</option>`;
+    });
+  }
+}
+
+function transformResponseToArray(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) return [];
+
+  const length = data[keys[0]].length;
+  const result = [];
+
+  for (let i = 0; i < length; i++) {
+    const obj = {};
+    keys.forEach(key => {
+      obj[key] = data[key][i];
+    });
+    result.push(obj);
+  }
+
+  return result;
+}
+
+
+function openModal(car) {
+  let imagesArr = Array.isArray(car.images)
+    ? car.images
+    : (typeof car.images === "string" ? car.images.split(/[,;]/) : []);
+
+  // On préfixe avec ton domaine
+  imagesArr = imagesArr.map(img =>
+    "https://p2p-cars.com/" + img.replace(/\\/g, "/")
+  );
+
+  let priceStr = car.prix ? car.prix + " MAD" : "";
+
+  let modalBg = document.getElementById("modal-bg");
+
+  modalBg.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" aria-label="Fermer">&times;</button>
+      <h2>${car.marque || ""} ${car.modele || ""} (${car.annee || ""})</h2>
+      
+      <!-- Swiper -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          ${imagesArr.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("")}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+
+      <div class="modal-details">
+        <p><strong>Date:</strong> ${car.date || ""}</p>
+        <p><strong>Kilométrage:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>Carburant:</strong> ${car.carburant || ""}</p>
+        <p><strong>Puissance fiscale:</strong> ${car.cv || ""}</p>
+        <p><strong>Prix:</strong> ${priceStr}</p>
+        <p>${car.description || ""}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="contact-btn">Contact</button>
+        <button id="buy-btn">Acheter</button>
+      </div>
+    </div>
+  `;
+
+  modalBg.style.display = "flex";
+
+  // Fermer modal
+  modalBg.querySelector(".modal-close").onclick = () => modalBg.style.display = "none";
+  modalBg.onclick = (e) => {
+    if (e.target === modalBg) modalBg.style.display = "none";
+  };
+
+  // Actions boutons avec Ref
+  document.getElementById("contact-btn").onclick = function () {
+    alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
+  };
+  document.getElementById("buy-btn").onclick = function () {
+    alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
+  };
+
+  // Init Swiper
+  new Swiper(".swiper", {
+    loop: true,
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+  });
+}
+
+
+setLang('fr');
+document.getElementById('btn').addEventListener('click', function() {
+  window.location.href = 'https://p2p-cars.com/carservices';
+});
+</script>
+
+</body>
+</html>
