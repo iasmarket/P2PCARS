@@ -1028,7 +1028,7 @@ function fallbackDisplayCars(page) {
 
       let imagesArr = Array.isArray(c.images)
         ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
-        : ["images/default.jpg"];
+        : ["datatof/default.jpg"];
 
       div.innerHTML = `
         <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}">
