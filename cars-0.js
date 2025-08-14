@@ -7,7 +7,7 @@ const cars = [
         kilometrage: 120000,
         carburant: "Essence",
         puissance: 5,
-        images: ["datatof/Sans qqtitre.jpeg", "datatof/Sanqqs titre.jpeg"],
+        images: ["datatof/Sansqqtitre.jpeg", "datatof/Sanqqstitre.jpeg"],
         description: "Petite citadine fiable et économique."
     },
     {
@@ -18,7 +18,7 @@ const cars = [
         kilometrage: 90000,
         carburant: "Diesel",
         puissance: 4,
-        images: ["datatof/Sansq titre.jpeg", "datatof/imagesq.jpeg"],
+        images: ["datatof/Sansqtitre.jpeg", "datatof/imagesq.jpeg"],
         description: "Compacte, confortable et bien entretenue."
     },
     {
@@ -29,9 +29,10 @@ const cars = [
         kilometrage: 60000,
         carburant: "Hybride",
         puissance: 4,
-        images: ["datatof/Sans titreq.jpeg", "datatof/Sans titre.jpeg"],
+        images: ["datatof/Sanstitreq.jpeg", "datatof/Sanstitre.jpeg"],
         description: "Hybride très économique, faible kilométrage."
     }
     //suite de la liste 
 ];
+
 
