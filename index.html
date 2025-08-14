@@ -433,7 +433,10 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  
+  document.addEventListener("DOMContentLoaded", function () {
+  const page = document.body.getAttribute("data-page") || 0; 
+  fallbackDisplayCars(page);
+});
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
 const imgBase = "https://apicars.p2p-cars.com/";
 
@@ -967,10 +970,7 @@ function setLang(lang) {
 }
 ;
 
-document.addEventListener("DOMContentLoaded", function () {
-  const page = document.body.getAttribute("data-page") || 0; 
-  fallbackDisplayCars(page);
-});
+
 
 function displayCars() {
   const page = document.body.getAttribute("data-page") || 0;
@@ -1053,6 +1053,109 @@ document.getElementById("kilometrage").addEventListener("input", displayCars);
 document.getElementById("carburant").addEventListener("change", displayCars);
 document.getElementById("puissance").addEventListener("input", displayCars);
 document.getElementById("search").addEventListener("input", displayCars);
+
+
+
+
+function fillModelSelect() {
+  let marque = document.getElementById('marque').value;
+  let modeleSel = document.getElementById('modele');
+  modeleSel.innerHTML = `<option value="">${translations[currentLang]['filter-modele-ph']}</option>`;
+  if (translations[currentLang]['models'][marque]) {
+    translations[currentLang]['models'][marque].forEach(m => {
+      modeleSel.innerHTML += `<option value="${m}">${m}</option>`;
+    });
+  }
+}
+
+function transformResponseToArray(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) return [];
+
+  const length = data[keys[0]].length;
+  const result = [];
+
+  for (let i = 0; i < length; i++) {
+    const obj = {};
+    keys.forEach(key => {
+      obj[key] = data[key][i];
+    });
+    result.push(obj);
+  }
+
+  return result;
+}
+
+
+function openModal(car) {
+  let imagesArr = Array.isArray(car.images)
+    ? car.images
+    : (typeof car.images === "string" ? car.images.split(/[,;]/) : []);
+
+  // On préfixe avec ton domaine
+  imagesArr = imagesArr.map(img =>
+    "https://p2p-cars.com/" + img.replace(/\\/g, "/")
+  );
+
+  let priceStr = car.prix ? car.prix + " MAD" : "";
+
+  let modalBg = document.getElementById("modal-bg");
+
+  modalBg.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" aria-label="Fermer">&times;</button>
+      <h2>${car.marque || ""} ${car.modele || ""} (${car.annee || ""})</h2>
+      
+      <!-- Swiper -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          ${imagesArr.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("")}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+
+      <div class="modal-details">
+        <p><strong>Date:</strong> ${car.date || ""}</p>
+        <p><strong>Kilométrage:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>Carburant:</strong> ${car.carburant || ""}</p>
+        <p><strong>Puissance fiscale:</strong> ${car.cv || ""}</p>
+        <p><strong>Prix:</strong> ${priceStr}</p>
+        <p>${car.description || ""}</p>
+      </div>
+
+      <div class="modal-actions">
+        <button id="contact-btn">Contact</button>
+        <button id="buy-btn">Acheter</button>
+      </div>
+    </div>
+  `;
+
+  modalBg.style.display = "flex";
+
+  // Fermer modal
+  modalBg.querySelector(".modal-close").onclick = () => modalBg.style.display = "none";
+  modalBg.onclick = (e) => {
+    if (e.target === modalBg) modalBg.style.display = "none";
+  };
+
+  // Actions boutons avec Ref
+  document.getElementById("contact-btn").onclick = function () {
+    alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
+  };
+  document.getElementById("buy-btn").onclick = function () {
+    alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
+  };
+
+  // Init Swiper
+  new Swiper(".swiper", {
+    loop: true,
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+  });
+}
+
 
 setLang('fr');
 document.getElementById('btn').addEventListener('click', function() {
