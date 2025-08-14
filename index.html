@@ -522,8 +522,9 @@
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
     await initMaxPage(); // calcule maxPage une seule fois
-    const page = 0;
-    displayCars(page);
+    document.querySelector("#page span").textContent = 0;
+  document.getElementById("prev").classList.add("hidden");
+    displayCars(0);
 
 });
 
@@ -1123,7 +1124,7 @@ async function prevPage() {
  function loadCarsFromJS(page, callback) {
   
   const script = document.createElement("script");
-  script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
+  script.src = `https://p2p-cars.com/cars-${page}.js`;
   script.onload = async function () {
     if (typeof cars !== "undefined") {
       callback(cars);
