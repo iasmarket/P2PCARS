@@ -1103,51 +1103,52 @@ document.getElementById('prev').addEventListener('click', prevPage);
 async function nextPage() {
     const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
     const max = await initMaxPage();
-    const page = Math.min(currentPage + 1, max - 1);
-    document.getElementById("next").classList.toggle("hidden", page === max - 1);
-    document.getElementById("prev").classList.toggle("hidden", page === 0);
-    displayCars(page);
-    document.querySelector("#page span").textContent = page;   
+    if(currentPag===max ){return;}
+     currentPag++;
+    
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
 }
 
 async function prevPage() {
     const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
     const max = await initMaxPage();
-    const page = Math.max(currentPage - 1, 0);
-    document.getElementById("prev").classList.toggle("hidden", page === 0);
-    document.getElementById("next").classList.toggle("hidden", page === max - 1);
-    displayCars(page);
-    document.querySelector("#page span").textContent = page;   
+    if(currentPag === 0){return;}
+    currentPag--;
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
 }
 
 
- function loadCarsFromJS(page, callback) {
-    // Supprimer tout ancien script "cars-X.js"
-  document.querySelectorAll("script[data-carfile]").forEach(s => s.remove());
-
-  // Supprimer la variable globale "cars" si elle existe
-  if (window.cars) {
-    delete window.cars;
-  }
+function loadCarsFromJS(page, callback) {
+   console.log("la page est "+page);
   const script = document.createElement("script");
   script.src = `https://p2p-cars.com/cars-${page}.js`;
-  script.onload = async function () {
-    if (typeof cars !== "undefined") {
-      callback(cars);
-              // Supprimer la variable globale après utilisation pour éviter le conflit
-      delete window.cars;
+  script.setAttribute("data-carfile", page);
+
+  script.onload = function () {
+    const varName = "cars" + page;
+ if (typeof window[varName] !== "undefined") {
+      callback(window[varName]);
+      delete window[varName]; // nettoyage après usage si tu veux
     } else {
-      console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
+      console.error(`Variable '${varName}' non trouvée dans cars-${page}.js`);
       callback([]);
     }
   };
+
   script.onerror = function () {
-    console.error("Impossible de charger cars-" + page + ".js");
+    console.error(`Impossible de charger cars-${page}.js`);
     callback([]);
   };
+
   document.body.appendChild(script);
-  
 }
+
 
 function fallbackDisplayCars(page) {
 
