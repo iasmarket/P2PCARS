@@ -521,7 +521,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-  const page = document.querySelector("#page span").textContent; 
+  const page = document.body.getAttribute("data-page") || 0; 
   fallbackDisplayCars(page);
 });
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
@@ -1059,47 +1059,35 @@ function setLang(lang) {
 
 
 
-
 function displayCars() {
-  const page = document.querySelector("#page span").textContent;
+  const page = document.body.getAttribute("data-page") || 0;
   fallbackDisplayCars(page);
 }
 
-
     function nextPage() {
-              let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
-              fallbackDisplayCars(currentPage + 1);
-        
+        let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+        fallbackDisplayCars(currentPage + 1);
+
     }
 
     function prevPage() {
-              let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
-              fallbackDisplayCars(currentPage - 1);
-       
-    }
+        let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+        fallbackDisplayCars(currentPage - 1);
 
+    }
 
 function loadCarsFromJS(page, callback) {
   const script = document.createElement("script");
-  const scriptt = document.createElement("script");
-   let cont=page+1;
-  scriptt.src = `https://p2p-cars.com/cars-${cont}.js?nocache=${Date.now()}`;
- 
-  scriptt.onload = function () {
-    if (typeof cars !== "undefined") {      
-      document.getElementById("next").classList.toggle("hidden", true);
-    } else {
-      document.getElementById("next").classList.toggle("hidden", false);
-    }
-  };
-
-
+  script.src = `https://p2p-cars.com/cars-${page+1}.js?nocache=${Date.now()}`;
+  script.onload = function () {
+    if (typeof cars !== "undefined") { document.getElementById("next").classList.toggle("hidden", true); } else { } };
   script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
   script.onload = function () {
     if (typeof cars !== "undefined") {
       callback(cars);
       document.querySelector("#page span").textContent = page;
       document.getElementById("prev").classList.toggle("hidden", page === 0);
+
     } else {
       console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
       callback([]);
