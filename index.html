@@ -520,10 +520,14 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-  const page = document.body.getAttribute("data-page") || 0; 
-  fallbackDisplayCars(page);
+document.addEventListener("DOMContentLoaded", async function () {
+    await initMaxPage(); // calcule maxPage une seule fois
+    const page = parseInt(document.body.getAttribute("data-page") || 0, 10);
+    fallbackDisplayCars(page);
+
 });
+
+
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
 const imgBase = "https://apicars.p2p-cars.com/";
 
@@ -1079,35 +1083,49 @@ async function countExistingCarFiles() {
   return count;
 }
 
+let maxPage = null;
 
-
+async function initMaxPage() {
+    if (maxPage === null) {
+        maxPage = await countExistingCarFiles();
+    }
+    return maxPage;
+}
 function displayCars() {
   const page = document.body.getAttribute("data-page") || 0;
   fallbackDisplayCars(page);
 }
 
-    function nextPage() {
-        let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
-        fallbackDisplayCars(currentPage + 1);
+document.getElementById('next').addEventListener('click', nextPage);
+document.getElementById('prev').addEventListener('click', prevPage);
 
-    }
+async function nextPage() {
+    const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    const page = Math.min(currentPage + 1, max - 1);
+    fallbackDisplayCars(page);
+}
 
-    function prevPage() {
-        let currentPage = parseInt(document.querySelector("#page span").textContent, 10);
-        fallbackDisplayCars(currentPage - 1);
+async function prevPage() {
+    const currentPage = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    const page = Math.max(currentPage - 1, 0);
+    fallbackDisplayCars(page);
+}
 
-    }
 
-async function loadCarsFromJS(page, callback) {
-  const maxPage= await countExistingCarFiles();
+ function loadCarsFromJS(page, callback) {
+  
   const script = document.createElement("script");
   script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
-  script.onload = function () {
+  script.onload = async function () {
     if (typeof cars !== "undefined") {
       callback(cars);
       document.querySelector("#page span").textContent = page;
+      document.body.setAttribute("data-page", page);
+      const max = await initMaxPage();
       document.getElementById("prev").classList.toggle("hidden", page === 0);
-      document.getElementById("next").classList.toggle("hidden", page === maxPage-1);
+      document.getElementById("next").classList.toggle("hidden", page >= max - 1);
     } else {
       console.error("Variable 'cars' non trouvée dans cars-" + page + ".js");
       callback([]);
@@ -1122,6 +1140,7 @@ async function loadCarsFromJS(page, callback) {
 }
 
 function fallbackDisplayCars(page) {
+
   loadCarsFromJS(page, function(cars) {
     const list = document.getElementById("carList");
 
