@@ -521,7 +521,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-  const page = document.body.getAttribute("data-page") || 0; 
+  const page =  0; 
   fallbackDisplayCars(page);
 });
 const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
@@ -1061,21 +1061,21 @@ let currentPage=0;
 
 
 function displayCars() {
-  const page = document.body.getAttribute("data-page") || 0;
+  
   fallbackDisplayCars(page);
 }
 
 
     function nextPage() {
-        if (currentPage < maxPage) {
+        
             fallbackDisplayCars(currentPage + 1);;
-        }
+  
     }
 
     function prevPage() {
-        if (currentPage > 1) {
+        
             fallbackDisplayCars(currentPage - 1);
-        }
+        
     }
 
 
