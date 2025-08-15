@@ -1069,7 +1069,7 @@ async function countExistingCarFiles() {
 
   while (exists) {
     try {
-      const response = await fetch(`https://p2p-cars.com/cars-${page}.js`);
+      const response = await fetch(`https://p2p-cars.com/generatedjs/cars-${page}.js`);
       if (response.ok) {
         count++;
         page++;
@@ -1128,7 +1128,7 @@ async function prevPage() {
 function loadCarsFromJS(page, callback) {
     console.log("la page est "+page);
     const script = document.createElement("script");
-    script.src = `https://p2p-cars.com/cars-${page}.js?nocache=${Date.now()}`;
+    script.src = `https://p2p-cars.com/generatedjs/cars-${page}.js?nocache=${Date.now()}`;
     script.onload = function () {
         const carsVar = window['cars' + page];
         if (typeof carsVar !== "undefined") {
