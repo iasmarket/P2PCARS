@@ -1023,7 +1023,9 @@ const translations = {
     'modal-price': "السعر"
   }
 };
-
+document.getElementById("lang-fr").addEventListener("click", ()=>setLang("fr"));
+document.getElementById("lang-en").addEventListener("click", ()=>setLang("en"));
+document.getElementById("lang-ar").addEventListener("click", ()=>setLang("ar"));
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
