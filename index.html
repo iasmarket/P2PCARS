@@ -516,6 +516,17 @@
 <!-- Modal structure -->
 <div id="modal-bg" style="display:none"></div>
 
+<!-- Modal HTML (caché par défaut) -->
+<div id="contact-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <label id="contact-email-label"></label>
+    <input type="text" id="contact-email" readonly />
+    <label id="contact-message-label"></label>
+    <textarea id="contact-message"></textarea>
+    <button id="contact-send-btn"></button>
+  </div>
+</div>
 
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -1006,6 +1017,7 @@ const translations = {
         description: "سيارة مدينة موثوقة واقتصادية."
       }
     ],
+    
     'consult-btn': "معاينة التفاصيل",
     'modal-title': "تفاصيل السيارة",
     'modal-close': "إغلاق",
@@ -1026,6 +1038,7 @@ const translations = {
 document.getElementById("lang-fr").addEventListener("click", ()=>setLang("fr"));
 document.getElementById("lang-en").addEventListener("click", ()=>setLang("en"));
 document.getElementById("lang-ar").addEventListener("click", ()=>setLang("ar"));
+
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
@@ -1259,7 +1272,6 @@ function openModal(car) {
     ? car.images
     : (typeof car.images === "string" ? car.images.split(/[,;]/) : []);
 
-  // On préfixe avec ton domaine
   imagesArr = imagesArr.map(img =>
     "https://p2p-cars.com/" + img.replace(/\\/g, "/")
   );
@@ -1270,8 +1282,8 @@ function openModal(car) {
 
   modalBg.innerHTML = `
     <div class="modal">
-      <button class="modal-close" aria-label="Fermer">&times;</button>
-      <h2>${car.marque || ""} ${car.modele || ""} (${car.annee || ""})</h2>
+      <button class="modal-close" aria-label="${translations[currentLang]['modal-close']}">&times;</button>
+      <h2>${translations[currentLang]['modal-title']}</h2>
       
       <!-- Swiper -->
       <div class="swiper">
@@ -1284,38 +1296,82 @@ function openModal(car) {
       </div>
 
       <div class="modal-details">
-        <p><strong>Date:</strong> ${car.date || ""}</p>
-        <p><strong>Kilométrage:</strong> ${car.kilometrage || ""} km</p>
-        <p><strong>Carburant:</strong> ${car.carburant || ""}</p>
-        <p><strong>Puissance fiscale:</strong> ${car.cv || ""}</p>
-        <p><strong>Prix:</strong> ${priceStr}</p>
+        <p><strong>${translations[currentLang]['modal-date']}:</strong> ${car.date || ""}</p>
+        <p><strong>${translations[currentLang]['modal-kilometrage']}:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>${translations[currentLang]['modal-carburant']}:</strong> ${car.carburant || ""}</p>
+        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.cv || ""}</p>
+        <p><strong>${translations[currentLang]['modal-price']}:</strong> ${priceStr}</p>
         <p>${car.description || ""}</p>
       </div>
 
       <div class="modal-actions">
-        <button id="contact-btn">Contact</button>
-        <button id="buy-btn">Acheter</button>
+        <button id="contact-btn">${translations[currentLang]['modal-contact']}</button>
+        <button id="buy-btn">${translations[currentLang]['modal-buy']}</button>
       </div>
     </div>
   `;
 
   modalBg.style.display = "flex";
 
-  // Fermer modal
   modalBg.querySelector(".modal-close").onclick = () => modalBg.style.display = "none";
   modalBg.onclick = (e) => {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
 
-  // Actions boutons avec Ref
-  document.getElementById("contact-btn").onclick = function () {
-    alert("Contact vendeur - Ref : " + (car.Ref || "N/A"));
-  };
+document.getElementById("contact-btn").onclick = async function () {
+  try {
+    // Vérifier la session utilisateur
+    let res = await fetch('https://p2p-cars.com/login', { credentials: 'include' });
+    let data = await res.json(); // supposons que l'API retourne { loggedIn: true/false, email: "..." }
+
+    if (!data.loggedIn) {
+      // Rediriger vers login si pas connecté
+      window.location.href = 'https://p2p-cars.com/login';
+      return;
+    }
+
+    // S'il est connecté, récupérer l'email
+    let email = data.email || '';
+
+    // Remplir et afficher le modal
+    const modal = document.getElementById("contact-modal");
+    document.getElementById("contact-email-label").textContent = translations[currentLang]['contact-email-label'];
+    document.getElementById("contact-email").value = email;
+    document.getElementById("contact-message-label").textContent = translations[currentLang]['contact-message-label'];
+    document.getElementById("contact-send-btn").textContent = translations[currentLang]['contact-send-btn'];
+
+    modal.style.display = "block";
+
+    // Fermer le modal
+    modal.querySelector(".close").onclick = function () {
+      modal.style.display = "none";
+    }
+
+    // Envoi du message
+    document.getElementById("contact-send-btn").onclick = async function () {
+      let message = document.getElementById("contact-message").value;
+      let ref = car.Ref || "N/A";
+      // POST message au serveur
+      await fetch('https://p2p-cars.com/api/send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, message, ref })
+      });
+      alert(translations[currentLang]['contact-sent']);
+      modal.style.display = "none";
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert(translations[currentLang]['contact-error']);
+  }
+};
+
   document.getElementById("buy-btn").onclick = function () {
-    alert("Acheter cette voiture - Ref : " + (car.Ref || "N/A"));
+    alert(translations[currentLang]['modal-buy'] + " - Ref : " + (car.Ref || "N/A"));
   };
 
-  // Init Swiper
   new Swiper(".swiper", {
     loop: true,
     pagination: { el: ".swiper-pagination", clickable: true },
