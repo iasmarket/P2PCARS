@@ -515,31 +515,42 @@
 </footer>
 <!-- Modal structure -->
 <div id="modal-bg" style="display:none"></div>
+<!-- Modal container -->
 
-<!-- Modal HTML -->
-<div id="contact-modal" class="modal" style="display:none;">
-  <div class="modal-content">
-    <span id="contact-close" class="close">&times;</span>
-    <label id="contact-email-label"></label>
-    <br>
-    <label id="contact-ref-label"></label>
-    <br>
-    <textarea id="contact-message" placeholder=""></textarea>
-    <br>
-    <button id="contact-send-btn"></button>
+<!-- Modal container -->
+<div id="contact-modal" style="display:none; 
+    position:fixed; 
+    top:0; left:0; 
+    width:100%; height:100%; 
+    background: rgba(0,0,0,0.5); 
+    justify-content:center; 
+    align-items:center; 
+    z-index:9999;"> <!-- z-index élevé pour rester au premier plan -->
+  
+  <div style="background:rgba(8, 8, 8, 0.562); padding:20px; border-radius:10px; width:300px; position:relative; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+    <span id="close-modal" style="position:absolute; top:5px; right:10px; cursor:pointer; font-size:18px;">&times;</span>
+    <h3>Contact</h3>
+    <p id="ref-label">Ref : </p>
+    <label>ID/Email:</label>
+    <input type="text" id="contact-email" style="width:100%; margin-bottom:10px;" placeholder="Votre ID ou email">
+    <label>Message:</label>
+    <textarea id="contact-message" style="width:100%; margin-bottom:10px;" placeholder="Votre message"></textarea>
+    <button id="send-btn">Envoyer ✉️</button>
   </div>
 </div>
+
 
 
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+  const userEmail = localStorage.getItem('userEmail');
 document.addEventListener("DOMContentLoaded", async function () {
     await initMaxPage(); // calcule maxPage une seule fois
     document.querySelector("#page span").textContent = 0;
   document.getElementById("prev").classList.add("hidden");
     displayCars(0);
-
+    const userEmail = localStorage.getItem('userEmail');
 });
 
 
@@ -1320,47 +1331,33 @@ function openModal(car) {
   modalBg.onclick = (e) => {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
+////////////////////////////////////////////
+const modal = document.getElementById('contact-modal');
+  const refLabel = document.getElementById('ref-label');
+  const closeModal = document.getElementById('close-modal');
 
-// Fonction pour ouvrir le modal de contact
-document.getElementById("contact-btn").onclick = async function () {
-  let userEmail = "";
-
-  try {
-    // Vérifie si l'utilisateur est connecté
-    let res = await fetch("https://p2p-cars.com/api/check-login", { credentials: 'include' });
-    let data = await res.json();
-
-    if (data.loggedIn) {
-      userEmail = data.email; // récupère l'email
-    } else {
-      // redirige seulement si vraiment pas connecté
-      window.location.href = "https://p2p-cars.com/login";
-      return;
-    }
-  } catch (err) {
-    console.error("Erreur check-login", err);
-    alert("Impossible de vérifier la connexion");
-    return;
-  }
-
-  // Récupère le modal
-  const modal = document.getElementById("contact-modal");
-
-  // Remplit les champs du modal
-  document.getElementById("contact-email-label").textContent = translations[currentLang]['email-label'] + ": " + userEmail;
-  document.getElementById("contact-ref-label").textContent = translations[currentLang]['ref-label'] + ": " + (car.Ref || "N/A");
-  document.getElementById("contact-message").placeholder = translations[currentLang]['message-placeholder'];
-  document.getElementById("contact-send-btn").textContent = translations[currentLang]['send-btn'];
-
-  // Affiche le modal
-  modal.style.display = "block";
-
-  // Gestion du bouton fermer
-  document.getElementById("contact-close").onclick = function () {
-    modal.style.display = "none";
+  document.getElementById("contact-btn").onclick = function () {
+    refLabel.textContent = "Ref : " + (car.Ref || "N/A");
+    modal.style.display = 'flex';
   };
-};
+  document.getElementById('contact-email').value=userEmail;
+  
+  closeModal.onclick = function() {
+    modal.style.display = 'none';
+  };
 
+  window.onclick = function(event) {
+    if(event.target == modal) modal.style.display = 'none';
+  };
+
+  document.getElementById('send-btn').onclick = function() {
+    const email = document.getElementById('contact-email').value;
+    const message = document.getElementById('contact-message').value;
+    console.log("Envoyé:", { Ref: car.Ref, email, message });
+    alert("Message envoyé !");
+    modal.style.display = 'none';
+  };
+////////////////////////////////////////////
   document.getElementById("buy-btn").onclick = function () {
     alert(translations[currentLang]['modal-buy'] + " - Ref : " + (car.Ref || "N/A"));
   };
