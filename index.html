@@ -516,17 +516,20 @@
 <!-- Modal structure -->
 <div id="modal-bg" style="display:none"></div>
 
-<!-- Modal HTML (caché par défaut) -->
+<!-- Modal HTML -->
 <div id="contact-modal" class="modal" style="display:none;">
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <span id="contact-close" class="close">&times;</span>
     <label id="contact-email-label"></label>
-    <input type="text" id="contact-email" readonly />
-    <label id="contact-message-label"></label>
-    <textarea id="contact-message"></textarea>
+    <br>
+    <label id="contact-ref-label"></label>
+    <br>
+    <textarea id="contact-message" placeholder=""></textarea>
+    <br>
     <button id="contact-send-btn"></button>
   </div>
 </div>
+
 
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -1318,54 +1321,44 @@ function openModal(car) {
     if (e.target === modalBg) modalBg.style.display = "none";
   };
 
+// Fonction pour ouvrir le modal de contact
 document.getElementById("contact-btn").onclick = async function () {
-  try {
-    // Vérifier la session utilisateur
-    let res = await fetch('https://p2p-cars.com/login', { credentials: 'include' });
-    let data = await res.json(); // supposons que l'API retourne { loggedIn: true/false, email: "..." }
+  let userEmail = "";
 
-    if (!data.loggedIn) {
-      // Rediriger vers login si pas connecté
-      window.location.href = 'https://p2p-cars.com/login';
+  try {
+    // Vérifie si l'utilisateur est connecté
+    let res = await fetch("https://p2p-cars.com/api/check-login", { credentials: 'include' });
+    let data = await res.json();
+
+    if (data.loggedIn) {
+      userEmail = data.email; // récupère l'email
+    } else {
+      // redirige seulement si vraiment pas connecté
+      window.location.href = "https://p2p-cars.com/login";
       return;
     }
-
-    // S'il est connecté, récupérer l'email
-    let email = data.email || '';
-
-    // Remplir et afficher le modal
-    const modal = document.getElementById("contact-modal");
-    document.getElementById("contact-email-label").textContent = translations[currentLang]['contact-email-label'];
-    document.getElementById("contact-email").value = email;
-    document.getElementById("contact-message-label").textContent = translations[currentLang]['contact-message-label'];
-    document.getElementById("contact-send-btn").textContent = translations[currentLang]['contact-send-btn'];
-
-    modal.style.display = "block";
-
-    // Fermer le modal
-    modal.querySelector(".close").onclick = function () {
-      modal.style.display = "none";
-    }
-
-    // Envoi du message
-    document.getElementById("contact-send-btn").onclick = async function () {
-      let message = document.getElementById("contact-message").value;
-      let ref = car.Ref || "N/A";
-      // POST message au serveur
-      await fetch('https://p2p-cars.com/api/send-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, message, ref })
-      });
-      alert(translations[currentLang]['contact-sent']);
-      modal.style.display = "none";
-    }
-
   } catch (err) {
-    console.error(err);
-    alert(translations[currentLang]['contact-error']);
+    console.error("Erreur check-login", err);
+    alert("Impossible de vérifier la connexion");
+    return;
   }
+
+  // Récupère le modal
+  const modal = document.getElementById("contact-modal");
+
+  // Remplit les champs du modal
+  document.getElementById("contact-email-label").textContent = translations[currentLang]['email-label'] + ": " + userEmail;
+  document.getElementById("contact-ref-label").textContent = translations[currentLang]['ref-label'] + ": " + (car.Ref || "N/A");
+  document.getElementById("contact-message").placeholder = translations[currentLang]['message-placeholder'];
+  document.getElementById("contact-send-btn").textContent = translations[currentLang]['send-btn'];
+
+  // Affiche le modal
+  modal.style.display = "block";
+
+  // Gestion du bouton fermer
+  document.getElementById("contact-close").onclick = function () {
+    modal.style.display = "none";
+  };
 };
 
   document.getElementById("buy-btn").onclick = function () {
