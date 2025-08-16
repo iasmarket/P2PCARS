@@ -532,6 +532,9 @@
     <h3>Contact</h3>
     <p id="ref-label">Ref : </p>
     <p id="msg-label"></p>
+    <label for="montant-propose">Montant proposé :</label>
+    <input type="text" id="montant-propose" placeholder="Entrez votre montant">
+    <p id="error-montant" style="color:red;"></p>
     <label>Message:</label>
     <textarea id="contact-message" style="width:100%; margin-bottom:10px;" placeholder="Votre message"></textarea>
     <button id="send-btn">Envoyer ✉️</button>
@@ -1342,7 +1345,8 @@ const modal = document.getElementById('contact-modal');
   };
  const sendBtn = document.getElementById("send-btn");
   if (userEmail===null){
-    msgLabel.textContent = "Vous n’êtes pas connecté. Veuillez vous connecter.";
+    
+msgLabel.innerHTML = `Vous n’êtes pas connecté. Veuillez vous connecter. <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">ici</a>`;
     msgLabel.style.color = "red"; // texte en rouge
      sendBtn.disabled = true;             // désactive le bouton
     sendBtn.style.backgroundColor = "red"; // couleur de fond rouge
@@ -1363,13 +1367,39 @@ const modal = document.getElementById('contact-modal');
     if(event.target == modal) modal.style.display = 'none';
   };
 
-  document.getElementById('send-btn').onclick = function() {
-    const email = document.getElementById('contact-email').value;
+document.getElementById('send-btn').onclick = async function() {
+    const email = localStorage.getItem('userEmail'); // récupère l'email
     const message = document.getElementById('contact-message').value;
-    console.log("Envoyé:", { Ref: car.Ref, email, message });
-    alert("Message envoyé !");
-    modal.style.display = 'none';
-  };
+
+    // Prépare les données à envoyer
+    const data = {
+        Ref: car.Ref,   // assure-toi que car.Ref est défini
+        email: email,
+        message: message
+    };
+
+    try {
+        const response = await fetch('https://apicars.p2p-cars.com/api/msgsellr', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            alert("Message envoyé !");
+            modal.style.display = 'none';
+        } else {
+            const errorData = await response.json();
+            alert("Erreur lors de l'envoi : " + (errorData.message || response.status));
+        }
+    } catch (error) {
+        console.error('Erreur fetch:', error);
+        alert("Impossible d'envoyer le message. Vérifiez votre connexion.");
+    }
+};
+
 ////////////////////////////////////////////
   document.getElementById("buy-btn").onclick = function () {
     alert(translations[currentLang]['modal-buy'] + " - Ref : " + (car.Ref || "N/A"));
