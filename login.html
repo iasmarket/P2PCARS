@@ -372,6 +372,9 @@
           showMessage('success', translations[currentLang]['success-login']);
           setLoading(false);
           window.location.href = 'https://p2p-cars.com/profile';
+              // Stocke l'email dans le localStorage
+          localStorage.setItem('userEmail', email);
+
         } catch (err) {
           showMessage('error', translations[currentLang]['error-network']);
           setLoading(false);
