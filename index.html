@@ -1370,11 +1370,12 @@ msgLabel.innerHTML = `Vous n’êtes pas connecté. Veuillez vous connecter. <a 
 document.getElementById('send-btn').onclick = async function() {
     const email = localStorage.getItem('userEmail'); // récupère l'email
     const message = document.getElementById('contact-message').value;
-
+    const poffre=document.getElementById('montant-propose').value;
     // Prépare les données à envoyer
     const data = {
         Ref: car.Ref,   // assure-toi que car.Ref est défini
         email: email,
+        poffre:poffre,
         message: message
     };
 
