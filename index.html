@@ -531,8 +531,7 @@
     <span id="close-modal" style="position:absolute; top:5px; right:10px; cursor:pointer; font-size:18px;">&times;</span>
     <h3>Contact</h3>
     <p id="ref-label">Ref : </p>
-    <label>ID/Email:</label>
-    <input type="text" id="contact-email" style="width:100%; margin-bottom:10px;" placeholder="Votre ID ou email">
+    <p id="msg-label"></p>
     <label>Message:</label>
     <textarea id="contact-message" style="width:100%; margin-bottom:10px;" placeholder="Votre message"></textarea>
     <button id="send-btn">Envoyer ✉️</button>
@@ -1334,14 +1333,28 @@ function openModal(car) {
 ////////////////////////////////////////////
 const modal = document.getElementById('contact-modal');
   const refLabel = document.getElementById('ref-label');
+  const msgLabel = document.getElementById('msg-label');
   const closeModal = document.getElementById('close-modal');
 
   document.getElementById("contact-btn").onclick = function () {
     refLabel.textContent = "Ref : " + (car.Ref || "N/A");
     modal.style.display = 'flex';
   };
-  document.getElementById('contact-email').value=userEmail;
-  
+ const sendBtn = document.getElementById("send-btn");
+  if (userEmail===null){
+    msgLabel.textContent = "Vous n’êtes pas connecté. Veuillez vous connecter.";
+    msgLabel.style.color = "red"; // texte en rouge
+     sendBtn.disabled = true;             // désactive le bouton
+    sendBtn.style.backgroundColor = "red"; // couleur de fond rouge
+    sendBtn.style.color = "white";     
+  }else{
+    msgLabel.textContent = "Vous êtes connecté en tant que : " + userEmail;
+    msgLabel.style.color = "green"; // texte en vert
+    sendBtn.disabled = false;            // active le bouton
+    sendBtn.style.backgroundColor = "green"; // couleur de fond verte
+    sendBtn.style.color = "white";      
+  }
+    
   closeModal.onclick = function() {
     modal.style.display = 'none';
   };
