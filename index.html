@@ -328,52 +328,52 @@
       .modal { padding: 15px 7px 10px 7px; }
       .modal-actions button { padding: 10px 8px; font-size: 1rem;}
     }
-#modal-bg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-}
-.modal {
-  background: rgba(42, 7, 82, 0.466);
-  padding: 20px;
-  max-width: 800px;
-  width: 90%;
-  border-radius: 10px;
-  position: relative;
-}
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 22px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-    .modal-images img {
-      max-width: 100%;
-      margin: 5px 0;
+    #modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
     }
-.swiper {
-  width: 100%;
-  height: 400px;
-}
-.swiper-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .modal {
+      background: rgba(42, 7, 82, 0.466);
+      padding: 20px;
+      max-width: 800px;
+      width: 90%;
+      border-radius: 10px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+        .modal-images img {
+          max-width: 100%;
+          margin: 5px 0;
+        }
+    .swiper {
+      width: 100%;
+      height: 400px;
+    }
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-/* Actions */
-.modal-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
+    /* Actions */
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
        main {
         flex: 1;
         padding: 40px;
@@ -444,6 +444,50 @@
         padding: 20px;
         color: white;
     }
+/* Style du fond du modal */
+#forum {
+    display: none; /* caché au départ */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: #fcfafa88;
+    width: 80%;
+    height: 90%;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+#forum-body {
+    flex: 1;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow: auto;
+}
+
   </style>
 </head>
 <body>
@@ -540,12 +584,23 @@
     <button id="send-btn">Envoyer ✉️</button>
   </div>
 </div>
+<!-- La modal avec style intégré -->
+ 
+<div id="forum">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="forum-body"></div>
+  </div>
+</div>
+<!-- Modal centrée -->
 
 
 
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
+
+
   const userEmail = localStorage.getItem('userEmail');
 document.addEventListener("DOMContentLoaded", async function () {
     await initMaxPage(); // calcule maxPage une seule fois
@@ -712,6 +767,7 @@ const translations = {
     'modal-close': "Fermer",
     'modal-contact': "Contacter le vendeur",
     'modal-buy': "Demander l'achat P2P",
+    'modal-forume': "Forum de négociation",
     'modal-date': "Date de mise en ligne",
     'modal-marque': "Marque",
     'modal-modele': "Modèle",
@@ -875,6 +931,7 @@ const translations = {
     'modal-close': "Close",
     'modal-contact': "Contact seller",
     'modal-buy': "Request P2P purchase",
+    'modal-forume': "Negotiation forum",
     'modal-date': "Online since",
     'modal-marque': "Brand",
     'modal-modele': "Model",
@@ -1039,6 +1096,7 @@ const translations = {
     'modal-close': "إغلاق",
     'modal-contact': "اتصل بالبائع",
     'modal-buy': "طلب شراء P2P",
+    'modal-forume': "منتدى التفاوض",
     'modal-date': "تاريخ النشر",
     'modal-marque': "الماركة",
     'modal-modele': "الموديل",
@@ -1323,6 +1381,7 @@ function openModal(car) {
       <div class="modal-actions">
         <button id="contact-btn">${translations[currentLang]['modal-contact']}</button>
         <button id="buy-btn">${translations[currentLang]['modal-buy']}</button>
+        <button id="forum-btn">${translations[currentLang]['modal-forume']}</button>
       </div>
     </div>
   `;
@@ -1405,7 +1464,46 @@ document.getElementById('send-btn').onclick = async function() {
   document.getElementById("buy-btn").onclick = function () {
     alert(translations[currentLang]['modal-buy'] + " - Ref : " + (car.Ref || "N/A"));
   };
+//////////////////////////////////////////////////////////
+const forum = document.getElementById("forum");
+const closeBtn = forum.querySelector(".close");
 
+document.getElementById("forum-btn").onclick = function () {
+    
+
+    // Afficher message de chargement
+    document.getElementById("forum-body").innerText = "Chargement msgsellr...";
+    document.getElementById("forume-body").innerText = "Chargement forume...";
+    forum.style.display = "flex"; // Affiche le modal immédiatement
+
+    //  Requête forume
+    fetch('https://apicars.p2p-cars.com/api/forume', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Ref: car.Ref })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("forume-body").innerText = JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+        document.getElementById("forume-body").innerText = "Erreur: " + err;
+    });
+};
+
+// Fermer avec la croix
+closeBtn.onclick = () => forum.style.display = "none";
+
+// Fermer en cliquant en dehors
+window.onclick = (event) => {
+    if (event.target === forum) forum.style.display = "none";
+};
+
+// Fermer avec Échap
+window.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") forum.style.display = "none";
+});
+/////////////////////////////////////////////////////////////////
   new Swiper(".swiper", {
     loop: true,
     pagination: { el: ".swiper-pagination", clickable: true },
