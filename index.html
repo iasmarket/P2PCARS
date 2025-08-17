@@ -1581,7 +1581,7 @@ confirmBtn.onclick = function() {
     })
     .then(data => {
       if (data.status === 'success') {
-        if(data.message === 'duplicate'){
+        if (data.message === 'duplicate') { // <-- corrige ici
           alert(translations[currentLang]['duplicate']);
           return;
         } else {
@@ -1591,8 +1591,7 @@ confirmBtn.onclick = function() {
     })
     .catch(error => {
       console.error('Erreur:', error);
-      alert("⚠️ Erreur: " + translations[currentLang]['resauerreur']);
-      
+      alert("⚠️ " + translations[currentLang]['resauerreur']);
     }); 
         modalc.style.display = "none";
     };
@@ -1663,7 +1662,6 @@ window.onclick = (event) => {
 window.addEventListener('keydown', (e) => {
     if (e.key === "Escape") forum.style.display = "none";
 });
-  
 /////////////////////////////////////////////////////////////////
   new Swiper(".swiper", {
     loop: true,
