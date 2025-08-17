@@ -770,6 +770,7 @@ const translations = {
     'modal-close': "Fermer",
     'modal-contact': "Contacter le vendeur",
     'modal-buy': "Demander l'achat P2P",
+    'titre-forum':"Bienvenue 👋 Vous pouvez suivre ici les discussions concernant le prix de cette voiture en toute transparence, en rappelant que la décision finale sur le prix revient au vendeur. Remarque : Toutes les conversations sont enregistrées et les participants sont identifiés, nous vous prions donc de faire preuve de sérieux et de respect. Merci pour votre coopération 🙏",
     'modal-forume': "Forum de négociation",
     'modal-date': "Date de mise en ligne",
     'modal-marque': "Marque",
@@ -934,6 +935,7 @@ const translations = {
     'modal-close': "Close",
     'modal-contact': "Contact seller",
     'modal-buy': "Request P2P purchase",
+    'titre-forum':"Welcome 👋 You can follow the discussion about the price of this car here with full transparency, noting that the final decision on the price rests with the seller. Note: All conversations are recorded and participants are verified, so we kindly ask everyone to remain serious and respectful. Thank you for your cooperation 🙏",
     'modal-forume': "Negotiation forum",
     'modal-date': "Online since",
     'modal-marque': "Brand",
@@ -1099,6 +1101,7 @@ const translations = {
     'modal-close': "إغلاق",
     'modal-contact': "اتصل بالبائع",
     'modal-buy': "طلب شراء P2P",
+    'titre-forum':"مرحبًا بكم 👋 يمكنكم هنا متابعة النقاش حول ثمن هذه السيارة بكل شفافية، مع التأكيد أنّ القرار النهائي بشأن السعر يعود للبائع. تنويه: جميع الحوارات مسجَّلة والمشاركون موثَّقون، لذا نرجو من الجميع الالتزام بالجدّية والاحترام. شكرًا لتعاونكم ",
     'modal-forume': "منتدى التفاوض",
     'modal-date': "تاريخ النشر",
     'modal-marque': "الماركة",
@@ -1486,7 +1489,7 @@ document.getElementById("forum-btn").onclick = function () {
     forum.style.display = "flex";
 
     // Afficher messages de chargement
-    document.getElementById("forum-body").innerText = "Chargement msgsellr...";
+    document.getElementById("forum-body").innerText = translations[currentLang]['titre-forum'];
     document.getElementById("forume-body").innerText = "Chargement forume...";
 
     // Requête POST pour récupérer le forum
