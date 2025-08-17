@@ -1581,7 +1581,7 @@ confirmBtn.onclick = function() {
     })
     .then(data => {
       if (data.status === 'success') {
-        if(data.message === 'duplicat'){
+        if(data.message === 'duplicate'){
           alert(translations[currentLang]['duplicate']);
           return;
         } else {
