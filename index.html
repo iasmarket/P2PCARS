@@ -822,6 +822,7 @@ const translations = {
     'modal-forume': "Forum de négociation du prix",
     'commandeeffect':"Commande reçue avec succès, veuillez accéder à votre profil pour la valider.",
     'msg-title':"Offre de prix",
+    'duplicate':"Waoo 😲😂 Impossible de commander la voiture qui t’appartient déjà !",
     'resauerreur':"Erreur du réseau, veuillez réessayer plus tard. Veuillez actualiser la page ou réessayer plus tard.",
     'commander':"En tant que titulaire du compte P2P-Cars associé à l’adresse e-mail :",
     'noconect':'Vous n’êtes pas connecté. Veuillez vous connecter. <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">ici-هنا</a>',
@@ -995,6 +996,7 @@ const translations = {
     'modal-forume': "Price Negotiation Forum",
     'commandeeffect':"Order received successfully, please access your profile to validate it.",
     'msg-title':"Price offer",
+    'duplicate':"Waoo 😲😂 You can’t order the car you already own!",
     'resauerreur':"Network error, please try again later. Please refresh the page or try again later.",
     'commander':"As the holder of the P2P-Cars account associated with the email address: ",
     'noconect':'You are not logged in. Please log in <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">here</a>',
@@ -1169,6 +1171,7 @@ const translations = {
     'modal-forume': "منتدى التفاوض على السعر",
     'commandeeffect':"تم استلام الطلب بنجاح، يرجى الدخول إلى حسابك على المنصة من أجل تأكيده.",
     'msg-title':"عرض سعر",
+    'duplicate':"واو 😲😂 لا يمكنك طلب السيارة التي تملكها بالفعل!",
     'resauerreur':"خطأ في الشبكة، يرجى المحاولة لاحقًا. يرجى تحديث الصفحة أو المحاولة من جديد لاحقًا.",
     'commander':"بصفتي صاحب حساب P2P-Cars المرتبط بالبريد الإلكتروني:",
     'noconect':'أنت لست مسجّل الدخول. يرجى تسجيل الدخول <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">هنا</a>',
@@ -1560,7 +1563,12 @@ document.getElementById("buy-btn").onclick = function() {
 
 // Fermer la modale au clic sur "Confirmer"
 confirmBtn.onclick = function() {
-     alert("⚠️" + translations[currentLang]['noconect']);
+    if (userEmail===null){
+      alert("⚠️" + translations[currentLang]['noconect']);
+      return ;
+    }
+     
+
     fetch('https://apicars.p2p-cars.com/api/commande', {
       method: 'POST',
       headers: {
@@ -1576,8 +1584,8 @@ confirmBtn.onclick = function() {
         alert("✅ " + translations[currentLang]['commandeeffect']); // Affiche un message dans une popup
         // ou afficher dans la page :
         // document.getElementById("msg").innerText = data.message;
-      } else {
-        alert("⚠️ Erreur: " + translations[currentLang]['resauerreur']);
+      } else if(data.status === 'duplicat'){
+        alert(translations[currentLang]['duplicate']);
       }
     })
     .catch(error => {
