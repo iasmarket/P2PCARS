@@ -590,7 +590,7 @@
 <div id="forum" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.616); justify-content:center; align-items:center;">
     <div style="background:rgba(8, 8, 8, 0.842); padding:20px; border-radius:10px; width:90%; max-width:1000px; position:relative;">
         <span class="close" style="position:absolute; top:10px; right:15px; cursor:pointer;">&times;</span>
-        <h2>Forum</h2>
+          <h2 id="forum-title" style="text-align:center; color:#fff; margin-bottom:20px;">Nouveau Titre du Forum</h2>
         <div id="forum-body">Chargement...</div>
         <div id="forume-body">Chargement...</div>
     </div>
@@ -609,7 +609,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     await initMaxPage(); // calcule maxPage une seule fois
     document.querySelector("#page span").textContent = 0;
   document.getElementById("prev").classList.add("hidden");
-    displayCars(0);
+   //displayCars(0);
     const userEmail = localStorage.getItem('userEmail');
 });
 
@@ -771,7 +771,7 @@ const translations = {
     'modal-contact': "Contacter le vendeur",
     'modal-buy': "Demander l'achat P2P",
     'titre-forum':"Bienvenue 👋 Vous pouvez suivre ici les discussions concernant le prix de cette voiture en toute transparence, en rappelant que la décision finale sur le prix revient au vendeur. Remarque : Toutes les conversations sont enregistrées et les participants sont identifiés, nous vous prions donc de faire preuve de sérieux et de respect. Merci pour votre coopération 🙏",
-    'modal-forume': "Forum de négociation",
+    'modal-forume': "Forum de négociation du prix",
     'modal-date': "Date de mise en ligne",
     'modal-marque': "Marque",
     'modal-modele': "Modèle",
@@ -936,7 +936,7 @@ const translations = {
     'modal-contact': "Contact seller",
     'modal-buy': "Request P2P purchase",
     'titre-forum':"Welcome 👋 You can follow the discussion about the price of this car here with full transparency, noting that the final decision on the price rests with the seller. Note: All conversations are recorded and participants are verified, so we kindly ask everyone to remain serious and respectful. Thank you for your cooperation 🙏",
-    'modal-forume': "Negotiation forum",
+    'modal-forume': "Price Negotiation Forum",
     'modal-date': "Online since",
     'modal-marque': "Brand",
     'modal-modele': "Model",
@@ -1102,7 +1102,7 @@ const translations = {
     'modal-contact': "اتصل بالبائع",
     'modal-buy': "طلب شراء P2P",
     'titre-forum':"مرحبًا بكم 👋 يمكنكم هنا متابعة النقاش حول ثمن هذه السيارة بكل شفافية، مع التأكيد أنّ القرار النهائي بشأن السعر يعود للبائع. تنويه: جميع الحوارات مسجَّلة والمشاركون موثَّقون، لذا نرجو من الجميع الالتزام بالجدّية والاحترام. شكرًا لتعاونكم ",
-    'modal-forume': "منتدى التفاوض",
+    'modal-forume': "منتدى التفاوض على السعر",
     'modal-date': "تاريخ النشر",
     'modal-marque': "الماركة",
     'modal-modele': "الموديل",
@@ -1122,6 +1122,7 @@ document.getElementById("lang-ar").addEventListener("click", ()=>setLang("ar"));
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
+  displayCars(0);
   document.documentElement.lang = lang;
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
   [
@@ -1473,7 +1474,7 @@ document.getElementById('send-btn').onclick = async function() {
 //////////////////////////////////////////////////////////
 const forum = document.getElementById("forum");
 const closeBtn = forum.querySelector(".close");
-
+document.getElementById("forum-title").innerText = translations[currentLang]['modal-forume'];
 // Vérifie que car et car.Ref existent
 const Ref = (typeof car !== "undefined" && car.Ref) ? car.Ref : null;
 if (!Ref) console.error("Ref n'est pas défini !");
