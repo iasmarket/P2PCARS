@@ -1563,38 +1563,42 @@ document.getElementById("buy-btn").onclick = function() {
 
 // Fermer la modale au clic sur "Confirmer"
 confirmBtn.onclick = function() {
-    if (userEmail===null){
-      alert("⚠️" + translations[currentLang]['noconect']);
-      return ;
-    }
-     
+  if (userEmail === null){
+    alert("⚠️" + translations[currentLang]['noconect']);
+    return;
+  }
 
-    fetch('https://apicars.p2p-cars.com/api/commande', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userEmail: userEmail,
-        selectedRef: selectedRef
-      })
+  fetch('https://apicars.p2p-cars.com/api/commande', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      userEmail: userEmail,
+      selectedRef: selectedRef
     })
-    .then(data => {
-      if (data.status === 'success') {
-        if (data.message === 'duplicate') { // <-- corrige ici
-          alert(translations[currentLang]['duplicate']);
-          return;
-        } else {
-          alert("✅ " + translations[currentLang]['commandeeffect']); // Affiche un message dans une popup
-        }
+  })
+  .then(response => response.json())  // <-- Important : convertir la réponse en JSON
+  .then(data => {
+    if (data.status === 'success') {
+      if (data.message === 'duplicate') {
+        alert(translations[currentLang]['duplicate']);
+        return;
+      } else {
+        alert("✅ " + translations[currentLang]['commandeeffect']);
       }
-    })
-    .catch(error => {
-      console.error('Erreur:', error);
-      alert("⚠️ " + translations[currentLang]['resauerreur']);
-    }); 
-        modalc.style.display = "none";
-    };
+    } else {
+      // Optionnel : gérer un statut autre que success
+      alert("⚠️ " + (data.message || translations[currentLang]['resauerreur']));
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    alert("⚠️ " + translations[currentLang]['resauerreur']);
+  }); 
+
+  modalc.style.display = "none";
+};
 
 // Fermer la modale au clic sur "Annuler"
 cancelBtn.onclick = function() {
