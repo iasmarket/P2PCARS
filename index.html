@@ -820,9 +820,11 @@ const translations = {
     'modal-buy': "Demander l'achat P2P",
     'titre-forum':"Bienvenue 👋 Vous pouvez suivre ici les discussions concernant le prix de cette voiture en toute transparence, en rappelant que la décision finale sur le prix revient au vendeur. Remarque : Toutes les conversations sont enregistrées et les participants sont identifiés, nous vous prions donc de faire preuve de sérieux et de respect. Merci pour votre coopération 🙏",
     'modal-forume': "Forum de négociation du prix",
+    'commandeeffect':"Commande reçue avec succès, veuillez accéder à votre profil pour la valider.",
     'msg-title':"Offre de prix",
+    'resauerreur':"Erreur du réseau, veuillez réessayer plus tard. Veuillez actualiser la page ou réessayer plus tard.",
     'commander':"En tant que titulaire du compte P2P-Cars associé à l’adresse e-mail :",
-    'noconect':'Vous n’êtes pas connecté. Veuillez vous connecter. <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">ici</a>',
+    'noconect':'Vous n’êtes pas connecté. Veuillez vous connecter. <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">ici-هنا</a>',
     'engagement':", j’exprime ma volonté d’acheter ce véhicule.",
     'commanderB':"Commander",
     'AnnulerB':"Annuler",
@@ -991,7 +993,9 @@ const translations = {
     'modal-buy': "Request P2P purchase",
     'titre-forum':"Welcome 👋 You can follow the discussion about the price of this car here with full transparency, noting that the final decision on the price rests with the seller. Note: All conversations are recorded and participants are verified, so we kindly ask everyone to remain serious and respectful. Thank you for your cooperation 🙏",
     'modal-forume': "Price Negotiation Forum",
+    'commandeeffect':"Order received successfully, please access your profile to validate it.",
     'msg-title':"Price offer",
+    'resauerreur':"Network error, please try again later. Please refresh the page or try again later.",
     'commander':"As the holder of the P2P-Cars account associated with the email address: ",
     'noconect':'You are not logged in. Please log in <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">here</a>',
     'engagement':", I express my intention to purchase this vehicle.",
@@ -1163,7 +1167,9 @@ const translations = {
     'modal-buy': "طلب شراء P2P",
     'titre-forum':"مرحبًا بكم 👋 يمكنكم هنا متابعة النقاش حول ثمن هذه السيارة بكل شفافية، مع التأكيد أنّ القرار النهائي بشأن السعر يعود للبائع. تنويه: جميع الحوارات مسجَّلة والمشاركون موثَّقون، لذا نرجو من الجميع الالتزام بالجدّية والاحترام. شكرًا لتعاونكم ",
     'modal-forume': "منتدى التفاوض على السعر",
+    'commandeeffect':"تم استلام الطلب بنجاح، يرجى الدخول إلى حسابك على المنصة من أجل تأكيده.",
     'msg-title':"عرض سعر",
+    'resauerreur':"خطأ في الشبكة، يرجى المحاولة لاحقًا. يرجى تحديث الصفحة أو المحاولة من جديد لاحقًا.",
     'commander':"بصفتي صاحب حساب P2P-Cars المرتبط بالبريد الإلكتروني:",
     'noconect':'أنت لست مسجّل الدخول. يرجى تسجيل الدخول <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">هنا</a>',
     'engagement':"، أعبّر عن رغبتي في شراء هذه السيارة.",
@@ -1554,9 +1560,32 @@ document.getElementById("buy-btn").onclick = function() {
 
 // Fermer la modale au clic sur "Confirmer"
 confirmBtn.onclick = function() {
-    console.log("Commande confirmée pour la référence :", selectedRef);
-    modalc.style.display = "none";
-};
+     alert("⚠️" + translations[currentLang]['noconect']);
+    fetch('https://apicars.p2p-cars.com/api/commande', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userEmail: userEmail,
+        selectedRef: selectedRef
+      })
+    })
+    .then(data => {
+      if (data.status === 'success') {
+        alert("✅ " + translations[currentLang]['commandeeffect']); // Affiche un message dans une popup
+        // ou afficher dans la page :
+        // document.getElementById("msg").innerText = data.message;
+      } else {
+        alert("⚠️ Erreur: " + translations[currentLang]['resauerreur']);
+      }
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      
+    }); 
+        modalc.style.display = "none";
+    };
 
 // Fermer la modale au clic sur "Annuler"
 cancelBtn.onclick = function() {
