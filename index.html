@@ -1581,15 +1581,17 @@ confirmBtn.onclick = function() {
     })
     .then(data => {
       if (data.status === 'success') {
-        alert("✅ " + translations[currentLang]['commandeeffect']); // Affiche un message dans une popup
-        // ou afficher dans la page :
-        // document.getElementById("msg").innerText = data.message;
-      } else if(data.status === 'duplicat'){
-        alert(translations[currentLang]['duplicate']);
+        if(data.message === 'duplicat'){
+          alert(translations[currentLang]['duplicate']);
+          return;
+        } else {
+          alert("✅ " + translations[currentLang]['commandeeffect']); // Affiche un message dans une popup
+        }
       }
     })
     .catch(error => {
       console.error('Erreur:', error);
+      alert("⚠️ Erreur: " + translations[currentLang]['resauerreur']);
       
     }); 
         modalc.style.display = "none";
