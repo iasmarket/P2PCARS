@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>P2P-CARS - Profil</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #3b82f6;
+      --blue-dark: #2563eb;
+      --bg-input: #1e293b;
+      --text: #e2e8f0;
+      --muted: rgba(226,232,240,0.85);
+      --error: #ff6b6b;
+      --success: #34d399;
+    }
+    body {
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
+                  url('arier.png') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    header {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 14px 10px 20px 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      gap: 40px;
+    }
+    header img { max-height: 110px; width: auto; object-fit: contain; transition: transform 0.3s; }
+    header img:hover { transform: scale(1.05);}
+    header .header-center { display: flex; flex-direction: column; align-items: center; text-align: center;}
+    header h1 { font-size: 2.4rem; font-weight: 700; color: var(--blue); margin-bottom: 0.3em;}
+    header .text-h { font-size: 1.1rem; color: var(--text); letter-spacing: 0.5px;}
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%; }
+      header h1 { font-size: 2rem;}
+    }
+    .navbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; margin-top: 1rem; }
+    .lang-btns { display: flex; gap: 0.5rem; align-items: center; }
+    .lang-btns button { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--blue); background: var(--bg-input); color: var(--blue);
+      font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; font-size: 1rem; }
+    .lang-btns button.active, .lang-btns button:hover { background: var(--blue); color: #fff; }
+    .home-btn { margin-left: 0.7rem; background: #fff; color: #1e293b; border-radius: 20px; padding: 8px 16px; border: none; font-weight: 600;
+      font-size: 1rem; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.07); transition: background 0.2s, color 0.2s; }
+    .home-btn:hover { background: var(--blue); color: #fff; }
+    h1 { color: var(--blue); }
+    /* Table container for mobile scroll */
+    .table-container { width: 100%; overflow-x: auto; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.92rem; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden; min-width:600px;}
+    th, td { padding:8px 10px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; vertical-align:top; }
+    th { background: rgba(59,130,246,0.12); color:#fff; font-weight:600; }
+    tr:hover { background: rgba(59,130,246,0.06); }
+    .icon-btn { cursor:pointer; color:#ff6b6b; font-size:1rem; }
+    .icon-btn:hover { color:#ff0000; }
+    footer { background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 16px; text-align: center; color: #94a3b8; font-size: 0.9rem; margin-top: auto; box-shadow: 0 -2px 10px rgba(0,0,0,0.25);}
+    /* Responsive mobile: affichage vertical, scroll horizontal tableau, texte réduit */
+    @media (max-width: 600px) {
+      body { padding: 4px;}
+      h1 { font-size: 1.18rem;}
+      .navbar { flex-direction: column; gap: 0.5rem;}
+      .home-btn { margin-left: 0;}
+      .table-container { padding-bottom: 12px; }
+      table { font-size: 0.74rem; min-width: 500px;}
+      th, td { padding: 4px 6px;}
+      .icon-btn { font-size: 0.93rem;}
+    }
+    @media (max-width: 420px) {
+      th, td { padding: 2px 2px;}
+      table { font-size: 0.67rem; min-width: 400px;}
+    }
+    /* Conteneur du menu centré */
+  .navbar {
+    display: flex;
+    justify-content: center;  /* Centre horizontalement */
+    align-items: center;
+    gap: 1rem;
+    margin: 20px 0;
+    flex-wrap: wrap; /* permet de passer en ligne suivante sur mobile */
+  }
+
+  /* Boutons principaux du menu */
+  .menu-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 26px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  .menu-btn:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+  }
+
+  /* Bouton Accueil spécial avec icône */
+  .home-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue);
+    color: #fff !important;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  .home-btn:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+  }
+
+  /* Boutons langues modernisés */
+  .lang-btns {
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  .lang-btns button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-input);
+    color: var(--blue);
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+  }
+
+  .lang-btns button.active,
+  .lang-btns button:hover {
+    background: var(--blue);
+    color: #fff;
+    transform: scale(1.1);
+  }
+  /* Conteneur des onglets centré */
+  .tablist {
+    display: flex;
+    justify-content: center;  /* Centre horizontalement */
+    align-items: center;
+    gap: 1rem;
+    margin: 25px 0;
+    flex-wrap: wrap; /* Passe en ligne suivante si petit écran */
+  }
+
+  /* Style des onglets */
+  .tablist button[role="tab"] {
+    background: var(--bg-input);
+    color: var(--text);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  /* Onglet actif (sélectionné) */
+  .tablist button[role="tab"][aria-selected="true"] {
+    background: var(--blue);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* Effet hover */
+  .tablist button[role="tab"]:hover {
+    background: var(--blue-dark);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo1.png" alt="Logo société mère">
+    <div class="header-center">
+      <h1>P2P-CARS</h1>
+      <p class="text-h">Plateforme de Voitures d'Occasion</p>
+    </div>
+    <img src="logo4.png" alt="Logo plateforme">
+  </header>
+
+  <div class="navbar">
+    <a href="/" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
+    <button id="logoutBtn" class="menu-btn">Déconnexion</button>
+    <div class="lang-btns">
+      <button id="lang-fr">FR</button>
+      <button id="lang-en">EN</button>
+      <button id="lang-ar">AR</button>
+    </div>
+  </div>
+
+  <main>
+    <h1 id="profile-title">Mon Espace Privé</h1>
+    <p class="lead">Espace personnel pour gérer vos commandes, vos informations et vos négociations de prix.</p>
+    
+    <div>
+      <span id="connected-label">Connecté en tant que :</span>
+      <span id="emailDisplay"></span>
+      <button id="logoutBtn" style="margin-left:20px;"></button>
+    </div>
+    <div id="message" style="margin-top: 10px;"></div>
+    <div class="tabs" id="tabs-exemple">
+      <div class="tablist" role="tablist" aria-label="Onglets principaux">
+        <button role="tab" id="tab-accueil" aria-controls="panel-accueil" aria-selected="true">Accueil</button>
+        <button role="tab" id="tab-services" aria-controls="panel-services" aria-selected="false" tabindex="-1">Services</button>
+        <button role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1">Contact</button>
+      </div>
+
+
+      <div class="panels">
+        <section id="panel-accueil" role="tabpanel" aria-labelledby="tab-accueil">
+          <section id="results" style="display:none; margin-top: 20px;" role="tabpanel" aria-labelledby="tab-accueil">
+            <h2 id="title-annonces">Demandes de publication</h2>
+            <div class="table-container"><table id="table-annonces"></table></div>
+            <h2 id="title-achats">Demandes d'achats</h2>
+            <div class="table-container"><table id="table-achats"></table></div>
+            <h2 id="title-recherches">demandes de Recherches</h2>
+            <div class="table-container"><table id="table-recherches"></table></div>
+          </section>
+        </section>
+
+        <section id="panel-services" role="tabpanel" aria-labelledby="tab-services" hidden>
+          <h2>Nos services</h2>
+          <ul>
+            <li>Conception web moderne</li>
+            <li>Intégration responsive</li>
+            <li>Audit d'accessibilité</li>
+          </ul>
+        </section>
+
+        <section id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" hidden>
+          <h2>Contact</h2>
+          <p>Écrivez-nous à <a href="mailto:contact@example.com">contact@example.com</a> ou via les réseaux sociaux.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer>
+    &copy; 2025 IASMarket Services. Tous droits réservés.
+  </footer>
+
+  <!-- Script onglets -->
+  <script>
+    (function () {
+      const tablist = document.querySelector('[role="tablist"]');
+      const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+      const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+
+      function activateTab(tab, focus = true) {
+        tabs.forEach(t => {
+          t.setAttribute('aria-selected', 'false');
+          t.setAttribute('tabindex', '-1');
+        });
+        panels.forEach(p => p.hidden = true);
+
+        tab.setAttribute('aria-selected', 'true');
+        tab.removeAttribute('tabindex');
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        panel.hidden = false;
+        if (focus) tab.focus();
+      }
+
+      tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab, false)));
+
+      tablist.addEventListener('keydown', (e) => {
+        const currentIndex = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+        let nextIndex = null;
+        switch (e.key) {
+          case 'ArrowRight': nextIndex = (currentIndex + 1) % tabs.length; break;
+          case 'ArrowLeft': nextIndex = (currentIndex - 1 + tabs.length) % tabs.length; break;
+          case 'Home': nextIndex = 0; break;
+          case 'End': nextIndex = tabs.length - 1; break;
+          case 'Enter':
+          case ' ': activateTab(tabs[currentIndex]); e.preventDefault(); return;
+        }
+        if (nextIndex !== null) { tabs[nextIndex].focus(); e.preventDefault(); }
+      });
+    })();
+  </script>
+
+  <!-- Script multilangue + API -->
+  <script>
+    /* === ton script de traduction + API ici === */
+  </script>
+</body>
+</html>
