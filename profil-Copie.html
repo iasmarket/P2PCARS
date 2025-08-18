@@ -727,7 +727,7 @@ function afficherForums(data) {
                 Prix: ${forum.voiture.prix}<br>
                 Carburant: ${forum.voiture.carburant}<br>
                 Description: ${forum.voiture.description || ''}<br>
-                ${forum.voiture.image ? `<img src="${forum.voiture.image}" alt="voiture" style="max-width:100px; display:block;">` : ''}
+                ${forum.voiture.image ? `<img src="https://p2p-cars.com/datatof/${forum.voiture.image}" alt="voiture" style="max-width:100px; display:block;">` : ''}
             `;
         } else {
             rightDiv.textContent = "Aucune info voiture";
@@ -757,3 +757,4 @@ function afficherForums(data) {
 </script>
 </body>
 </html>
+
