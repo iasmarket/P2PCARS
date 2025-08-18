@@ -687,7 +687,12 @@ function afficherForums(data) {
 
         const discussion = document.createElement("div");
         discussion.className = "forum-discussion";
-        discussion.innerHTML = forum.messages.map(m => `<div>${m}</div>`).join("");
+
+        if (Array.isArray(forum.messages)) {
+            discussion.innerHTML = forum.messages
+                .map(m => `<div>${m.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>`)
+                .join("");
+        }
 
         const messageDiv = document.createElement("div");
         messageDiv.className = "forum-message";
@@ -713,11 +718,23 @@ function afficherForums(data) {
         // Partie droite : infos voiture
         const rightDiv = document.createElement("div");
         rightDiv.className = "forum-right";
-        rightDiv.textContent = forum.voiture;
+
+        if (forum.voiture) {
+            rightDiv.innerHTML = `
+                <strong>${forum.voiture.marque} ${forum.voiture.modele}</strong><br>
+                Année: ${forum.voiture.annee}<br>
+                CV: ${forum.voiture.cv}<br>
+                Prix: ${forum.voiture.prix}<br>
+                Carburant: ${forum.voiture.carburant}<br>
+                Description: ${forum.voiture.description || ''}<br>
+                ${forum.voiture.image ? `<img src="${forum.voiture.image}" alt="voiture" style="max-width:100px; display:block;">` : ''}
+            `;
+        } else {
+            rightDiv.textContent = "Aucune info voiture";
+        }
 
         forumDiv.appendChild(leftDiv);
         forumDiv.appendChild(rightDiv);
-
         panel.appendChild(forumDiv);
 
         // Séparateur sauf après le dernier forum
