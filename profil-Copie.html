@@ -218,7 +218,7 @@
 
   <main>
     <h1 id="profile-title">Mon Espace Privé</h1>
-    <p class="lead">Espace personnel pour gérer vos commandes, vos informations et vos négociations de prix.</p>
+    <p id= "clas" class="lead">Espace personnel pour gérer vos commandes, vos informations et vos négociations de prix.</p>
     
     <div>
       <span id="connected-label">Connecté en tant que :</span>
@@ -228,15 +228,16 @@
     <div id="message" style="margin-top: 10px;"></div>
     <div class="tabs" id="tabs-exemple">
       <div class="tablist" role="tablist" aria-label="Onglets principaux">
-        <button role="tab" id="tab-accueil" aria-controls="panel-accueil" aria-selected="true">Accueil</button>
-        <button role="tab" id="tab-services" aria-controls="panel-services" aria-selected="false" tabindex="-1">Services</button>
-        <button role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="false" tabindex="-1">Contact</button>
+        <button role="tab" id="tab-demandes" aria-controls="panel-accueil" aria-selected="true"></button>
+        <button role="tab" id="tab-negoce" aria-controls="panel-services" aria-selected="false" tabindex="-1"></button>
+        <button role="tab" id="tab-infopers" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
+        <button role="tab" id="tabcontactnous" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
       </div>
 
 
       <div class="panels">
-        <section id="panel-accueil" role="tabpanel" aria-labelledby="tab-accueil">
-          <section id="results" style="display:none; margin-top: 20px;" role="tabpanel" aria-labelledby="tab-accueil">
+        <section id="panel-accueil" role="tabpanel" aria-labelledby="tab-demandes">
+          <section id="results" style="display:none; margin-top: 20px;" role="tabpanel" aria-labelledby="tab-demandes">
             <h2 id="title-annonces">Demandes de publication</h2>
             <div class="table-container"><table id="table-annonces"></table></div>
             <h2 id="title-achats">Demandes d'achats</h2>
@@ -246,7 +247,7 @@
           </section>
         </section>
 
-        <section id="panel-services" role="tabpanel" aria-labelledby="tab-services" hidden>
+        <section id="panel-services" role="tabpanel" aria-labelledby="tab-negoce" hidden>
           <h2>Nos services</h2>
           <ul>
             <li>Conception web moderne</li>
@@ -255,7 +256,7 @@
           </ul>
         </section>
 
-        <section id="panel-contact" role="tabpanel" aria-labelledby="tab-contact" hidden>
+        <section id="panel-contact" role="tabpanel" aria-labelledby="tab-infopers" hidden>
           <h2>Contact</h2>
           <p>Écrivez-nous à <a href="mailto:contact@example.com">contact@example.com</a> ou via les réseaux sociaux.</p>
         </section>
@@ -310,7 +311,12 @@
     // Traductions multilangue
     const translations = {
       fr: {
-        'profile-title': "Profil utilisateur",
+        'profile-title': "Mon Espace Privé",
+        'DEMANDES':"DEMANDES",
+        'contacter':"Contactez-nous",
+        'infoperso':"Informations personnelles",
+        'Négociation':"Négociation",
+        'clas':"Espace personnel pour gérer vos commandes, vos informations et vos négociations de prix.",
         'connected-label': "Connecté en tant que :",
         'logoutBtn': "Déconnexion",
         'home': "Accueil",
@@ -329,7 +335,12 @@
         'not-connected': "Non connecté"
       },
       en: {
-        'profile-title': "User profile",
+        'profile-title': "My Private Space",
+        'DEMANDES':"Requests",
+        'contacter':"Contactez-nous",
+        'infoperso':"Informations personnelles",
+        'Négociation':"Negotiation",
+        'clas':"Personal space to manage your orders, your information, and your price negotiations.",
         'connected-label': "Logged in as:",
         'logoutBtn': "Logout",
         'home': "Home",
@@ -348,7 +359,12 @@
         'not-connected': "Not connected"
       },
       ar: {
-        'profile-title': "ملف المستخدم",
+        'profile-title': "مساحتي الخاصة",
+        'Négociation':"تفاوض",
+        'contacter':"اتصل بنا",
+        'infoperso':"المعلومات الشخصية",
+        'DEMANDES':"الطلبات",
+        'clas':"مساحتك الشخصية لإدارة طلباتك، ومعلوماتك، ومفاوضات الأسعار الخاصة بك.",
         'connected-label': "متصل باسم:",
         'logoutBtn': "تسجيل الخروج",
         'home': "الرئيسية",
@@ -372,6 +388,12 @@
       currentLang = lang;
       document.documentElement.lang = lang;
       document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
+      document.getElementById("tab-demandes").textContent = translations[lang]['DEMANDES'];
+      document.getElementById( 'tab-negoce').textContent = translations[lang]['Négociation'];
+      document.getElementById( 'tab-infopers').textContent = translations[lang]['infoperso'];
+      document.getElementById( 'tabcontactnous').textContent = translations[lang]['contacter'];
+      
+      document.getElementById('clas').textContent = translations[lang]['clas'];
       document.getElementById('profile-title').textContent = translations[lang]['profile-title'];
       document.getElementById('connected-label').textContent = translations[lang]['connected-label'];
       document.getElementById('logoutBtn').textContent = translations[lang]['logoutBtn'];
