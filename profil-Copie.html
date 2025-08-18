@@ -193,7 +193,53 @@
     color: #fff;
     transform: translateY(-2px);
   }
+.forum {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
 
+.forum-left {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.forum-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.forum-discussion {
+    height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.forum-message {
+    display: flex;
+    gap: 5px;
+}
+
+.forum-message textarea {
+    flex: 1;
+    height: 50px;
+}
+
+.forum-right {
+    width: 200px;
+    border: 1px solid #aaa;
+    padding: 10px;
+    text-align: left;
+}
+
+.separator {
+    border-bottom: 3px solid #000;
+    margin: 20px 0;
+}
   </style>
 </head>
 <body>
@@ -228,15 +274,15 @@
     <div id="message" style="margin-top: 10px;"></div>
     <div class="tabs" id="tabs-exemple">
       <div class="tablist" role="tablist" aria-label="Onglets principaux">
-        <button role="tab" id="tab-demandes" aria-controls="panel-accueil" aria-selected="true"></button>
-        <button role="tab" id="tab-negoce" aria-controls="panel-services" aria-selected="false" tabindex="-1"></button>
+        <button role="tab" id="tab-demandes" aria-controls="panel-demandes" aria-selected="true"></button>
+        <button role="tab" id="tab-negoce" aria-controls="panel-negoce" aria-selected="false" tabindex="-1"></button>
         <button role="tab" id="tab-infopers" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
         <button role="tab" id="tabcontactnous" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
       </div>
 
 
       <div class="panels">
-        <section id="panel-accueil" role="tabpanel" aria-labelledby="tab-demandes">
+        <section id="panel-demandes" role="tabpanel" aria-labelledby="tab-demandes">
           <section id="results" style="display:none; margin-top: 20px;" role="tabpanel" aria-labelledby="tab-demandes">
             <h2 id="title-annonces">Demandes de publication</h2>
             <div class="table-container"><table id="table-annonces"></table></div>
@@ -247,13 +293,8 @@
           </section>
         </section>
 
-        <section id="panel-services" role="tabpanel" aria-labelledby="tab-negoce" hidden>
-          <h2>Nos services</h2>
-          <ul>
-            <li>Conception web moderne</li>
-            <li>Intégration responsive</li>
-            <li>Audit d'accessibilité</li>
-          </ul>
+        <section id="panel-negoce" role="tabpanel" aria-labelledby="tab-negoce" hidden>
+
         </section>
 
         <section id="panel-contact" role="tabpanel" aria-labelledby="tab-infopers" hidden>
@@ -269,6 +310,7 @@
 
   <!-- Script onglets -->
   <script>
+    const userEmail = localStorage.getItem('userEmail');
     (function () {
       const tablist = document.querySelector('[role="tablist"]');
       const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
@@ -567,5 +609,134 @@
       });
     })();
   </script>
+
+  <script>
+    document.getElementById('tab-negoce').addEventListener('click', async function() {
+    // Récupère le userId depuis l'attribut data-userid
+    const userId = this.getAttribute('data-userid');
+
+    try {
+        // Envoie du userId via POST (ou GET selon ton API)
+        const response = await fetch('https://apicars.p2p-cars.com/api/userforumes', {
+            method: 'POST', // ou 'GET'
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userEmail }) // pour POST
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Réponse de l\'API:', data);
+        // Ici tu peux faire ce que tu veux avec les données
+    } catch (error) {
+        console.error('Erreur lors de l\'appel API:', error);
+    }
+});
+
+
+document.getElementById('tab-negoce').addEventListener('click', async function() {
+    // Récupère le userId depuis l'attribut data-userid
+    const userId = userEmail;
+
+    try {
+        // Envoie du userId via POST (ou GET selon ton API)
+        const response = await fetch('https://apicars.p2p-cars.com/api/userforums', {
+            method: 'POST', // ou 'GET'
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId }) // pour POST
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+
+        const data = await response.json();
+        afficherForums(data);
+        // Ici tu peux faire ce que tu veux avec les données
+
+    } catch (error) {
+        console.error('Erreur lors de l\'appel API:', error);
+    }
+});
+
+// Exemple de données reçues du serveur
+
+
+// Fonction pour créer les forums
+function afficherForums(data) {
+    const panel = document.getElementById("panel-negoce");
+    panel.innerHTML = ""; // vider avant d'ajouter
+
+    data.forEach((forum, index) => {
+        const forumDiv = document.createElement("div");
+        forumDiv.className = "forum";
+
+        // Partie gauche : titre, discussion, zone message
+        const leftDiv = document.createElement("div");
+        leftDiv.className = "forum-left";
+
+        const title = document.createElement("div");
+        title.className = "forum-title";
+        title.textContent = forum.title;
+
+        const discussion = document.createElement("div");
+        discussion.className = "forum-discussion";
+        discussion.innerHTML = forum.messages.map(m => `<div>${m}</div>`).join("");
+
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "forum-message";
+        const textarea = document.createElement("textarea");
+        const sendBtn = document.createElement("button");
+        sendBtn.textContent = "Envoyer";
+        sendBtn.onclick = () => {
+            const msg = textarea.value.trim();
+            if (msg) {
+                const newMsg = document.createElement("div");
+                newMsg.textContent = msg;
+                discussion.appendChild(newMsg);
+                textarea.value = "";
+            }
+        };
+        messageDiv.appendChild(textarea);
+        messageDiv.appendChild(sendBtn);
+
+        leftDiv.appendChild(title);
+        leftDiv.appendChild(discussion);
+        leftDiv.appendChild(messageDiv);
+
+        // Partie droite : infos voiture
+        const rightDiv = document.createElement("div");
+        rightDiv.className = "forum-right";
+        rightDiv.textContent = forum.voiture;
+
+        forumDiv.appendChild(leftDiv);
+        forumDiv.appendChild(rightDiv);
+
+        panel.appendChild(forumDiv);
+
+        // Séparateur sauf après le dernier forum
+        if (index < data.length - 1) {
+            const sep = document.createElement("div");
+            sep.className = "separator";
+            panel.appendChild(sep);
+        }
+    });
+
+    panel.hidden = false; // afficher la section
+}
+
+// Appel après fetch
+// fetch("url_du_serveur")
+//   .then(res => res.json())
+//   .then(data => afficherForums(data));
+
+//afficherForums(forumsData); // test avec données exemple
+</script>
 </body>
 </html>
