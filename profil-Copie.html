@@ -718,20 +718,44 @@ function afficherForums(data) {
         // Partie droite : infos voiture
         const rightDiv = document.createElement("div");
         rightDiv.className = "forum-right";
+if (forum.voiture) {
+    rightDiv.innerHTML = `
+        <div style="
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden;
+            border-radius: 8px;
+        ">
+            ${forum.voiture.image 
+                ? `<img src="https://p2p-cars.com/${forum.voiture.image.replace(/\\/g, '/')}" 
+                       alt="voiture" 
+                       style="width:100%; height:100%; object-fit:cover; display:block;">` 
+                : ''}
 
-        if (forum.voiture) {
-            rightDiv.innerHTML = `
-                <strong>${forum.voiture.marque} ${forum.voiture.modele}</strong><br>
-                Année: ${forum.voiture.annee}<br>
-                CV: ${forum.voiture.cv}<br>
-                Prix: ${forum.voiture.prix}<br>
-                Carburant: ${forum.voiture.carburant}<br>
-                Description: ${forum.voiture.description || ''}<br>
-                ${forum.voiture.image ? `<img src="https://p2p-cars.com/${forum.voiture.image.replace(/\\/g, '/')}" alt="voiture" style="max-width:100px; display:block;">` : ''}
-            `;
-        } else {
-            rightDiv.textContent = "Aucune info voiture";
-        }
+            <div style="
+                position: absolute; 
+                bottom: 0; 
+                left: 0; 
+                width: 100%; 
+                background: rgba(0,0,0,0.5); 
+                color: yellow; 
+                font-weight: bold; 
+                padding: 8px; 
+                font-size: 14px;
+            ">
+                ${forum.voiture.marque} ${forum.voiture.modele},
+                Année: ${forum.voiture.annee},
+                CV: ${forum.voiture.cv},
+                Prix: ${forum.voiture.prix},
+                Carburant: ${forum.voiture.carburant},
+                ${forum.voiture.description || ''}
+            </div>
+        </div>
+    `;
+} else {
+    rightDiv.textContent = "Aucune info voiture";
+}
 
         forumDiv.appendChild(leftDiv);
         forumDiv.appendChild(rightDiv);
