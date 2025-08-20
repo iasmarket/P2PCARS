@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P2P-CARS - Plateforme Voitures d'Occasion</title>
+  <title>P2P-CARS - Trouvez Votre Voiture d'Occasion Idéale</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <style>
     body {
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.301), rgba(30, 41, 59, 0.247)),
+      background: linear-gradient(to bottom, rgba(9, 31, 82, 0.192), rgba(1, 9, 20, 0.171)),
       url('arier.png') no-repeat center center fixed;
       background-size: cover;
       color: #e2e8f0;
       font-family: 'Poppins', sans-serif;
-      margin: 0;
+      min-height: 100vh;
       padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
     }
     header {
       background: rgba(255,255,255,0.07);
@@ -44,13 +48,17 @@
     header h1 {
       font-size: 2.4rem;
       font-weight: 700;
-      color: #3b82f6;
+      color: #e98a1e;
       margin-bottom: 0.3em;
     }
     header .text-h {
       font-size: 1.1rem;
-      color: #e2e8f0;
+      color: #effafa;
       letter-spacing: 0.5px;
+    }
+    @media (max-width: 750px) {
+      header { flex-direction: column; gap: 12px;}
+      header img { max-width: 70%;}
     }
     .navbar {
       display: flex;
@@ -90,90 +98,395 @@
       text-decoration: none;
       box-shadow: 0 2px 4px rgba(0,0,0,0.07);
       transition: background 0.2s, color 0.2s;
-      display: flex; align-items: center; gap: 7px;
     }
     .home-btn:hover { background: #3b82f6; color: #fff;}
-    .form-switcher {
+    footer {
+      text-align:center;
+      margin: 20px 0 0 0;
+      color: #e2e8f0;
+      background: rgba(255,255,255,0.06);
+      border-radius: 15px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      padding: 16px;
+      font-size: 0.97rem;
+    }
+    .header-nav {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 12px;
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      margin-top: 8px;
-    }
-    .form-switcher button {
-      background: #1e293b;
-      color: #3b82f6;
-      border: 2px solid #3b82f6;
-      border-radius: 7px;
-      padding: 8px 17px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s, color 0.3s;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .form-switcher button.active,
-    .form-switcher button:hover { background: #3b82f6; color: #fff;}
-    .form-section {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(11px);
-      border-radius: 15px;
-      max-width: 720px;
-      margin: auto;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.20);
-      padding: 34px 22px;
+      flex-wrap: wrap;
+      gap: 15px;
       margin-bottom: 30px;
-      display: none;
-      flex-direction: column;
     }
-    .form-section.active { display: flex;}
-    .form-section h2 { font-size: 1.5rem; color: #3b82f6; margin-bottom: 10px; text-align: center;}
-    .form-section .intro { font-size: 1.07rem; margin-bottom: 22px; color: #e0e9f7; text-align: center;}
-    form label { font-weight: 500; margin-bottom: 3px;}
-    form input, form select, form textarea {
-      width: 100%;
+    .header-nav a {
+      color: #3bf6e6;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    .header-nav a:hover {
+      background: rgba(115, 59, 246, 0.562);
+    }
+    .welcome-section {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      padding: 40px 30px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      margin-bottom: 30px;
+      transition: transform 0.3s ease;
+    }
+    .welcome-section:hover {
+      transform: translateY(-5px);
+    }
+    .welcome-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 15px;
+    }
+    .welcome-section p {
+      font-size: 1.2rem;
+      color: #eaecf0;
+      margin-bottom: 25px;
+    }
+    .welcome-section button {
+      background: #3b82f6;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .welcome-section button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+.filters {
+  background: rgba(19, 18, 18, 0.644);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+  color: #e2e8f0;
+  align-items: start;
+}
+    .filters label {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .filters input,
+    .filters select {
       padding: 10px;
-      margin-bottom: 12px;
       background: #1e293b;
       color: #e2e8f0;
-      border: 1px solid #334155;
-      border-radius: 7px;
-      font-size: 1rem;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      font-size: 0.95rem;
     }
-    form textarea { min-height: 55px; }
-    form input[type="file"] { background: transparent; border: none; color: #e2e8f0;}
-    form button[type="submit"] {
-      background: #3b82f6; color: #fff; border: none; border-radius: 7px;
-      font-size: 1.1rem; font-weight: 600; padding: 10px 25px;
-      cursor: pointer; margin-top: 10px;
+    .filters input:focus,
+    .filters select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    .car-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    .car {
+      background: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+    .car:hover {
+      transform: scale(1.02);
+    }
+    .car img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .car-details {
+      padding: 20px;
+    }
+    .car h3 {
+      font-size: 1.4rem;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .car p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .car button {
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .car button:hover {
+      background: #2563eb;
+    }
+    /* Modal styles */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.3s;
+    }
+    .modal {
+      background: #1e293b;
+      border-radius: 18px;
+      max-width: 800px;
+      width: 97vw;
+      max-height: 95vh;
+      overflow-y: auto;
+      padding: 30px 24px 20px 24px;
+      position: relative;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #f87171;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+    .modal-images {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+    .modal-images img {
+      height: 160px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+      object-fit: cover;
+      background: #222;
+    }
+    .modal-details {
+      margin-bottom: 18px;
+    }
+    .modal-details p {
+      margin: 6px 0;
+      font-size: 1.08rem;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    .modal-actions button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
       transition: background 0.3s;
     }
-    form button[type="submit"]:hover { background: #2563eb;}
-    #result { text-align: center; margin-top: 14px; font-weight: 600;}
-    footer {
-      text-align:center; margin: 20px 0; color: #e2e8f0;
+    .modal-actions button:hover {
+      background: #2563eb;
+    }
+    @media (max-width: 768px) {
+      header { flex-direction: column; text-align: center;}
+      header img { max-width: 68%;}
+      .header-nav { flex-direction: column; gap: 10px;}
+      .filters { grid-template-columns: 1fr; }
+      .car img { height: 160px; }
+      .modal { padding: 15px 7px 10px 7px; }
+      .modal-actions button { padding: 10px 8px; font-size: 1rem;}
+    }
+    #modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal {
+      background: rgba(42, 7, 82, 0.466);
+      padding: 20px;
+      max-width: 800px;
+      width: 90%;
+      border-radius: 10px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-images img {
+      max-width: 100%;
+      margin: 5px 0;
+    }
+    .swiper {
+      width: 100%;
+      height: 400px;
+    }
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    /* ----------- Responsive Mobile ------------ */
-    @media (max-width: 750px) {
-      header { flex-direction: column; gap: 12px; padding: 10px 4px; margin: 8px 2px 12px 2px;}
-      header img { max-width: 68%; max-height: 70px;}
-      header h1 { font-size: 1.45rem;}
-      .form-section { padding: 13px 5px;}
-      .navbar { flex-direction: column; gap: 7px; margin-bottom: 0.5rem; margin-top: 0.5rem;}
-      .home-btn { width: 100%; font-size: 1.07rem; margin-left: 0; padding: 10px 0; border-radius: 7px;}
-      .lang-btns button { width: 30px; height: 30px; font-size: 0.95rem;}
-      .form-switcher { flex-direction: column; gap: 7px;}
-      .form-switcher button { width: 100%; font-size: 1rem; padding: 10px 0;}
-      form input, form select, form textarea { font-size: 1rem; padding: 10px 5px;}
-      footer { font-size: 0.95rem; margin: 10px 0;}
+    /* Actions */
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
     }
-    @media (max-width: 480px) {
-      header h1 { font-size: 1.2rem;}
-      header .text-h { font-size: 0.98rem;}
-      .form-section { padding: 6px 2px; max-width: 100%; box-shadow: none; border-radius: 0;}
-      .form-switcher button { font-size: 0.98rem;}
-      form input, form select, form textarea { font-size: 0.98rem;}
+       main {
+        flex: 1;
+        padding: 40px;
+        color: white;
     }
+
+    /* Conteneur pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+    }
+
+    .btn-circle {
+        position: relative;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .btn-circle:hover {
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    .btn-circle:active::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 255, 255, 0.4);
+        border-radius: 50%;
+        animation: ripple 0.5s ease;
+    }
+
+    @keyframes ripple {
+        from { transform: scale(0); opacity: 0.8; }
+        to { transform: scale(2); opacity: 0; }
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .hidden {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+    }
+
+    footer {
+        background: rgba(255,255,255,0.05);
+        text-align: center;
+        padding: 20px;
+        color: white;
+    }
+#forum {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background: #fcfafa88;
+    width: 80%;
+    height: 90%;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+#forum-body {
+    flex: 1;
+    white-space: pre-wrap;
+    font-family: monospace;
+    overflow: auto;
+  }
   </style>
 </head>
 <body>
@@ -185,657 +498,534 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
-
 <div class="navbar">
   <div class="lang-btns">
-    <button id="lang-fr" onclick="setLang('fr')" aria-label="Français">FR</button>
-    <button id="lang-en" onclick="setLang('en')" aria-label="English">EN</button>
-    <button id="lang-ar" onclick="setLang('ar')" aria-label="العربية">AR</button>
+    <button id="lang-fr" aria-label="Français">FR</button>
+    <button id="lang-en" aria-label="English">EN</button>
+    <button id="lang-ar" aria-label="العربية">AR</button>
   </div>
   <a href="https://p2p-cars.com" class="home-btn"><i class="fas fa-home"></i> Accueil</a>
 </div>
+<nav class="header-nav">
+  <a href="https://p2p-cars.com" id="nav-accueil">Accueil</a>
+  <a href="https://p2p-cars.com/esprix" id="nav-simulateur">Simulateur Prix</a>
+  <a href="https://p2p-cars.com/carservices" id="nav-services">Services P2P-Cars</a>
+  <a href="https://p2p-cars.com/login" id="nav-login">Espace personnel </a>
+</nav>
+<section class="welcome-section" id="welcome-section">
+  <h2 id="welcome-title">Bienvenue sur P2P-CARS</h2>
+  <p id="welcome-desc">Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins...</p>
+  <button id="btn">Envoyer une demande</button>
+</section>
+<section class="filters">
+  <label for="search" id="filter-search-label">Rechercher:</label>
+  <input type="text" id="search" placeholder="Rechercher...">
+  <label for="marque" id="filter-marque-label">Marque:</label>
+  <select id="marque"></select>
+  <label for="modele" id="filter-modele-label">Modèle:</label>
+  <select id="modele"></select>
+  <label for="annee" id="filter-annee-label">Année:</label>
+  <select id="annee"></select>
+  <label for="kilometrage" id="filter-kilometrage-label">Kilométrage max:</label>
+  <input type="number" id="kilometrage" placeholder="Kilométrage max">
+  <label for="carburant" id="filter-carburant-label">Carburant:</label>
+  <select id="carburant"></select>
+  <label for="puissance" id="filter-puissance-label">Puissance max (CV):</label>
+  <input type="number" id="puissance" placeholder="Puissance max (CV)">
+  <label for="ville" id="filter-ville-label">Ville:</label>
+  <select id="ville"></select>
+  <button id="reset-filters" style="grid-column: span 2; background:#e98a1e; color:#fff; border:none; border-radius:8px; padding:10px 20px; font-weight:600; cursor:pointer;">Réinitialiser</button>
+</section>
+<section class="car-list" id="carList">
+  <!-- Car listings will be dynamically added here -->
+</section>
+<div class="pagination">
+    <button id="prev" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
 
-<div class="form-switcher">
-  <button id="btn-vendre" class="active" onclick="showForm('vendre')"><i class="fas fa-bullhorn"></i> <span id="t-vendre">Vendre sa voiture</span></button>
-  <button id="btn-achat" onclick="showForm('achat')"><i class="fas fa-cart-plus"></i> <span id="t-achat">Demander l'achat</span></button>
-  <button id="btn-chercher" onclick="showForm('chercher')"><i class="fas fa-search"></i> <span id="t-chercher">Chercher une voiture</span></button>
+    <button id="page" class="btn-circle">
+        <span>0</span>
+    </button>
+
+    <button id="next" class="btn-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+    </button>
 </div>
-
-<section id="form-vendre" class="form-section active">
-  <h2 id="titre-vendre"></h2>
-  <div class="intro" id="intro-vendre"></div>
-  <form id="annonceForm" enctype="multipart/form-data" autocomplete="off">
-    <label id="lbl-marque-v"></label>
-    <select name="marque" id="marque-v" required></select>
-    <label id="lbl-modele-v"></label>
-    <select name="modele" id="modele-v" required><option value="">--</option></select>
-    <label id="lbl-annee-v"></label>
-    <select name="annee" id="annee-v" required></select>
-    <label id="lbl-puissancefiscal-v"></label>
-    <input name="puissancefiscal" type="number" required min="0">
-    <label id="lbl-prix-v"></label>
-    <input name="prix" type="number" required min="0">
-    <label id="lbl-kilometrage-v"></label>
-    <input name="kilometrage" type="number" required min="0">
-    <label id="lbl-carburant-v"></label>
-    <select name="carburant" id="carburant-v" required></select>
-    <label id="lbl-transmission-v"></label>
-    <select name="transmission" id="transmission-v" required></select>
-    <label id="lbl-description-v"></label>
-    <textarea name="description" required></textarea>
-    <label id="lbl-email-v"></label>
-    <input name="email" type="email" required autocomplete="off">
-    <label id="lbl-phone-v"></label>
-    <input name="telephone" type="tel" required>
-    <label id="lbl-cin-v"></label>
-    <input name="cin" type="text" required>
-        <label id="lbl-ville-v"></label>
-    <select name="ville" id="ville-v" required><option value="">--المدينة/ ville --</option></select>
-    <!-- Photo recto/verso CIN -->
-    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <!-- Carte grise recto / verso -->
-    <div id="div-cartegrise">
-      <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
-      <input name="cartegrise" type="file" accept="image/*" multiple required >
-    </div>
-    <!-- Procuration (facultatif) -->
-    <label id="lbl-checkbox-procuration">
-      <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
-      <input type="checkbox" id="checkbox-procuration">
-    </label>
-    <div id="div-procuration" style="display:none;">
-      <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
-      <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
-    </div>
-    <!-- Images voiture -->
-    <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
-    <input name="images" type="file" accept="image/*" multiple required>
-    <!-- Bouton envoyer -->
-    <button type="submit" id="btn-submit-v" data-i18n="btn_submit">Envoyer</button>
-  </form>
-  <div id="result-vendre"></div>
-</section>
-
-<section id="form-achat" class="form-section">
-  <h2 id="titre-achat"></h2>
-  <div class="intro" id="intro-achat"></div>
-  <form id="achatForm" enctype="multipart/form-data" autocomplete="off">
-    <label id="lbl-marque-a"></label>
-    <select name="marque" id="marque-a" required></select>
-    <label id="lbl-modele-a"></label>
-    <select name="modele" id="modele-a" required><option value="">--</option></select>
-    <label id="lbl-annee-a"></label>
-    <select name="annee" id="annee-a" required></select>
-    <label id="lbl-puissancefiscal-a"></label>
-    <input name="puissancefiscal" type="number" required min="0">
-    <label id="lbl-prix-a"></label>
-    <input name="prix" type="number" required min="0">
-    <label id="lbl-kilometrage-a"></label>
-    <input name="kilometrage" type="number" required min="0">
-    <label id="lbl-carburant-a"></label>
-    <select name="carburant" id="carburant-a" required></select>
-    <label id="lbl-transmission-a"></label>
-    <select name="transmission" id="transmission-a" required></select>
-    <label id="lbl-description-a"></label>
-    <textarea name="description" required></textarea>
-    <label id="lbl-email-a"></label>
-    <input name="email" type="email" required autocomplete="off">
-    <label id="lbl-phone-a"></label>
-    <input name="telephone" type="tel" required>
-    <label id="lbl-cin-a"></label>
-    <input name="cin" type="text" required>
-            <label id="lbl-ville-a"></label>
-    <select name="ville" id="ville-a" required><option value="">--المدينة/ ville --</option></select>
-    <label id="lbl-cin-img-a"></label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <button type="submit" id="btn-submit-a"></button>
-  </form>
-  <div id="result-achat"></div>
-</section>
-
-<section id="form-chercher" class="form-section">
-  <h2 id="titre-chercher"></h2>
-  <div class="intro" id="intro-chercher"></div>
-  <form id="chercherForm" enctype="multipart/form-data" autocomplete="off">
-    <label id="lbl-marque-c"></label>
-    <select name="marque" id="marque-c" required></select>
-    <label id="lbl-modele-c"></label>
-    <select name="modele" id="modele-c" required><option value="">--</option></select>
-    <label id="lbl-annee-c"></label>
-    <select name="annee" id="annee-c" required></select>
-    <label id="lbl-puissancefiscal-c"></label>
-    <input name="puissancefiscal" type="number" required min="0">
-    <label id="lbl-prix-c"></label>
-    <input name="prix" type="number" required min="0">
-    <label id="lbl-kilometrage-c"></label>
-    <input name="kilometrage" type="number" required min="0">
-    <label id="lbl-carburant-c"></label>
-    <select name="carburant" id="carburant-c" required></select>
-    <label id="lbl-transmission-c"></label>
-    <select name="transmission" id="transmission-c" required></select>
-    <label id="lbl-description-c"></label>
-    <textarea name="description" required></textarea>
-    <label id="lbl-email-c"></label>
-    <input name="email" type="email" required autocomplete="off">
-    <label id="lbl-phone-c"></label>
-    <input name="telephone" type="tel" required>
-    <label id="lbl-cin-c"></label>
-    <input name="cin" type="text" required>
-            <label id="lbl-ville-c"></label>
-    <select name="ville" id="ville-c" required><option value="">--المدينة/ ville --</option></select>
-    <label id="lbl-cin-img-c"></label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <button type="submit" id="btn-submit-c"></button>
-  </form>
-  <div id="result-chercher"></div>
-</section>
-
 <footer>
   &copy; 2025 IASMarket Services. Tous droits réservés.
 </footer>
+<div id="modal-bg" style="display:none"></div>
+<div id="contact-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(148, 136, 136, 0.5); justify-content:center; align-items:center; z-index:9999;">
+  <div style="background:rgba(8, 8, 8, 0.863); padding:20px; border-radius:10px; width:300px; position:relative; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+    <span id="close-modal" style="position:absolute; top:5px; right:10px; cursor:pointer; font-size:18px;">&times;</span>
+    <h3 id="msg-title" style="text-align:center; color:#fff; margin-bottom:20px;"></h3>
+    <p id="msg-label"></p>
+    <label for="montant-propose">Montant proposé :</label>
+    <input type="text" id="montant-propose" placeholder="Entrez votre montant">
+    <p id="error-montant" style="color:rgb(245, 45, 45);"></p>
+    <label>Message:</label>
+    <textarea id="contact-message" style="width:100%; margin-bottom:10px;" placeholder="Votre message"></textarea>
+    <button id="send-btn">Envoyer ✉️</button>
+  </div>
+</div>
+<div id="forum" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.616); justify-content:center; align-items:center;">
+    <div style="background:rgba(8, 8, 8, 0.842); padding:20px; border-radius:10px; width:90%; max-width:1000px; position:relative; max-height:90vh; overflow:auto;">
+        <span class="close" style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:24px;">&times;</span>
+        <h2 id="forum-title" style="text-align:center; color:#fff; margin-bottom:20px;">Nouveau Titre du Forum</h2>
+        <div id="forum-body" style="color:#fff; overflow-y:auto; max-height:60vh; padding-right:10px;">
+            Chargement...
+        </div>
+        <div id="forume-body" style="color:#fff; overflow-y:auto; max-height:60vh; padding-right:10px;">
+            Chargement...
+        </div>
+    </div>
+</div>
+<div id="confirmationModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(248, 246, 246, 0.61); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:rgba(0, 0, 0, 0.705); padding:20px 30px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,0.3); max-width:400px; width:80%; text-align:center; position:relative;">
+        <span id="closeModal" style="position:absolute; top:10px; right:10px; cursor:pointer; font-size:18px; font-weight:bold;">&times;</span>
+        <p id="modalMessage" style="margin-bottom:20px; font-size:16px;"></p>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <button id="confirmBtn" style="padding:8px 16px; border:none; border-radius:5px; background:#4CAF50; color:white; cursor:pointer; font-size:14px;">Confirmer</button>
+            <button id="cancelBtn" style="padding:8px 16px; border:none; border-radius:5px; background:#f44336; color:white; cursor:pointer; font-size:14px;">Annuler</button>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  window.addEventListener('DOMContentLoaded', () => {
-  // Récupérer les infos sauvegardées
-  const savedEmail = localStorage.getItem('p2p_email');
-  const savedTele = localStorage.getItem('p2p_tele');
-  const savedNcin = localStorage.getItem('p2p_ncin');
-
-  // Pré-remplir les champs si disponibles
-  if (savedEmail) emailInput.value = savedEmail;
-  if (savedTele) teletzon.value = savedTele;
-  if (savedNcin) ncinzon.value = savedNcin;
+const userEmail = localStorage.getItem('userEmail');
+document.addEventListener("DOMContentLoaded", async function () {
+    await initMaxPage();
+    document.querySelector("#page span").textContent = 0;
+    document.getElementById("prev").classList.add("hidden");
 });
-
-document.getElementById("checkbox-procuration").addEventListener("change", function () {
-  const blocProcuration = document.getElementById("div-procuration");
-  const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
-  if (this.checked) {
-    blocProcuration.style.display = "block";
-    inputsProcuration.forEach(input => input.disabled = false);
-  } else {
-    blocProcuration.style.display = "none";
-    inputsProcuration.forEach(input => input.disabled = true);
-  }
-});
-const ville =["Afourar", "Agadir", "Aghbala", "Aghbalou", "Agdz", "Agouraï", "Aguelmous", "Ahfir", "Aïn Leuh", "Aïn Beni Mathar", "Aïn Cheggag", "Aïn Dorij", "Aïn El Aouda", "Aïn Erreggada", "Aïn Harrouda", "Aïn Jemaa", "Aïn Karma", "Aïn Taoujdate", "Aït Iaaza", "Aït Baha", "Aït Boubidmane", "Aït Daoud", "Aït Ishaq", "Aït Melloul", "Aït Ourir", "Akka", "Aklim", "Aknoul", "Ajdir (province d'Al Hoceïma)", "Ajdir (province de Taza)", "Al Aaroui", "Al Hoceïma", "Alnif", "Amalou Ighriben", "Amizmiz", "Aoufous", "Aoulouz", "Aourir", "Arbaoua", "Arfoud", "Assa", "Assahrij", "Assilah", "Azemmour", "Azilal", "Azrou","Bab Berred", "Bab Taza", "Bejaâd", "Ben Ahmed", "Ben Guerir", "Ben Taïeb", "Ben Yakhlef", "Beni Ammar", "Beni Boughafer", "Berkane", "Berrechid", "Bouchane", "Bouguedra", "Boukmour", "Bouznika", "Boukidan", "Bouzoug","Casablanca", "Chefchaouen", "Chichaoua", "Chbika","Dcheira El Jihadia","Deroua","Demnate","Drarga","Dar Bouazza","Dar El Kebdani","Douar Skhirat","Errachidia","Es-Semara","El Hajeb","El Jadida","El Kelaa des Sraghna","El Ksiba","El Marsa","El Aioun Sidi Mellouk","Fès","Fquih Ben Salah","Fnideq","Figuig","Fam El Hisn","Guelmim","Guercif","Ghazoua","Ghazni","Hassan","Hay Mohammadi","Hbou","Harhoura","Haj Kaddour","Hassi Berkane","Houara","Ifrane","Imouzzer Kandar","Imouzzer Ida Ou Tanane","Inezgane","Itzer","Igherm","Jerada","Jorf El Melha","Jdida","Kénitra","Kelaat Sraghna","Kelaat Mgouna","Khemisset","Khenifra","Khénifra","Ksar El Kebir","Kelaat Beni Abbès","Kelaat Mgouna","Larache","Laayoune","Lqliaa","Lemsid","Lkssiba","Marrakech","Meknès","Mohammedia","Martil","Moulay Bousselham","Midelt","Martil","Moulay Yacoub","Moulay Abdellah","M'diq","Msemrir","Nador","Nouaceur","Naïma","Nezla","N'Zala","Ouarzazate","Oujda","Ouezzane","Ouled Teima","Ouazzane","Oulad Ayad","Oulad Berhil","Oulad M'Barek","Oulad Zbair","Port Tanger Med","Port de Casablanca","Rabat","Rissani","Rhamna","Ras El Ma","Ras Kebdana","Rabat-Salé","Safi","Settat","Salé","Sidi Kacem","Sidi Slimane","Sidi Bennour","Sidi Ifni","Sidi Yahya El Gharb","Souk El Arbaa","Sidi Allal El Bahraoui","Sidi Rahal","Sidi Taibi","Tangier","Tétouan","Taza","Taroudant","Tiznit","Taourirt","Taliouine","Tiflet","Taza","Taounate","Témara","Talsint","Tahanaout","Ville Nouvelle de Témara","Ville Nouvelle de Salé","Wechma","Zaouiat Cheikh","Wazzan","Zagora","Zaïo","Zemmour","Zaouiat Cheikh","Zrarda","Zoumi"];
-const allCarModels = {
-"Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
-"Alfa Romeo": ["6C", "8C", "1900", "2000", "2600", "33", "4C", "75", "90", "145", "146", "147", "155", "156", "159", "164", "166", "Alfasud", "Alfetta", "Arna", "Brera", "Dauphine", "Disco Volante", "Giulia", "Giulietta", "GT", "GTA", "GTV", "Matta", "Mito", "Montreal", "Romeo", "RZ", "Spider", "Sprint", "Stelvio", "SZ", "Tonale"],
-"Aston Martin": ["Atom", "Bulldog", "Cygnet", "DB1", "DB2", "DB3", "DB4", "DB5", "DB6", "DB7", "DB9", "DB11", "DB12", "DBS", "DBX", "Lagonda", "One-77", "Rapide", "Rapide E", "Valhalla", "Valkyrie", "Valour", "Vanquish", "Vantage", "Victor", "Virage", "Vulcan"],
-"Audi": ["50", "60", "72", "75", "80", "90", "100", "200", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "Cabriolet", "Coupé", "e-tron", "e-tron GT", "F103", "Q2", "Q3", "Q4 e-tron", "Q5", "Q6 e-tron", "Q7", "Q8", "Quattro", "R8", "RS2 Avant", "RS3", "RS4", "RS5", "RS6", "RS7", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "TT", "V8"],
-"Bentley": ["3 Litre", "4½ Litre", "6½ Litre", "8 Litre", "Arnage", "Azure", "Batur", "Bentayga", "Brooklands", "Continental", "Continental Flying Spur", "Continental GT", "Corniche", "Derby", "Flying Spur", "Mark V", "Mark VI", "Mulsanne", "R Type", "S1", "S2", "S3", "T1", "T2", "Turbo R"],
-"BMW": ["1 Series", "2 Series", "3 Series", "4 Series", "5 Series", "6 Series", "7 Series", "8 Series", "3/15", "3/20", "303", "328", "501", "502", "503", "507", "600", "700", "Dixi", "E3", "E9", "i3", "i4", "i5", "i7", "i8", "iX", "iX1", "iX2", "iX3", "Isetta", "M1", "M2", "M3", "M4", "M5", "M6", "M8", "New Class", "X1", "X2", "X3", "X4", "X5", "X6", "X7", "XM", "Z1", "Z3", "Z4", "Z8"],
-"Bugatti": ["Bolide", "Centodieci", "Chiron", "Divo", "EB 110", "EB 112", "EB 118", "EB 218", "Galibier", "La Voiture Noire", "Mistral", "Tourbillon", "Type 13", "Type 35", "Type 41 Royale", "Type 57", "Veyron"],
-"Buick": ["Apollo", "Cascada", "Centurion", "Century", "Electra", "Enclave", "Encore", "Encore GX", "Envision", "Estate", "Gran Sport", "GSX", "Invicta", "LaCrosse", "LeSabre", "Limited", "Lucerne", "Park Avenue", "Rainier", "Reatta", "Regal", "Rendezvous", "Riviera", "Roadmaster", "Skyhawk", "Skylark", "Somerset", "Special", "Super", "Terraza", "Verano", "Wildcat"],
-"Cadillac": ["Allanté", "ATS", "BLS", "Brougham", "Calais", "Catera", "Celestiq", "Cimarron", "Coupe de Ville", "CT4", "CT5", "CT6", "CTS", "DeVille", "DTS", "Eldorado", "ELR", "Escalade", "Fleetwood", "LSE", "Lyriq", "Series 60", "Series 61", "Series 62", "Seville", "Sixty Special", "SLS", "SRX", "STS", "Trump", "V-16", "XLR", "XT4", "XT5", "XT6", "XTS"],
-"Changan": ["Alsvin", "Benni", "CS15", "CS35", "CS55", "CS75", "CS85", "CS95", "Eado", "Hunter", "Lumin", "Raeton", "Star", "UNI-K", "UNI-T", "UNI-V", "Z-Shine"],
-"Chevrolet": ["150", "210", "454 SS", "APV", "Astro", "Avalanche", "Aveo", "Bel Air", "Beretta", "Biscayne", "Blazer", "Bolt", "Brookwood", "Camaro", "Caprice", "Captiva", "Cavalier", "Celebrity", "Celta", "Chevelle", "Chevette", "Chevy II", "Citation", "Cobalt", "Colorado", "Corsica", "Corvair", "Corvette", "Cruze", "Delray", "El Camino", "Epica", "Equinox", "Express", "Fleetline", "Forrester", "HHR", "Impala", "K5 Blazer", "Kingswood", "Kodiak", "Lumina", "LUV", "Malibu", "Master", "Metro", "Monte Carlo", "Monza", "Nomad", "Nova", "Niva", "Optra", "Orlando", "Prizm", "Rezzo", "S-10", "Silverado", "Sonic", "Spark", "Spectrum", "Sprint", "SSR", "Suburban", "Tahoe", "Tavera", "Tracker", "TrailBlazer", "Traverse", "Trax", "Uplander", "Vega", "Venture", "Volt"],
-"Chrysler": ["200", "300", "300M", "Airflow", "Airstream", "Aspen", "Caravan", "Cirrus", "Concorde", "Conquest", "Cordoba", "Crossfire", "Daytona", "Dynasty", "E-Class", "Executive", "Fifth Avenue", "Grand Voyager", "Imperial", "Laser", "LeBaron", "LHS", "Nassau", "New Yorker", "Newport", "Pacifica", "Prowler", "PT Cruiser", "Royal", "Saratoga", "Sebring", "TC by Maserati", "Town & Country", "Turbine Car", "Valiant", "Viper", "Voyager", "Windsor"],
-"Citroën": ["2CV", "Activa", "Ami", "AX", "Axel", "Berlingo", "BX", "C-Crosser", "C-Elysée", "C-Métisse", "C-Triomphe", "C1", "C2", "C3", "C3 Aircross", "C4", "C4 Aircross", "C4 Cactus", "C4 Picasso", "C4 SpaceTourer", "C4 X", "C5", "C5 Aircross", "C5 X", "C6", "C8", "CX", "DS", "Dyane", "E-Méhari", "Evasion", "GS", "GSA", "H Van", "ID", "Jumper", "Jumpy", "Karin", "LNA", "M35", "Méhari", "Nemo", "Oltcit", "Pluriel", "Rosalie", "Saxo", "SM", "SpaceTourer", "Traction Avant", "Type A", "Visa", "Xantia", "XM", "Xsara", "Xsara Picasso", "ZX"],
-"Dacia": ["1100", "1300", "1310", "1410", "500 Lăstun", "Dokker", "Duster", "Jogger", "Lodgy", "Logan", "Nova", "Sandero", "Solenza", "Spring", "SuperNova"],
-"Daewoo": ["Arcadia", "Chairman", "Damas", "Espero", "Evanda", "G2X", "Gentra", "Kalos", "Korando", "Lacetti", "Lanos", "Leganza", "LeMans", "Lublin", "Magnus", "Matiz", "Musso", "Nexia", "Nubira", "Prince", "Racer", "Rezzo", "Statesman", "Super Salon", "Tacuma", "Tico", "Tosca", "Winstorm"],
-"Daihatsu": ["Altis", "Applause", "Atrai", "Bee", "Be-go", "Boon", "Ceria", "Charade", "Charmant", "Copen", "Consorte", "Cuore", "Delta", "Esse", "Fellow", "Feroza", "Gran Max", "Hijet", "Leeza", "Luxio", "Materia", "Max", "Mebius", "Midget", "Mira", "Move", "Naked", "Opti", "Pyzar", "Rocky", "Rugger", "Sirion", "Sonica", "Storia", "Taft", "Tanto", "Terios", "Thor", "Trevis", "Wake", "Xenia", "YRV"],
-"Dodge": ["400", "600", "Aries", "Aspen", "Avenger", "Caliber", "Caravan", "Challenger", "Charger", "Colt", "Conquest", "Coronet", "Dakota", "Dart", "Daytona", "Diplomat", "Durango", "Dynasty", "Grand Caravan", "Hornet", "Intrepid", "Journey", "La Femme", "Lancer", "Magnum", "Mirada", "Monaco", "Neon", "Nitro", "Omni", "Polara", "Power Wagon", "Raider", "Ram", "Ram 50", "Rampage", "Shadow", "Spirit", "Sprinter", "Stealth", "Stratus", "Super Bee", "Viper"],
-"Exeed": ["LX", "RX", "Stellar", "TX", "TXL", "VX"],
-"Eagle": ["Medallion", "Premier", "Summit", "Talon", "Vision", "Vista"],
-"Ferrari": ["12Cilindri", "208", "250", "275", "288 GTO", "296 GTB", "308", "328", "330", "348", "360", "365", "400", "412", "456", "458 Italia", "488", "512", "550", "575M", "599", "612 Scaglietti", "812 Superfast", "California", "Daytona", "Dino", "Enzo", "F8 Tributo", "F12berlinetta", "F355", "F40", "F430", "F50", "FF", "GTC4Lusso", "LaFerrari", "Mondial", "Monza", "Portofino", "Purosangue", "Roma", "SF90 Stradale", "Superamerica", "Testarossa"],
-"Fiat": ["124", "124 Spider", "125", "126", "127", "128", "130", "131", "132", "133", "500", "500L", "500X", "508", "600", "850", "Albea", "Argenta", "Barchetta", "Brava", "Bravo", "Campagnola", "Cinquecento", "Coupe", "Croma", "Dino", "Doblo", "Ducato", "Duna", "Fiorino", "Freemont", "Fullback", "Grande Punto", "Idea", "Linea", "Marea", "Multipla", "Palio", "Panda", "Punto", "Qubo", "Regata", "Ritmo", "Scudo", "Sedici", "Seicento", "Siena", "Stilo", "Strada", "Tempra", "Tipo", "Topolino", "Ulysse", "Uno", "X1/9"],
-"Fisker": ["Karma", "Latigo CS", "Ocean", "Tramonto"],
-"Ford": ["Aerostar", "Anglia", "Aspire", "B-Max", "Bronco", "Bronco II", "C-Max", "Capri", "Consul", "Contour", "Corsair", "Cortina", "Cougar", "Courier", "Crown Victoria", "Custom", "Del Rio", "EcoSport", "Edge", "Escape", "Escort", "Everest", "Excursion", "Expedition", "Explorer", "F-100", "F-150", "Fairlane", "Fairmont", "Falcon", "Festiva", "Fiesta", "Figo", "Five Hundred", "Flex", "Focus", "Freda", "Freestar", "Freestyle", "Fusion", "Galaxie", "Granada", "GT", "GT40", "Ka", "Kuga", "LTD", "Maverick", "Model A", "Model T", "Mondeo", "Mustang", "Mustang Mach-E", "Orion", "Pinto", "Probe", "Puma", "Ranchero", "Ranger", "S-Max", "Scorpio", "Sierra", "Taunus", "Taurus", "Tempo", "Territory", "Thunderbird", "Torino", "Transit", "Windstar", "Zephyr", "Zodiac"],
-"Geely": ["Atlas", "Beauty Leopard", "Binrui", "Binyue", "Borui", "Boyue", "CK", "Coolray", "Emgrand", "Farizon", "GC6", "Geometry", "Haoqing", "Icon", "Jiaji", "Kingkong", "Maple", "MK", "Monjaro", "Panda", "Preface", "Tugella", "Vision", "Xingyue"],
-"Genesis": ["G70", "G80", "G90", "GV60", "GV70", "GV80", "GV90", "Mint Concept", "X Concept"],
-"GMC": ["Acadia", "Caballero", "Canyon", "Envoy", "Graphyte", "Hummer EV", "Jimmy", "Safari", "Savana", "Sierra", "Sonoma", "Sprint", "Suburban", "Syclone", "Terrain", "TopKick", "Tracker", "Typhoon", "Vandura", "Yukon"],
-"Great Wall": ["Coolbear", "Cowry", "Deer", "Florid", "Haval", "Hover", "M4", "Pao", "Peri", "Poer", "Safe", "Sing", "Socool", "Steed", "Tank", "Voleex", "Wingle"],
-"Honda": ["1300", "145", "Accord", "Acty", "Airwave", "Ascot", "Avancier", "Ballade", "Beat", "Brio", "Capa", "City", "Civic", "Clarity", "Concerto", "CR-V", "CR-X", "CR-Z", "Crossroad", "Crosstour", "Domani", "e", "Edix", "Element", "Elysion", "FCX Clarity", "Fit", "FR-V", "Freed", "Grace", "HR-V", "Insight", "Inspire", "Integra", "Jade", "Jazz", "Lagreat", "Legend", "Life", "Logo", "Mobilio", "N-Box", "N-One", "N-WGN", "NSX", "Odyssey", "Orthia", "Partner", "Passport", "Pilot", "Prelude", "Quint", "Rafaga", "Ridgeline", "S-MX", "S2000", "S500", "S600", "S660", "Saber", "Shuttle", "Stepwgn", "Stream", "Today", "Torneo", "Vamos", "Vezel", "Vigor", "Z", "Zest"],
-"Hummer": ["H1", "H2", "H3", "H3T", "EV"],
-"Hyundai": ["Accent", "Aslan", "Atos", "Azera", "Bayon", "Casper", "Celesta", "Centennial", "Coupe", "Creta", "Dynasty", "Elantra", "Entourage", "Eon", "Equus", "Excel", "Galloper", "Genesis", "Getz", "Grace", "Grandeur", "H-1", "i10", "i20", "i30", "i40", "Ioniq", "ix20", "ix35", "ix55", "Kona", "Lantra", "Lavita", "Marcia", "Matrix", "Maxcruz", "Mistra", "Nexo", "Palisade", "Pony", "Porter", "Santa Cruz", "Santa Fe", "Santamo", "Scoupe", "Sonata", "Starex", "Stellar", "Terracan", "Tiburon", "Trajet", "Tucson", "Veloster", "Venue", "Veracruz", "Verna", "Xcent", "XG"],
-"Infiniti": ["ESQ", "EX", "FX", "G", "I", "J", "JX", "M", "Q", "Q30", "Q40", "Q45", "Q50", "Q60", "Q70", "QX", "QX30", "QX4", "QX50", "QX55", "QX60", "QX70", "QX80"],
-"Jaguar": ["420", "C-Type", "D-Type", "E-Pace", "E-Type", "F-Pace", "F-Type", "I-Pace", "Mark 1", "Mark 2", "Mark V", "Mark VII", "Mark VIII", "Mark IX", "Mark X", "S-Type", "SS 100", "X-Type", "XE", "XF", "XJ", "XJ220", "XJR", "XJS", "XK", "XKSS"],
-"Jeep": ["Cherokee", "CJ", "Comanche", "Commander", "Compass", "Dispatcher", "DJ", "FC", "Gladiator", "Grand Cherokee", "Grand Wagoneer", "Honcho", "Jeepster", "Liberty", "Meridian", "Patriot", "Recon", "Renegade", "Scrambler", "Wagoneer", "Willys", "Wrangler"],
-"Kia": ["Amanti", "Avella", "Bongo", "Borrego", "Brisa", "Cadenza", "Capital", "Carens", "Carnival", "Ceed", "Cerato", "Clarus", "Concord", "Credos", "Elan", "Enterprise", "EV3", "EV4", "EV5", "EV6", "EV9", "Forte", "Joice", "K3", "K4", "K5", "K7", "K8", "K9", "K900", "Magentis", "Mohave", "Morning", "Niro", "Opirus", "Optima", "Pegas", "Picanto", "Potentia", "Pregio", "Pride", "ProCeed", "Ray", "Retona", "Rio", "Rondo", "Sedona", "Seltos", "Sephia", "Shuma", "Sonet", "Sorento", "Soul", "Spectra", "Sportage", "Stinger", "Stonic", "Telluride", "Towner", "Venga", "Visto", "X-Trek", "XCeed"],
-"Koenigsegg": ["Agera", "CC", "CC8S", "CCR", "CCX", "CCXR", "Gemera", "Jesko", "One:1", "Regera", "Trevita"],
-"Lada": ["110", "111", "112", "Aura", "C-Cross", "Granta", "Iskra", "Kalina", "Largus", "Nadezhda", "Niva", "Oka", "Priora", "Revolution", "Riva", "Samara", "Sputnik", "Vesta", "X-Code", "Xray"],
-"Lamborghini": ["350 GT", "400 GT", "Aventador", "Centenario", "Countach", "Diablo", "Espada", "Gallardo", "Huracán", "Islero", "Jalpa", "Jarama", "LM002", "Miura", "Murciélago", "Reventón", "Revuelto", "Sesto Elemento", "Sián", "Silhouette", "Urus", "Urraco", "Veneno"],
-"Lancia": ["Appia", "Aprilia", "Ardea", "Augusta", "Aurelia", "Autobianchi A112", "Beta", "Dedra", "Delta", "Dialogos", "Flaminia", "Flavia", "Fulvia", "Gamma", "Hyena", "Kappa", "Lambda", "Lybra", "Montecarlo", "Musa", "Phedra", "Prisma", "Stratos", "Thema", "Thesis", "Trevi", "Voyager", "Y10", "Ypsilon", "Zeta"],
-"Land Rover": ["Defender", "Discovery", "Discovery Sport", "Freelander", "LR2", "LR3", "LR4", "Range Rover", "Range Rover Evoque", "Range Rover Sport", "Range Rover Velar", "Series I", "Series II", "Series III"],
-"Lexus": ["CT", "ES", "GS", "GX", "HS", "IS", "LC", "LFA", "LM", "LS", "LX", "NX", "RC", "RX", "RZ", "SC", "TX", "UX"],
-"Lincoln": ["Aviator", "Blackwood", "Capri", "Continental", "Corsair", "Cosmopolitan", "Custom", "KB", "L-series", "LS", "Mark II", "Mark III", "Mark IV", "Mark V", "Mark VI", "Mark VII", "Mark VIII", "MKS", "MKT", "MKX", "MKZ", "Nautilus", "Navigator", "Premiere", "Sport", "Town Car", "Versailles", "Zephyr"],
-"Lotus": ["2-Eleven", "3-Eleven", "340R", "Carlton", "Cortina", "Elan", "Eletre", "Elise", "Elite", "Emeya", "Emira", "Esprit", "Europa", "Evora", "Excel", "Exige", "Evija", "Omega", "Sunbeam", "Talbot"],
-"Lucid Motors": ["Air", "Gravity"],
-"Mahindra": ["Alturas G4", "Armada", "Bolero", "e2o", "Genio", "Jeep", "KUV100", "Marazzo", "Nuvosport", "Quanto", "Reva", "Scorpio", "Thar", "TUV300", "Verito", "XUV300", "XUV500", "XUV700", "Xylo"],
-"Maserati": ["228", "3200 GT", "3500 GT", "4200 GT", "5000 GT", "Barchetta", "Biturbo", "Bora", "Chubasco", "Folgor", "Ghibli", "GranCabrio", "GranSport", "GranTurismo", "Grecale", "Indy", "Karif", "Khamsin", "Kyalami", "Levante", "MC12", "MC20", "Merak", "Mexico", "Mistral", "Quattroporte", "Sebring", "Shamal", "Spyder"],
-"Mazda": ["121", "2", "3", "323", "5", "6", "616", "626", "929", "Atenza", "Autozam", "Axela", "AZ-1", "B-Series", "Biante", "Bongo", "BT-50", "Carol", "Chantez", "Cosmo", "Cronos", "CX-3", "CX-30", "CX-4", "CX-5", "CX-50", "CX-60", "CX-7", "CX-8", "CX-80", "CX-9", "CX-90", "Demio", "Eunos", "Familia", "Flair", "Lantis", "Luce", "Mazda6", "Millenia", "MPV", "MX-3", "MX-5", "MX-6", "MX-30", "Navajo", "Persona", "Premacy", "Proceed", "Protegé", "R100", "Revue", "Roadster", "RX-2", "RX-3", "RX-4", "RX-5", "RX-7", "RX-8", "Savanna", "Scrum", "Sentia", "Spiano", "Tribute", "Verisa", "Xedos"],
-"McLaren": ["540C", "570S", "600LT", "620R", "650S", "675LT", "720S", "750S", "765LT", "Artura", "Elva", "F1", "GT", "GTS", "MP4-12C", "P1", "Senna", "Solus GT", "Speedtail"],
-"Mercedes-Benz": ["190", "240D", "300D", "300SL", "A-Class", "AMG GT", "B-Class", "C-Class", "Citan", "CL-Class", "CLA", "CLC", "CLE", "CLK", "CLS", "E-Class", "EQA", "EQB", "EQC", "EQE", "EQG", "EQS", "EQT", "EQV", "G-Class", "GL-Class", "GLA", "GLB", "GLC", "GLE", "GLK", "GLS", "M-Class", "Maybach", "Metris", "R-Class", "S-Class", "SL-Class", "SLC", "SLK", "SLR McLaren", "SLS AMG", "Sprinter", "T-Class", "V-Class", "Vaneo", "Viano", "Vito", "W110", "W114", "W115", "W123", "W124", "X-Class"],
-"Mini": ["Aceman", "Clubman", "Convertible", "Cooper", "Countryman", "Coupe", "Electric", "Paceman", "Roadster"],
-"Mitsubishi": ["3000GT", "500", "Airtrek", "Aspire", "ASX", "Attrage", "Bravo", "Carisma", "Celeste", "Challenger", "Champ", "Chariot", "Colt", "Cordia", "Debonair", "Delica", "Diamante", "Dignity", "Dingo", "Dion", "Eclipse", "Eclipse Cross", "eK", "Emeraude", "Endeavor", "FTO", "Galant", "Grandis", "GTO", "i", "i-MiEV", "Jeep", "L200", "Lancer", "Lancer Evolution", "Legnum", "Libero", "Magna", "Minica", "Mirage", "Montero", "Outlander", "Pajero", "Pajero iO", "Pajero Junior", "Pajero Mini", "Pajero Pinin", "Pajero Sport", "Pistachio", "Precis", "Proudia", "Raider", "RVR", "Sapporo", "Sigma", "Space Gear", "Space Runner", "Space Star", "Space Wagon", "Starion", "Strada", "Tredia", "Triton", "Verada", "Virage", "Xpander"],
-"Nissan": ["100NX", "180SX", "200SX", "240SX", "240Z", "280ZX", "300C", "300ZX", "350Z", "370Z", "AD", "Almera", "Altima", "Ariya", "Armada", "Auster", "Avenir", "Bassara", "Be-1", "Bluebird", "Cedric", "Cefiro", "Cherry", "Cima", "Clipper", "Crew", "Cube", "Datsun", "Dayz", "Dualis", "Elgrand", "Evalia", "Exa", "Expert", "Fairlady Z", "Figaro", "Frontier", "Fuga", "Gloria", "GT-R", "Hypermini", "Juke", "Kicks", "Kix", "Lafesta", "Langley", "Largo", "Latio", "Laurel", "Leaf", "Leopard", "Liberta Villa", "Liberty", "Livina", "Lucino", "Magnite", "March", "Maxima", "Micra", "Moco", "Murano", "Navara", "Note", "NP300", "NV200", "NV400", "Otti", "Pao", "Pathfinder", "Patrol", "Pino", "Pixo", "Platina", "Prairie", "Presage", "Presea", "President", "Primastar", "Primera", "Pulsar", "Qashqai", "Quest", "R'nessa", "Rasheen", "Rogue", "Roox", "S-Cargo", "Safari", "Sentra", "Serena", "Silvia", "Skyline", "Stagea", "Stanza", "Sunny", "Sylphy", "Teana", "Terrano", "Tiida", "Tino", "Titan", "Vanette", "Versa", "Violet", "Wingroad", "X-Trail", "Xterra", "Z"],
-"Nio": ["EC6", "EC7", "EL6", "EL7", "ES6", "ES7", "ES8", "ET5", "ET7", "ET9", "Eve", "EP9"],
-"Opel": ["Adam", "Admiral", "Agila", "Ampera", "Antara", "Ascona", "Astra", "Calibra", "Campo", "Cascada", "Combo", "Commodore", "Corsa", "Crossland", "Diplomat", "Frontera", "Grandland", "GT", "Insignia", "Kadett", "Kapitän", "Karl", "Manta", "Meriva", "Mokka", "Monterey", "Monza", "Movano", "Olympia", "Omega", "Rekord", "Rocks-e", "Senator", "Signum", "Sintra", "Speedster", "Super 6", "Tigra", "Vectra", "Vivaro", "Zafira"],
-"Oldsmobile": ["442", "88", "98", "Achieva", "Alero", "Aurora", "Bravada", "Calais", "Custom Cruiser", "Cutlass", "Delta 88", "Dynamic 88", "F-85", "Firenza", "Intrigue", "Jetstar", "Omega", "Regency", "Silhouette", "Starfire", "Toronado", "Vista Cruiser"],
-"Peugeot": ["104", "106", "107", "108", "201", "202", "203", "204", "205", "206", "207", "208", "2008", "301", "302", "304", "305", "306", "307", "308", "309", "3008", "401", "402", "403", "404", "405", "406", "407", "408", "4007", "4008", "504", "505", "508", "5008", "601", "604", "605", "607", "806", "807", "Bipper", "Boxer", "Expert", "Hoggar", "iOn", "J5", "Partner", "P4", "RCZ", "Rifter", "Traveller"],
-"Polestar": ["1", "2", "3", "4", "5", "6", "Precept"],
-"Pontiac": ["1000", "2000 Sunbird", "6000", "Acadian", "Astre", "Aztek", "Bonneville", "Catalina", "Chieftain", "Fiero", "Firebird", "Firefly", "G3", "G4", "G5", "G6", "G8", "Grand Am", "Grand Prix", "Grand Ville", "GTO", "J2000", "LeMans", "Matiz", "Montana", "Parisienne", "Phoenix", "Pursuit", "Safari", "Solstice", "Star Chief", "Streamliner", "Sunbird", "Sunfire", "Super Chief", "T1000", "Tempest", "Torrent", "Trans Am", "Trans Sport", "Ventura", "Vibe", "Wave"],
-"Porsche": ["356", "550 Spyder", "718", "911", "912", "914", "918 Spyder", "924", "928", "944", "959", "968", "Boxster", "Carrera GT", "Cayenne", "Cayman", "Macan", "Panamera", "Taycan"],
-"Proton": ["Arena", "Chancellor", "Citra", "Ertiga", "Exora", "Gen-2", "Inspira", "Iriz", "Juara", "Perdana", "Persona", "Preve", "Putra", "Saga", "Satria", "Savvy", "Suprima S", "Tiara", "Waja", "Wira", "X50", "X70", "X90"],
-"Ram": ["1500", "2500", "3500", "700", "C/V Tradesman", "Dakota", "ProMaster", "ProMaster City"],
-"Renault": ["4", "4CV", "5", "6", "8", "9", "10", "11", "12", "14", "15", "16", "17", "18", "19", "20", "21", "25", "30", "Alliance", "Arkana", "Austral", "Avantime", "Captur", "Caravelle", "Clio", "Dauphine", "Duster", "Espace", "Express", "Floride", "Fluence", "Fuego", "Grand Scénic", "Kadjar", "Kangoo", "Kaptur", "Kardian", "Kiger", "Koleos", "Kwid", "Laguna", "Latitude", "Le Car", "Logan", "Master", "Megane", "Modus", "Ondine", "Oroch", "Pulse", "Rafale", "Rodeo", "Safrane", "Sandero", "Scala", "Scenic", "Spider", "Symbol", "Symbioz", "Taliant", "Talisman", "Thalia", "Trafic", "Twingo", "Twizy", "Vel Satis", "Wind", "Zoe"],
-"Rimac": ["Concept_One", "C_Two", "Nevera"],
-"Rivian": ["R1S", "R1T", "R2", "R3"],
-"Rolls-Royce": ["20/25", "25/30", "Camargue", "Corniche", "Cullinan", "Dawn", "Ghost", "Park Ward", "Phantom", "Silver Cloud", "Silver Dawn", "Silver Ghost", "Silver Seraph", "Silver Shadow", "Silver Spirit", "Silver Spur", "Spectre", "Sweptail", "Wraith"],
-"Roewe": ["350", "360", "550", "750", "950", "Clever", "D7", "E50", "Ei5", "ERX5", "i5", "i6", "iMAX8", "Lomemo", "Marvel R", "Marvel X", "RX3", "RX5", "RX8", "W5"],
-"Saab": ["600", "9-2X", "9-3", "9-4X", "9-5", "9-7X", "90", "92", "93", "95", "96", "99", "900", "9000", "Sonett"],
-"SEAT": ["124 Sport", "127", "131", "133", "600", "850", "Alhambra", "Altea", "Arona", "Arosa", "Ateca", "Born", "Cordoba", "Cupra GT", "Exeo", "Fura", "Ibiza", "Inca", "Leon", "Malaga", "Marbella", "Mii", "Panda", "Ritmo", "Ronda", "Tarraco", "Terra", "Toledo"],
-"Škoda": ["100", "105", "110", "120", "130", "1000 MB", "Citigo", "Enyaq", "Fabia", "Favorit", "Felicia", "Forman", "Kamiq", "Karoq", "Kodiaq", "Kushaq", "Octavia", "Popular", "Praktik", "Rapid", "Roomster", "Scala", "Slavia", "Superb", "Tudor", "Yeti"],
-"Smart": ["#1", "#3", "City-Coupé", "Crossblade", "Forfour", "Fortwo", "Roadster"],
-"SsangYong": ["Actyon", "Chairman", "Istana", "Kallista", "Korando", "Kyron", "Musso", "Rexton", "Rodius", "Stavic", "Tivoli", "Torres", "XLV"],
-"Subaru": ["1000", "360", "Alcyone", "Ascent", "Baja", "Bighorn", "BRZ", "Brat", "Crosstrek", "Dex", "Domingo", "Exiga", "FF-1", "Forester", "G", "Impreza", "Justy", "L-Series", "Leone", "Levorg", "Legacy", "Libero", "Lucra", "Outback", "Pleo", "R1", "R2", "Rex", "Sambar", "Solterra", "Stella", "SVX", "Traviq", "Trezia", "Tribeca", "Vivio", "WRX", "XT", "XV"],
-"Suzuki": ["A-Star", "Across", "Aerio", "Alto", "APV", "Baleno", "Cappuccino", "Cara", "Carry", "Celerio", "Cervo", "Cultus", "DZire", "Equator", "Ertiga", "Escudo", "Esteem", "Every", "Forenza", "Fronte", "Grand Vitara", "Hustler", "Ignis", "Jimny", "Kei", "Kizashi", "Landy", "Lapin", "Liana", "MR Wagon", "Palette", "Reno", "S-Cross", "Samurai", "Sidekick", "Solio", "Spacia", "Splash", "Swift", "Swace", "SX4", "Twin", "Verona", "Vitara", "Wagon R", "X-90", "XL7"],
-"Tata Motors": ["Ace", "Altroz", "Aria", "Bolt", "Estate", "Harrier", "Hexa", "Indica", "Indigo", "Magic", "Manza", "Mobile", "Nano", "Nexon", "Punch", "Safari", "Sierra", "Spacio", "Sumo", "Tiago", "Tigor", "Winger", "Xenon", "Zest"],
-"Tesla": ["Cybertruck", "Model 3", "Model S", "Model X", "Model Y", "Roadster", "Semi"],
-"Toyota": ["2000GT", "4Runner", "86", "Agya", "Allion", "Alphard", "Altezza", "Aqua", "Aristo", "Aurion", "Auris", "Avalon", "Avanza", "Avensis", "Aygo", "bZ3", "bZ4X", "C-HR", "Caldina", "Cami", "Camry", "Carina", "Celica", "Celsior", "Century", "Chaser", "Comfort", "Copen", "Corolla", "Corona", "Corsa", "Cressida", "Cresta", "Crown", "Curren", "Cynos", "Duet", "Echo", "eCom", "Esquire", "Estima", "Etios", "Fielder", "FJ Cruiser", "Fortuner", "FunCargo", "Gaia", "Grand Highlander", "Grande", "GR86", "Harrier", "HiAce", "Highlander", "Hilux", "Innova", "Ipsum", "iQ", "Isis", "Ist", "Kluger", "Land Cruiser", "LiteAce", "Majesta", "Mark II", "Mark X", "MasterAce", "Matrix", "Mega Cruiser", "Mirai", "MR2", "Nadia", "Noah", "Opa", "Origin", "Paseo", "Passo", "Pickup", "Pixis", "Platz", "Porte", "Prado", "Premio", "Previa", "Prius", "Probox", "Progrès", "Pronard", "Publica", "Raize", "Raum", "RAV4", "Roomy", "Rush", "SAI", "Scepter", "Sequoia", "Sera", "Sienna", "Sienta", "Soarer", "Solara", "Soluna", "Sparky", "Sports 800", "Sprinter", "Starlet", "Stout", "Succeed", "Supra", "Tacoma", "Tank", "Tercel", "TownAce", "ToyoAce", "Tundra", "Urban Cruiser", "Van", "Vanguard", "Vellfire", "Veloz", "Venza", "Verossa", "Verso", "Vienta", "Vios", "Vista", "Vitz", "Voltz", "Voxy", "WiLL", "Windom", "Wigo", "Wish", "Yaris", "Yaris Cross", "Zelas"],
-"Volkswagen": ["181", "411", "412", "Amarok", "Ameo", "Apollo", "Arteon", "Atlas", "Beetle", "Bora", "Brasilia", "C-Trek", "Caddy", "CC", "Corrado", "Dasher", "Derby", "Eos", "Fox", "Gol", "Golf", "ID.2", "ID.3", "ID.4", "ID.5", "ID.6", "ID.7", "ID. Buzz", "Iltis", "Jetta", "K70", "Karmann Ghia", "Käfer", "Lamando", "Lavida", "Logus", "Lupo", "Magotan", "Multivan", "New Beetle", "Parati", "Passat", "Phaeton", "Phideon", "Pointer", "Polo", "Quantum", "Rabbit", "Routan", "Santana", "Saveiro", "Scirocco", "Sharan", "SP2", "Suran", "T-Cross", "T-Roc", "Taigo", "Taigun", "Taro", "Tayron", "Teramont", "Tharu", "Thing", "Tiguan", "Touareg", "Touran", "Transporter", "Type 1", "Type 2", "Type 3", "Type 4", "Up!", "Vento", "Virtus", "Voyage", "XL1"],
-"Volvo": ["66", "122", "140", "164", "240", "260", "340", "360", "440", "460", "480", "740", "760", "780", "850", "940", "960", "Amazon", "C30", "C40", "C70", "Duett", "EX30", "EX90", "L3314", "P1800", "P1900", "PV444", "PV544", "S40", "S60", "S70", "S80", "S90", "Sugga", "V40", "V50", "V60", "V70", "V90", "XC40", "XC60", "XC70", "XC90"],
-"Wuling": ["Almaz", "Baojun", "Confero", "Cortez", "Formo", "Hongguang", "Jiachen", "Victory", "Zhengtu"],
-"Aixam": ["City", "Coupé", "Crossline", "Crossover", "GTO", "Minauto", "Scouty"],
-"Aptera": ["2e", "3", "4"],
-"Arrinera": ["Hussarya"],
-"Ariel": ["Atom", "Hipercar", "Nomad"],
-"Baojun": ["310", "330", "360", "510", "530", "560", "610", "630", "730", "E100", "E200", "Kiwi EV", "Lechi", "RC-5", "RC-6", "RM-5", "RS-3", "RS-5", "RS-7", "Yep"],
-"BAIC": ["Arcfox", "BJ20", "BJ40", "BJ80", "BJ90", "Changhe", "D20", "E-Series", "EU-Series", "EX-Series", "Huansu", "Luba", "Magic Speed", "Ruiling", "Senova", "Weiwang", "X3", "X5", "X7", "X25", "X35", "X55", "X65"],
-"Bollinger": ["B1", "B2"],
-"Brilliance": ["BS2", "BS4", "BS6", "Dolphin", "FRV", "FSV", "Grandeur", "H220", "H230", "H3", "H320", "H330", "H530", "M1", "M2", "M3", "V3", "V5", "V6", "V7", "Zhonghua"],
-"BYD": ["Corvette 07", "Destroyer 05", "Dolphin", "e1", "e2", "e3", "e5", "e6", "F0", "F3", "F6", "Flyer", "Frigate 07", "G3", "G5", "G6", "Han", "L3", "M6", "Qin", "S6", "S7", "S8", "Seal", "Sirui", "Song", "Surui", "Tang", "Yuan"],
-"Callaway": ["C12", "C16", "Camaro", "Corvette", "Impala", "Malibu"],
-"Canoo": ["Lifestyle Vehicle", "MPDV", "Pickup"],
-"Chery": ["A1", "A3", "A5", "Amulet", "Arrizo", "Cowin", "Eastar", "eQ", "eQ1", "eQ5", "Fulwin", "Higgo", "Karry", "Kimo", "Omoda", "QQ", "Riich", "Tiggo", "Windcloud"],
-"Cupra": ["Ateca", "Born", "Formentor", "Leon", "Tavascan", "Terramar", "UrbanRebel"],
-"Dartz": ["Black Alligator", "Black Stallion", "Freze", "Prombron", "White Horse"],
-"De Tomaso": ["Deauville", "Guarà", "Longchamp", "Mangusta", "P72", "Pantera", "Vallelunga"],
-"Denza": ["D9", "N7", "N8", "X"],
-"Derways": ["Antelope", "Aurora", "Cowboy", "Land Crown", "Plutus", "Shuttle"],
-"Donkervoort": ["D8", "D10", "S7", "S8"],
-"Drako Motors": ["Dragon", "GTE"],
-"Elaris": ["Beo", "Dyo", "Finn", "Leo"],
-"Faraday Future": ["FF 91"],
-"GAC": ["Aion", "Emkoo", "Empow", "Enpulse", "Entranze", "Enverge", "E-jet", "GA3", "GA4", "GA5", "GA6", "GA8", "GE3", "GM6", "GM8", "GS3", "GS4", "GS5", "GS7", "GS8", "Gonow", "Trumpchi"],
-"Haval": ["Chitu", "Chulian", "Dagou", "F5", "F7", "H1", "H2", "H4", "H5", "H6", "H7", "H8", "H9", "Jolion", "M6", "Shenshou", "Veyron", "XY"],
-"HiPhi": ["A", "X", "Y", "Z"],
-"Hongqi": ["Century", "E-HS3", "E-HS9", "E-QM5", "Guoyao", "Guoya", "Guoli", "H5", "H6", "H7", "H9", "HS3", "HS5", "HS7", "HQ9", "L5", "LS7", "Mingshi", "Qijian"],
-"Iran Khodro": ["Arisun", "Bardo", "Dena", "Paykan", "Runna", "Samand", "Sarir", "Soren", "Tara"],
-"Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
-"Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
-};
-
-const translations = {
-  fr: { /* ... comme dans ton code ... */ 
-    'titre-vendre': "Déposer une annonce de vente",
-    'intro-vendre': "Ici, vous pouvez lancer votre annonce au public. Les informations personnelles (email, téléphone, CIN) ne seront jamais publiées, sauf si elles figurent explicitement dans la description du produit.",
-    'titre-achat': "Demander l'achat d'une voiture",
-    'intro-achat': "Ici, vous pouvez demander à la société d’acheter une voiture précise. Toutes les informations personnelles sont sécurisées et ne seront jamais partagées.",
-    'titre-chercher': "Demander de chercher une voiture",
-    'intro-chercher': "Ici, vous pouvez demander à la société de chercher et acheter une voiture selon vos critères. Toutes les informations personnelles sont sécurisées et ne seront jamais partagées.",
-    'lbl-marque-v': "Marque :",
-    'lbl-modele-v': "Modèle :",
-    'lbl-annee-v': "Année :",
-    'lbl-puissancefiscal-v':"Puissance fiscale :",
-    'lbl-prix-v': "Prix (MAD) :",
-    'lbl-kilometrage-v': "Kilométrage :",
-    'lbl-carburant-v': "Carburant :",
-    'lbl-transmission-v': "Transmission :",
-    'lbl-description-v': "Description :",
-    'lbl-email-v': "Votre email :",
-    'lbl-phone-v': "Numéro de téléphone :",
-    'lbl-cin-v': "Numéro de CIN :",
-    'lbl-cin-img-v': "Photo recto/verso CIN :",
-    'lbl-cartegrise-v': "Carte grise :",
-    'lbl-images-v': "Images voiture (max 10) :",
-    'btn-submit-v': "Envoyer",
-    'lbl-marque-a': "Marque :",
-    'lbl-modele-a': "Modèle :",
-    'lbl-annee-a': "Année :",
-    'lbl-puissancefiscal-a':"Puissance fiscale :",
-    'lbl-prix-a': "Prix (MAD) :",
-    'lbl-kilometrage-a': "Kilométrage :",
-    'lbl-carburant-a': "Carburant :",
-    'lbl-transmission-a': "Transmission :",
-    'lbl-description-a': "Description :",
-    'lbl-email-a': "Votre email :",
-    'lbl-phone-a': "Numéro de téléphone :",
-    'lbl-cin-a': "Numéro de CIN :",
-    'lbl-cin-img-a': "Photo recto/verso CIN :",
-    'btn-submit-a': "Envoyer",
-    'lbl-marque-c': "Marque :",
-    'lbl-modele-c': "Modèle :",
-    'lbl-annee-c': "Année :",
-    'lbl-puissancefiscal-c':"Puissance fiscale :",
-    'lbl-prix-c': "Prix (MAD) :",
-    'lbl-kilometrage-c': "Kilométrage :",
-    'lbl-carburant-c': "Carburant :",
-    'lbl-transmission-c': "Transmission :",
-    'lbl-description-c': "Description :",
-    'lbl-email-c': "Votre email :",
-    'lbl-phone-c': "Numéro de téléphone :",
-    'lbl-cin-c': "Numéro de CIN :",
-    'lbl-ville-v':"la ville",
-    'lbl-ville-a':"la ville",
-    'lbl-ville-c':"la ville",
-    'lbl-cin-img-c': "Photo recto/verso CIN :",
-    'btn-submit-c': "Envoyer",
-    't-vendre': "Vendre sa voiture",
-    't-achat': "Demander l'achat",
-    't-chercher': "Chercher une voiture",
-    'home': "Accueil",
-    'carburants': ["Essence", "Diesel", "Electrique", "Hybride", "GPL", "GNV", "Hydrogène"],
-    'transmissions': ["Manuelle", "Automatique", "Robotisée", "CVT"],
-    'lbl-cartegrise-recto-v': "Carte grise (recto/verso) :",
-    'lbl-procuration-v': "Procuration (si non propriétaire) :",
-    'label_checkbox_procuration': "Procuration",
-    'choisir': "--Choisir--"
-  },
-  en: { /* ... comme dans ton code ... */ 
-    'titre-vendre': "Post a car ad",
-    'intro-vendre': "Here you can post your ad to the public. Personal info (email, phone, CIN) will never be published unless included in the description.",
-    'titre-achat': "Request a car purchase",
-    'intro-achat': "Here you can request the company to buy a specific car for you. Your personal info is secure and will never be shared.",
-    'titre-chercher': "Ask to search for a car",
-    'intro-chercher': "Here you can request the company to search and buy a car based on your criteria. Your personal info is secure and will never be shared.",
-    'lbl-marque-v': "Brand:",
-    'lbl-modele-v': "Model:",
-    'lbl-annee-v': "Year:",
-    'lbl-puissancefiscal-v':"Fiscal horsepower :",
-    'lbl-prix-v': "Price (MAD):",
-    'lbl-kilometrage-v': "Mileage:",
-    'lbl-carburant-v': "Fuel:",
-    'lbl-transmission-v': "Transmission:",
-    'lbl-description-v': "Description:",
-    'lbl-email-v': "Your email:",
-    'lbl-phone-v': "Phone number:",
-    'lbl-cin-v': "CIN number:",
-    'lbl-cin-img-v': "CIN photo (front/back):",
-    'lbl-cartegrise-v': "Registration card:",
-    'lbl-images-v': "Car images (max 10):",
-    'btn-submit-v': "Send",
-    'lbl-marque-a': "Brand:",
-    'lbl-modele-a': "Model:",
-    'lbl-annee-a': "Year:",
-    'lbl-puissancefiscal-a':"Fiscal horsepower :",
-    'lbl-prix-a': "Price (MAD):",
-    'lbl-kilometrage-a': "Mileage:",
-    'lbl-carburant-a': "Fuel:",
-    'lbl-transmission-a': "Transmission:",
-    'lbl-description-a': "Description:",
-    'lbl-email-a': "Your email:",
-    'lbl-phone-a': "Phone number:",
-    'lbl-cin-a': "CIN number:",
-    'lbl-cin-img-a': "CIN photo (front/back):",
-    'btn-submit-a': "Send",
-    'lbl-marque-c': "Brand:",
-    'lbl-modele-c': "Model:",
-    'lbl-annee-c': "Year:",
-    'lbl-puissancefiscal-c':"Fiscal horsepower :",
-    'lbl-prix-c': "Price (MAD):",
-    'lbl-kilometrage-c': "Mileage:",
-    'lbl-carburant-c': "Fuel:",
-    'lbl-transmission-c': "Transmission:",
-    'lbl-description-c': "Description:",
-    'lbl-email-c': "Your email:",
-    'lbl-phone-c': "Phone number:",
-    'lbl-cin-c': "CIN number:",
-    'lbl-ville-c':"the city",
-     'lbl-ville-a':"the city",
-      'lbl-ville-v':"the city",
-    'lbl-cin-img-c': "CIN photo (front/back):",
-    'btn-submit-c': "Send",
-    't-vendre': "Sell your car",
-    't-achat': "Request purchase",
-    't-chercher': "Search for a car",
-    'home': "Home",
-    'carburants': ["Petrol", "Diesel", "Electric", "Hybrid", "LPG", "CNG", "Hydrogen"],
-    'transmissions': ["Manual", "Automatic", "Robotized", "CVT"],
-    'lbl-cartegrise-recto-v': "Registration certificate (front/back):",
-    'lbl-procuration-v': "Authorization letter (if not owner):" ,
-    'label_checkbox_procuration': "Authorization letter",
-    'choisir': "--Choose--"
-  },
-  ar: { /* ... comme dans ton code ... */ 
-    'titre-vendre': "إيداع إعلان سيارة",
-    'intro-vendre': "هنا يمكنك نشر إعلانك للعامة. لن يتم نشر المعلومات الشخصية (البريد، الهاتف، رقم التعريف) إلا إذا وردت في وصف المنتج.",
-    'titre-achat': "طلب شراء سيارة",
-    'intro-achat': "هنا يمكنك طلب شراء سيارة محددة من الشركة. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
-    'titre-chercher': "طلب البحث عن سيارة",
-    'intro-chercher': "هنا يمكنك طلب الشركة للبحث وشراء سيارة حسب معاييرك. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
-    'lbl-marque-v': "الماركة:",
-    'lbl-modele-v': "الموديل:",
-    'lbl-annee-v': "السنة:",
-    'lbl-puissancefiscal-v':"القوة الجبائية:",
-    'lbl-prix-v': "السعر (MAD):",
-    'lbl-kilometrage-v': "الكيلومترات:",
-    'lbl-carburant-v': "الوقود:",
-    'lbl-transmission-v': "ناقل الحركة:",
-    'lbl-description-v': "الوصف:",
-    'lbl-email-v': "البريد الإلكتروني:",
-    'lbl-phone-v': "رقم الهاتف:",
-    'lbl-cin-v': "رقم التعريف:",
-    'lbl-cin-img-v': "صورة التعريف (أمامية/خلفية):",
-    'lbl-cartegrise-v': "بطاقة التسجيل:",
-    'lbl-images-v': "صور السيارة (10 كحد أقصى):",
-    'btn-submit-v': "إرسال",
-    'lbl-marque-a': "الماركة:",
-    'lbl-modele-a': "الموديل:",
-    'lbl-annee-a': "السنة:",
-    'lbl-puissancefiscal-a':"القوة الجبائية:",
-    'lbl-prix-a': "السعر (MAD):",
-    'lbl-kilometrage-a': "الكيلومترات:",
-    'lbl-carburant-a': "الوقود:",
-    'lbl-transmission-a': "ناقل الحركة:",
-    'lbl-description-a': "الوصف:",
-    'lbl-email-a': "البريد الإلكتروني:",
-    'lbl-phone-a': "رقم الهاتف:",
-    'lbl-cin-a': "رقم التعريف:",
-    'lbl-cin-img-a': "صورة التعريف (أمامية/خلفية):",
-    'btn-submit-a': "إرسال",
-    'lbl-marque-c': "الماركة:",
-    'lbl-modele-c': "الموديل:",
-    'lbl-annee-c': "السنة:",
-    'lbl-puissancefiscal-c':"القوة الجبائية:",
-    'lbl-prix-c': "السعر (MAD):",
-    'lbl-kilometrage-c': "الكيلومترات:",
-    'lbl-carburant-c': "الوقود:",
-    'lbl-transmission-c': "ناقل الحركة:",
-    'lbl-description-c': "الوصف:",
-    'lbl-email-c': "البريد الإلكتروني:",
-    'lbl-phone-c': "رقم الهاتف:",
-    'lbl-cin-c': "رقم التعريف:",
-     'lbl-cin-v': "رقم التعريف:",
-      'lbl-cin-a': "رقم التعريف:",
-    'lbl-ville-c':"المدينة",
-    'lbl-cin-img-c': "صورة التعريف (أمامية/خلفية):",
-    'btn-submit-c': "إرسال",
-    't-vendre': "بيع سيارتك",
-    't-achat': "طلب شراء",
-    't-chercher': "طلب البحث عن سيارة",
-    'home': "الرئيسية",
-    'carburants': ["بنزين", "ديزل", "كهرباء", "هايبرد", "غاز", "غاز طبيعي", "هيدروجين"],
-    'transmissions': ["يدوي", "أوتوماتيكي", "روبوتي", "CVT"],
-    'lbl-cartegrise-recto-v': "رخصة السير (أمامية/خلفية):",
-    'lbl-procuration-v': "تفويض (إذا لم تكن المالك):",
-    'label_checkbox_procuration': "تفويض/وكالة",
-    'choisir': "--اختر--"
-  }
-};
-
-
-const selectVillev = document.getElementById("ville-v");
-const selectVillea = document.getElementById("ville-a");
-const selectVillec = document.getElementById("ville-c");
-
-ville.forEach(v => {
-  // Pour le premier select
-  let option1 = document.createElement("option");
-  option1.value = v;
-  option1.textContent = v;
-  selectVillev.appendChild(option1);
-
-  // Pour le deuxième select
-  let option2 = document.createElement("option");
-  option2.value = v;
-  option2.textContent = v;
-  selectVillea.appendChild(option2);
-
-  // Pour le troisième select
-  let option3 = document.createElement("option");
-  option3.value = v;
-  option3.textContent = v;
-  selectVillec.appendChild(option3);
-});
-
-
-// Multilangue/multiformulaire
+const apiURL = "https://apicars.p2p-cars.com/api/getannonce";
+const imgBase = "https://apicars.p2p-cars.com/";
+const translations = { /* ... à remplir ... */ };
+document.getElementById("lang-fr").addEventListener("click", ()=>setLang("fr"));
+document.getElementById("lang-en").addEventListener("click", ()=>setLang("en"));
+document.getElementById("lang-ar").addEventListener("click", ()=>setLang("ar"));
 let currentLang = "fr";
 function setLang(lang) {
   currentLang = lang;
+  displayCars(0);
   document.documentElement.lang = lang;
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
   [
-    'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
-    'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-ville-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
-    'lbl-marque-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-ville-a','lbl-cin-img-a','btn-submit-a',
-    'lbl-marque-c','lbl-modele-c','lbl-annee-c','lbl-puissancefiscal-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-ville-c','lbl-cin-img-c','btn-submit-c',
-    't-vendre','t-achat','t-chercher','lbl-cartegrise-recto-v', 'lbl-cartegrise-verso-v'
-  ].forEach(id=>{
+    'welcome-title','welcome-desc','btn','filter-search-label','filter-marque-label',
+    'filter-modele-label','filter-annee-label','filter-kilometrage-label','filter-carburant-label','filter-puissance-label',
+    'nav-accueil','nav-simulateur','nav-services','nav-login'
+  ].forEach(id => {
     let el = document.getElementById(id);
-    if(el) el.textContent = translations[lang][id];
+    if (el && translations[lang][id]) el.textContent = translations[lang][id];
   });
   document.querySelector('.home-btn').innerHTML = `<i class="fas fa-home"></i> ${translations[lang]['home']}`;
-  ['carburant-v','carburant-a','carburant-c'].forEach(id=>{
-    let sel = document.getElementById(id);
-    sel.innerHTML = translations[lang]['carburants'].map(x=>`<option value="${x}">${x}</option>`).join('');
-  });
-  ['transmission-v','transmission-a','transmission-c'].forEach(id=>{
-    let sel = document.getElementById(id);
-    sel.innerHTML = translations[lang]['transmissions'].map(x=>`<option value="${x}">${x}</option>`).join('');
-  });
   ['fr','en','ar'].forEach(l=>{
     document.getElementById('lang-'+l).classList.remove('active');
   });
   document.getElementById('lang-'+lang).classList.add('active');
-  fillBrandSelects();
-  ["v","a","c"].forEach(suffix=>{
-    let marque = document.getElementById(`marque-${suffix}`).value;
-    fillModelSelect(`modele-${suffix}`, marque);
+  document.getElementById('search').placeholder = translations[lang]['filter-search-ph'];
+  document.getElementById('kilometrage').placeholder = translations[lang]['filter-kilometrage-ph'];
+  document.getElementById('puissance').placeholder = translations[lang]['filter-puissance-ph'];
+  let marqueSel = document.getElementById('marque');
+  marqueSel.innerHTML = `<option value="">${translations[lang]['filter-marque-ph']}</option>` +
+    translations[lang]['brands'].map(m=>`<option value="${m}">${m}</option>`).join('');
+  fillModelSelect();
+  let anneeSel = document.getElementById('annee');
+  anneeSel.innerHTML = `<option value="">${translations[lang]['filter-annee-ph']}</option>`;
+  for (let y = new Date().getFullYear(); y >= 2000; y--) {
+    anneeSel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+  let carburantSel = document.getElementById('carburant');
+  carburantSel.innerHTML = `<option value="">${translations[lang]['filter-carburant-ph']}</option>` +
+    translations[lang]['fuels'].map(f=>`<option value="${f}">${f}</option>`).join('');
+  let villeSel = document.getElementById('ville');
+  villeSel.innerHTML = `<option value="">${translations[lang]['filter-ville-ph']}</option>` +
+    translations[lang]['ville'].map(m=>`<option value="${m}">${m}</option>`).join('');
+}
+async function countExistingCarFiles() {
+  let page = 0;
+  let exists = true;
+  let count = 0;
+  while (exists) {
+    try {
+      const response = await fetch(`https://p2p-cars.com/generatedjs/cars-${page}.js`);
+      if (response.ok) {
+        count++;
+        page++;
+      } else {
+        exists = false;
+      }
+    } catch (error) {
+      exists = false;
+    }
+  }
+  return count;
+}
+let maxPage = null;
+async function initMaxPage() {
+    if (maxPage === null) {
+        maxPage = await countExistingCarFiles();
+    }
+    return maxPage;
+}
+function displayCars(page) {
+  fillModelSelect();
+  fallbackDisplayCars(page);
+}
+document.getElementById('next').addEventListener('click', nextPage);
+document.getElementById('prev').addEventListener('click', prevPage);
+async function nextPage() {
+    let currentPag = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    if(currentPag === max - 1) return;
+    currentPag++;
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
+}
+async function prevPage() {
+    let currentPag = parseInt(document.querySelector("#page span").textContent, 10);
+    const max = await initMaxPage();
+    if(currentPag === 0) return;
+    currentPag--;
+    document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
+    document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
+    displayCars(currentPag);
+    document.querySelector("#page span").textContent = currentPag;   
+}
+function loadCarsFromJS(page, callback) {
+    const script = document.createElement("script");
+    script.src = `https://p2p-cars.com/generatedjs/cars-${page}.js?nocache=${Date.now()}`;
+    script.onload = function () {
+        const carsVar = window['cars' + page];
+        if (typeof carsVar !== "undefined") {
+            callback(carsVar);
+        } else {
+            callback([]);
+        }
+    };
+    script.onerror = function () {
+        callback([]);
+    };
+    document.body.appendChild(script);
+}
+function fallbackDisplayCars(page) {
+  loadCarsFromJS(page, function(cars) {
+    document.body.setAttribute("data-page", page);
+    const list = document.getElementById("carList");
+    const search = document.getElementById("search").value.toLowerCase();
+    const marque = document.getElementById("marque").value;
+    const modele = document.getElementById("modele").value;
+    const annee = document.getElementById("annee").value;
+    const kilometrage = document.getElementById("kilometrage").value;
+    const carburant = document.getElementById("carburant").value;
+    const puissance = document.getElementById("puissance").value;
+    const ville = document.getElementById("ville").value;
+    const filtered = cars.filter(c => {
+      return (
+        (search === "" ||
+          c.marque.toLowerCase().includes(search) ||
+          c.modele.toLowerCase().includes(search) ||
+          (c.description && c.description.toLowerCase().includes(search)) ||
+          (c.ville && c.ville.toLowerCase().includes(search)) ||
+          (c.annee && c.annee.toString().includes(search)) ||
+          (c.carburant && c.carburant.toLowerCase().includes(search)) ||
+          (c.kilometrage && c.kilometrage.toString().includes(search)) ||
+          (c.puissance && c.puissance.toString().includes(search))
+        ) &&
+        (marque === "" || c.marque.toLowerCase() === marque.toLowerCase()) &&
+        (modele === "" || c.modele.toLowerCase() === modele.toLowerCase()) &&
+        (annee === "" || parseInt(c.annee) === parseInt(annee)) &&
+        (kilometrage === "" || c.kilometrage <= parseInt(kilometrage || Infinity)) &&
+        (carburant === "" || c.carburant.toLowerCase() === carburant.toLowerCase()) &&
+        (puissance === "" || c.puissance <= parseInt(puissance || Infinity)) &&
+        (ville === "" || c.ville.toLowerCase() === ville.toLowerCase())
+      );
+    });
+    list.innerHTML = "";
+    filtered.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "car";
+      let imagesArr = Array.isArray(c.images)
+        ? c.images.map(img => "https://p2p-cars.com/" + img.replace(/\\/g, "/"))
+        : ["datatof/default.jpg"];
+      div.innerHTML = `
+        <img src="${imagesArr[0]}" alt="${c.marque} ${c.modele}"
+            onerror="
+              const exts = ['jpeg','jpg','png','webp'];
+              for(let i=0;i<exts.length;i++){
+                if(this.src.includes(exts[i])) continue;
+                const newSrc = this.src.replace(/\\.[a-z]+$/i,'.'+exts[i]);
+                const imgTest = new Image();
+                imgTest.onload=()=>{ this.src=newSrc; return true; };
+                imgTest.onerror=()=>{};
+                imgTest.src=newSrc;
+              }
+              this.onerror=null;
+              this.src='datatof/default.jpg';
+            ">
+        <div class="car-details">
+          <h3>${c.marque} ${c.modele} (${c.annee})</h3>
+          <p><strong>${translations[currentLang]['filter-kilometrage-label']}</strong> ${c.kilometrage} km</p>
+          <p><strong>${translations[currentLang]['filter-carburant-label']}</strong> ${c.carburant}</p>
+          <p><strong>${translations[currentLang]['filter-puissance-label']}</strong> ${c.puissance}</p>
+          <p>${c.description}</p>
+          <p>${c.ville}</p>
+          <button class="consult-btn" data-ref="${c.Ref}">${translations[currentLang]['consult-btn']}</button>
+        </div>
+      `;
+      list.appendChild(div);
+      div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
+    });
   });
 }
-function fillBrandSelects() {
-  const marques = Object.keys(allCarModels).sort();
-  ["marque-v","marque-a","marque-c"].forEach(id=>{
-    let sel = document.getElementById(id);
-    sel.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>` + marques.map(m=>`<option value="${m}">${m}</option>`).join('');
-  });
-}
-function fillModelSelect(modelId, marque) {
-  let modeleSel = document.getElementById(modelId);
-  modeleSel.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>`;
-  if(allCarModels[marque]) {
-    allCarModels[marque].forEach(m=>{
+document.getElementById("marque").addEventListener("change", displayCars);
+document.getElementById("modele").addEventListener("change", displayCars);
+document.getElementById("annee").addEventListener("change", displayCars);
+document.getElementById("kilometrage").addEventListener("input", displayCars);
+document.getElementById("carburant").addEventListener("change", displayCars);
+document.getElementById("puissance").addEventListener("input", displayCars);
+document.getElementById("search").addEventListener("input", displayCars);
+document.getElementById("ville").addEventListener("change", displayCars);
+// RESET button logic
+document.getElementById('reset-filters').addEventListener('click', function() {
+    document.getElementById('search').value = "";
+    document.getElementById('marque').value = "";
+    fillModelSelect();
+    document.getElementById('modele').value = "";
+    document.getElementById('annee').value = "";
+    document.getElementById('kilometrage').value = "";
+    document.getElementById('carburant').value = "";
+    document.getElementById('puissance').value = "";
+    document.getElementById('ville').value = "";
+    displayCars(0);
+    document.querySelector("#page span").textContent = 0;
+    document.getElementById("prev").classList.add("hidden");
+});
+function fillModelSelect() {
+  let marque = document.getElementById('marque').value;
+  let modeleSel = document.getElementById('modele');
+  modeleSel.innerHTML = `<option value="">${translations[currentLang]['filter-modele-ph']}</option>`;
+  if (translations[currentLang]['models'][marque]) {
+    translations[currentLang]['models'][marque].forEach(m => {
       modeleSel.innerHTML += `<option value="${m}">${m}</option>`;
     });
   }
 }
-// Année
-["annee-v","annee-a","annee-c"].forEach(id => {
-  const select = document.getElementById(id);
-  select.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>`;
-  for (let y = new Date().getFullYear(); y >= 1980; y--) {
-    let opt = document.createElement('option');
-    opt.value = y; opt.textContent = y;
-    select.appendChild(opt);
+function transformResponseToArray(data) {
+  const keys = Object.keys(data);
+  if (keys.length === 0) return [];
+  const length = data[keys[0]].length;
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    const obj = {};
+    keys.forEach(key => {
+      obj[key] = data[key][i];
+    });
+    result.push(obj);
   }
-});
-// Dépendance modèles
-[
-  {marque:'marque-v', modele:'modele-v'},
-  {marque:'marque-a', modele:'modele-a'},
-  {marque:'marque-c', modele:'modele-c'}
-].forEach(({marque,modele})=>{
-  document.getElementById(marque).addEventListener('change', function () {
-    fillModelSelect(modele, this.value);
+  return result;
+}
+function openModal(car) {
+  let imagesArr = Array.isArray(car.images)
+    ? car.images
+    : (typeof car.images === "string" ? car.images.split(/[,;]/) : []);
+  imagesArr = imagesArr.map(img =>
+    "https://p2p-cars.com/" + img.replace(/\\/g, "/")
+  );
+  let priceStr = car.prix ? car.prix + " MAD" : "";
+  let modalBg = document.getElementById("modal-bg");
+  modalBg.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" aria-label="${translations[currentLang]['modal-close']}">&times;</button>
+      <h2>${translations[currentLang]['modal-title']}</h2>
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          ${imagesArr.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("")}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+      <div class="modal-details">
+        <p><strong>${translations[currentLang]['modal-date']}:</strong> ${car.date || ""}</p>
+        <p><strong>${translations[currentLang]['modal-kilometrage']}:</strong> ${car.kilometrage || ""} km</p>
+        <p><strong>${translations[currentLang]['modal-carburant']}:</strong> ${car.carburant || ""}</p>
+        <p><strong>${translations[currentLang]['modal-puissance']}:</strong> ${car.cv || ""}</p>
+        <p><strong>${translations[currentLang]['modal-price']}:</strong> ${priceStr}</p>
+        <p>${car.description || ""}</p>
+        <p>${car.ville || ""}</p>
+      </div>
+      <div class="modal-actions">
+        <button id="contact-btn">${translations[currentLang]['modal-contact']}</button>
+        <button id="buy-btn">${translations[currentLang]['modal-buy']}</button>
+        <button id="forum-btn">${translations[currentLang]['modal-forume']}</button>
+      </div>
+    </div>
+  `;
+  modalBg.style.display = "flex";
+  modalBg.querySelector(".modal-close").onclick = () => modalBg.style.display = "none";
+  modalBg.onclick = (e) => {
+    if (e.target === modalBg) modalBg.style.display = "none";
+  };
+  const modal = document.getElementById('contact-modal');
+  const msgLabel = document.getElementById('msg-label');
+  const closeModal = document.getElementById('close-modal');
+  document.getElementById("contact-btn").onclick = function () {
+    modal.style.display = 'flex';
+  };
+  const sendBtn = document.getElementById("send-btn");
+  if (userEmail===null){
+    msgLabel.innerHTML = translations[currentLang]['noconect'];
+    msgLabel.style.color = "red";
+    sendBtn.disabled = true;
+    sendBtn.style.backgroundColor = "red";
+    sendBtn.style.color = "white";
+  }else{
+    msgLabel.textContent = "Vous êtes connecté en tant que : " + userEmail;
+    msgLabel.style.color = "green";
+    sendBtn.disabled = false;
+    sendBtn.style.backgroundColor = "green";
+    sendBtn.style.color = "white";
+  }
+  closeModal.onclick = function() {
+    modal.style.display = 'none';
+  };
+  window.onclick = function(event) {
+    if(event.target == modal) modal.style.display = 'none';
+  };
+  document.getElementById('send-btn').onclick = async function() {
+    const email = localStorage.getItem('userEmail');
+    const message = document.getElementById('contact-message').value;
+    const poffre=document.getElementById('montant-propose').value;
+    const data = {
+        Ref: car.Ref,
+        email: email,
+        poffre:poffre,
+        message: message
+    };
+    try {
+        const response = await fetch('https://apicars.p2p-cars.com/api/msgsellr', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        if (response.ok) {
+            alert("Message envoyé !");
+            modal.style.display = 'none';
+        } else {
+            const errorData = await response.json();
+            alert("Erreur lors de l'envoi : " + (errorData.message || response.status));
+        }
+    } catch (error) {
+        alert("Impossible d'envoyer le message. Vérifiez votre connexion.");
+    }
+  };
+  let selectedRef = car.Ref ;
+  const modalc = document.getElementById("confirmationModal");
+  const modalMessage = document.getElementById("modalMessage");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const closeModalc = document.getElementById("closeModal");
+  document.getElementById("buy-btn").onclick = function() {
+    modalMessage.textContent = translations[currentLang]['commander']+userEmail+translations[currentLang]['engagement'];
+    confirmBtn.textContent = translations[currentLang]['commanderB'];
+    cancelBtn.textContent = translations[currentLang]['AnnulerB'];
+    modalc.style.display = "flex";
+  };
+  confirmBtn.onclick = function() {
+    if (userEmail === null){
+      alert("⚠️" + translations[currentLang]['noconect']);
+      return;
+    }
+    fetch('https://apicars.p2p-cars.com/api/commande', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userEmail: userEmail,
+        selectedRef: selectedRef
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        if (data.message === 'duplicate') {
+          alert(translations[currentLang]['duplicate']);
+          return;
+        } else {
+          alert("✅ " + translations[currentLang]['commandeeffect']);
+        }
+      } else {
+        alert("⚠️ " + (data.message || translations[currentLang]['resauerreur']));
+      }
+    })
+    .catch(error => {
+      alert("⚠️ " + translations[currentLang]['resauerreur']);
+    });
+    modalc.style.display = "none";
+  };
+  cancelBtn.onclick = function() {
+    modalc.style.display = "none";
+  };
+  closeModalc.onclick = function() {
+    modalc.style.display = "none";
+  };
+  const forum = document.getElementById("forum");
+  const closeBtn = forum.querySelector(".close");
+  document.getElementById("forum-title").innerText = translations[currentLang]['modal-forume'];
+  document.getElementById("msg-title").innerText = translations[currentLang]['msg-title'];
+  const Ref = (typeof car !== "undefined" && car.Ref) ? car.Ref : null;
+  if (!Ref) console.error("Ref n'est pas défini !");
+  document.getElementById("forum-btn").onclick = function () {
+    if (!Ref) {
+        alert("Ref manquant. Impossible de charger le forum.");
+        return;
+    }
+    forum.style.display = "flex";
+    document.getElementById("forum-body").innerText = translations[currentLang]['titre-forum'];
+    document.getElementById("forume-body").innerText = "Chargement forume...";
+    fetch('https://apicars.p2p-cars.com/api/forume', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Ref })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erreur réseau: " + res.status);
+        return res.text();
+    })
+    .then(data => {
+        document.getElementById("forume-body").innerHTML = data;
+    })
+    .catch(err => {
+        document.getElementById("forume-body").innerText = "Erreur: " + err.message;
+    });
+  };
+  closeBtn.onclick = () => forum.style.display = "none";
+  window.onclick = (event) => {
+    if (event.target === forum) forum.style.display = "none";
+  };
+  window.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") forum.style.display = "none";
   });
-});
-const cartegriseInput = document.getElementById('cartegrise-v');
-if (cartegriseInput) {
-  cartegriseInput.addEventListener('change', function(){
-    const lblProc = document.getElementById('lbl-procuration-v');
-    const inputProc = document.getElementById('input-procuration-v');
-    if (lblProc) lblProc.style.display = '';
-    if (inputProc) inputProc.style.display = '';
+  new Swiper(".swiper", {
+    loop: true,
+    pagination: { el: ".swiper-pagination", clickable: true },
+    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
   });
 }
-function showForm(form) {
-  ['vendre','achat','chercher'].forEach(f=>{
-    document.getElementById('form-'+f).classList.remove('active');
-    document.getElementById('btn-'+f).classList.remove('active');
-  });
-  document.getElementById('form-'+form).classList.add('active');
-  document.getElementById('btn-'+form).classList.add('active');
-}
-document.getElementById('annonceForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  if (data.getAll('images').length > 10) {
-    document.getElementById('result-vendre').textContent = currentLang === "ar" ? "الحد الأقصى 10 صور." : (currentLang === "en" ? "Maximum 10 images allowed." : "Maximum 10 images autorisées.");
-    return;
-  }
-  try {
-    const response = await fetch('https://apicars.p2p-cars.com/api/annonce', { method:'POST', body:data });
-    if (response.ok) {
-      document.getElementById('result-vendre').textContent = currentLang === "ar" ? "تم إرسال الإعلان ✅ ! يرجى الدخول إلى حسابكم لطلب نشر إعلانكم." : (currentLang === "en" ? "Ad submitted ✅! Please access your account to request the publication of your ad." :"Annonce envoyée ✅ ! Veuillez accéder à votre espace afin de demander la mise en ligne de votre annonce.");
-      form.reset();
-    } else {
-      document.getElementById('result-vendre').textContent = "Erreur lors de l’envoi ("+response.status+").";
-    }
-  } catch (err) {
-    document.getElementById('result-vendre').textContent = "Erreur réseau/CORS.";
-  }
-});
-document.getElementById('achatForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  try {
-    const response = await fetch('https://apicars.p2p-cars.com/api/achat', { method:'POST', body:data });
-    if (response.ok) {
-      document.getElementById('result-achat').textContent ="ar" ? "تم إرسال الطلب ✅ ! يرجى الدخول إلى حسابكم لطلب تفعيل طلبكم." : (currentLang === "en" ? "Request sent ✅! Please log in to your account to request the activation of your request." :"Demande envoyée ✅ ! Veuillez accéder à votre compte pour demander l’activation de votre demande.");
-      form.reset();
-    } else {
-      document.getElementById('result-achat').textContent = "Erreur lors de l’envoi ("+response.status+").";
-    }
-  } catch (err) {
-    document.getElementById('result-achat').textContent = "Erreur réseau/CORS.";
-  }
-});
-document.getElementById('chercherForm').addEventListener('submit', async function(e){
-  e.preventDefault();
-  const form = e.target;
-  const data = new FormData(form);
-  try {
-    const response = await fetch('https://apicars.p2p-cars.com/api/rechercher', { method:'POST', body:data });
-    if (response.ok) {
-      document.getElementById('result-chercher').textContent ="ar" ? "تم إرسال الطلب ✅ ! يرجى الدخول إلى حسابكم لطلب تفعيل طلبكم." : (currentLang === "en" ? "Request sent ✅! Please log in to your account to request the activation of your request." :"Demande envoyée ✅ ! Veuillez accéder à votre compte pour demander l’activation de votre demande.");
-      form.reset();
-    } else {
-      document.getElementById('result-chercher').textContent = "Erreur lors de l’envoi ("+response.status+").";
-    }
-  } catch (err) {
-    document.getElementById('result-chercher').textContent = "Erreur réseau/CORS.";
-  }
-});
-window.setLang = setLang;
-window.showForm = showForm;
 setLang('fr');
+document.getElementById('btn').addEventListener('click', function() {
+  window.location.href = 'https://p2p-cars.com/carservices';
 });
 </script>
 </body>
