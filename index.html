@@ -488,6 +488,8 @@
     overflow: auto;
   }
   </style>
+  <link rel="icon" type="image/png" href="logo4.png">
+
 </head>
 <body>
 <header>
@@ -663,14 +665,14 @@ toggleBtn.addEventListener("click", async () => {  // async ajouté ici
     filtersSection.style.display = "grid"; // affichage des filtres
     toggleBtn.textContent = "Masquer les filtres";
     filter = true;
-    console.log("le fillltre est==> " + filter);
+    //coment/("le fillltre est==> " + filter);
   } else {
     filtersSection.style.display = "none"; // cache les filtres
     toggleBtn.textContent = "Activer les filtres";
     filter = false;
     await displayCars(hpage); // maintenant ça fonctionne
     resetFilters() ;
-    console.log("le fillltre est==> " + filter);
+    //coment/("le fillltre est==> " + filter);
   }
 });
 
@@ -1301,7 +1303,7 @@ function resetFilters() {
 
     // Si tu veux réinitialiser le filtre global
     filter = false;
-    console.log("Filtres réinitialisés, filter =", filter);
+    //coment/("Filtres réinitialisés, filter =", filter);
 }
 
 document.getElementById('next').addEventListener('click', nextPage);
@@ -1420,7 +1422,7 @@ function loadCarsFromJS(page, callback) {
 async function filtranonce() {
     const totalFiles = await countExistingCarFiles();
     let allCars = [];
-    console.log("Commencement du filtre >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    //coment/("Commencement du filtre >>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     
     // Charger toutes les annonces
     for (let page = 0; page < totalFiles; page++) {
@@ -1428,7 +1430,7 @@ async function filtranonce() {
             loadCarsFromJS(page, (cars) => {
                 allCars = allCars.concat(cars || []);
                 resolve();
-                console.log("Chargement des voitures: ", allCars);
+                //coment/("Chargement des voitures: ", allCars);
             });
         });
     }
@@ -1448,7 +1450,7 @@ async function filtranonce() {
     const prixMax = document.getElementById("prix-max").value ? parseInt(document.getElementById("prix-max").value) : null;
     const puissanceMin = document.getElementById("puissance-min").value ? parseInt(document.getElementById("puissance-min").value) : null;
     const puissanceMax = document.getElementById("puissance-max").value ? parseInt(document.getElementById("puissance-max").value) : null;
-    console.log("valeurs des filtre : "+ search+"/"+marque+"/"+modele+"/"+carburant+"/"+ville+"/"+anneeMin+"/"+anneeMax+"/"+kmMin+"/"+kmMax+"/"+prixMin+"/"+prixMax+"/"+puissanceMin+"/"+puissanceMax);
+    //coment/("valeurs des filtre : "+ search+"/"+marque+"/"+modele+"/"+carburant+"/"+ville+"/"+anneeMin+"/"+anneeMax+"/"+kmMin+"/"+kmMax+"/"+prixMin+"/"+prixMax+"/"+puissanceMin+"/"+puissanceMax);
     // Filtrer
     const filteredCars = allCars.filter(car => {
         const carMarque = (car.marque || "").toLowerCase().trim();
@@ -1461,7 +1463,7 @@ async function filtranonce() {
         const carKm = car.kilometrage ? parseInt(car.kilometrage) : null;
         const carPrix = car.prix ? parseInt(car.prix) : null;
         const carPuissance = car.puissance ? parseInt(car.puissance) : null;
-        console.log("valeurs cars : "+carMarque+"/"+carModele+"/"+carVille+"/"+ville+"/"+carCarburant+"/"+carDescription+"/"+carAnnee+"/"+carKm+"/"+carPrix+"/"+carPuissance);
+        //coment/("valeurs cars : "+carMarque+"/"+carModele+"/"+carVille+"/"+ville+"/"+carCarburant+"/"+carDescription+"/"+carAnnee+"/"+carKm+"/"+carPrix+"/"+carPuissance);
         return (
             (!search || carMarque.includes(search) || carModele.includes(search) || carVille.includes(search) || carDescription.includes(search)) &&
             (!marque || carMarque === marque) &&
@@ -1479,25 +1481,25 @@ async function filtranonce() {
         );
     });
 
-    console.log("🚗 Voitures filtrées:", filteredCars.length);
+    //coment/("🚗 Voitures filtrées:", filteredCars.length);
     return filteredCars;
 }
 
 async function fallbackDisplayCars(page) {
-    console.log(`🔹 fallbackDisplayCars appelé pour page=${page}, filter=${filter}`);
+    //coment/(`🔹 fallbackDisplayCars appelé pour page=${page}, filter=${filter}`);
 
     let carsToDisplay = [];
 
     if (filter) {
-        console.log("⚡ Récupération des annonces filtrées via filtranonce()");
+        //coment/("⚡ Récupération des annonces filtrées via filtranonce()");
         carsToDisplay = await filtranonce();
-        console.log(`📦 ${carsToDisplay.length} voitures trouvées après filtrage`);
+        //coment/(`📦 ${carsToDisplay.length} voitures trouvées après filtrage`);
     } else {
-        console.log(`⚡ Chargement des annonces du fichier cars-${page}.js`);
+        //coment/(`⚡ Chargement des annonces du fichier cars-${page}.js`);
         await new Promise(resolve => {
             loadCarsFromJS(page, (cars) => {
                 carsToDisplay = cars;
-                console.log(`📦 ${cars.length} voitures trouvées dans cars-${page}.js`);
+                //coment/(`📦 ${cars.length} voitures trouvées dans cars-${page}.js`);
                 resolve();
             });
         });
@@ -1508,7 +1510,7 @@ async function fallbackDisplayCars(page) {
     list.innerHTML = "";
 
     if (carsToDisplay.length === 0) {
-        console.log("⚠️ Aucune voiture à afficher pour cette page/filtre");
+        //coment/("⚠️ Aucune voiture à afficher pour cette page/filtre");
     }
 
     carsToDisplay.forEach(c => {
@@ -1548,7 +1550,7 @@ async function fallbackDisplayCars(page) {
         div.querySelector(".consult-btn").addEventListener("click", () => openModal(c));
     });
 
-    console.log(`✅ ${carsToDisplay.length} voitures affichées sur la page`);
+    //coment/(`✅ ${carsToDisplay.length} voitures affichées sur la page`);
 }
 
 
