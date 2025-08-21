@@ -697,7 +697,7 @@ function afficherForums(data) {
                     });
                     if (response.ok) {
                         alert("Message envoyé !");
-                        modal.style.display = 'none';
+                       
                     } else {
                         const errorData = await response.json();
                         alert("Erreur lors de l'envoi : " + (errorData.message || response.status));
@@ -782,4 +782,5 @@ if (forum.voiture) {
 </script>
 </body>
 </html>
+
 
