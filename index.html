@@ -63,7 +63,27 @@
   100% { transform: translateY(600px) rotate(360deg); opacity:0; }
 }
 
+  /* Style du top bar */
+    #serverTopBar {
+      display: none; /* caché par défaut */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: yellow;
+      color: black;
+      text-align: center;
+      padding: 10px 0;
+      font-weight: bold; /* texte en gras */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 9999;
+    }
 
+    /* Chaque message sur sa propre ligne */
+    #serverTopBar p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
     body {
       background: linear-gradient(to bottom, rgba(9, 31, 82, 0.192), rgba(1, 9, 20, 0.171)),
       url('arier.png') no-repeat center center fixed;
@@ -559,6 +579,28 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
+<div id="serverTopBar">
+  <p>Nos serveurs fonctionnent de 9h à 22h. Merci pour votre patience. Vous pouvez consulter toutes les informations, mais les négociations et les demandes sont suspendues pendant cette période.</p>
+  <p>الخوادم تعمل من الساعة 9 صباحًا حتى 10 مساءً. شكرًا لصبركم. يمكنكم الاطلاع على جميع المعلومات، ولكن المفاوضات والطلبات معلقة خلال هذا الوقت.</p>
+  <p>Our servers operate from 9 AM to 10 PM. Thank you for your patience. You can view all information, but negotiations and requests are suspended during this time.</p>
+</div>
+<script>
+  function checkServerTime() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    // Afficher entre 22h et 9h
+    if (hour >= 22 || hour < 9) {
+      document.getElementById('serverTopBar').style.display = 'block';
+    } else {
+      document.getElementById('serverTopBar').style.display = 'none';
+    }
+  }
+
+  checkServerTime();
+  setInterval(checkServerTime, 60000);
+</script>
+
 
 <div class="navbar">
   <div class="lang-btns">
