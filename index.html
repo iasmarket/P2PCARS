@@ -8,6 +8,61 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <style>
+/* Overlay couvrant toute la page */
+#overlay {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: transparent; /* Fond transparent */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:9999;
+}
+
+/* Texte stylé */
+.text-slide {
+  color:#ffcc00;
+  font-size:2em;
+  text-align:center;
+  text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff9900, 0 0 30px #ff6600;
+  opacity:0;
+  transition: opacity 1s ease-in-out;
+  max-width: 90%;
+  line-height:1.4em;
+  margin:0.3em 0;
+}
+
+/* Bouton fermer */
+#closeBtn {
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:2em;
+  color:white;
+  cursor:pointer;
+  user-select:none;
+  font-weight:bold;
+}
+
+/* Confettis */
+.confetti {
+  position:absolute;
+  width:6px;
+  height:12px;
+  background:hsl(var(--hue), 80%, 55%);
+  animation: drop 5s linear infinite;
+  opacity:1;
+  border-radius:2px;
+}
+
+@keyframes drop {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(600px) rotate(360deg); opacity:0; }
+}
+
+
     body {
       background: linear-gradient(to bottom, rgba(9, 31, 82, 0.192), rgba(1, 9, 20, 0.171)),
       url('arier.png') no-repeat center center fixed;
@@ -492,7 +547,10 @@
 
 </head>
 <body>
+
 <header>
+
+
   <img src="logo1.png" alt="Logo société mère">
   <div class="header-center">
     <h1>P2P-CARS</h1>
@@ -500,6 +558,7 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
+
 <div class="navbar">
   <div class="lang-btns">
     <button id="lang-fr" aria-label="Français">FR</button>
@@ -519,6 +578,82 @@
   <p id="welcome-desc">Découvrez ici les meilleures offres de voitures d'occasion, annoncez la vente de la vôtre en toute simplicité, ou demandez à trouver et à acheter précisément la voiture d'occasion qui correspond à vos besoins...</p>
   <button id="btn">Envoyer une demande</button>
 </section>
+<div id="overlay">
+  <div id="closeBtn">×</div>
+  <div class="text-slide" id="slide"></div>
+</div>
+<script>
+// Phrases multilingues
+const phrases = [
+  "مرحبًا بكم في منصّتكم الجديدة لبيع وشراء السيارات (P2P) نَدًا لند!\nالأمن – الأمانة – الشفافية – الخبرة 🚗✨",
+  "Bienvenue sur votre nouvelle plateforme P2P pour acheter et vendre des voitures en mode pair-à-pair !\nSécurité – Fiabilité – Transparence – Expertise 🚗✨",
+  "Welcome to your new P2P platform for buying and selling cars, peer-to-peer!\nSecurity – Integrity – Transparency – Expertise 🚗✨"
+];
+
+let current = 0;
+const slide = document.getElementById('slide');
+const overlay = document.getElementById('overlay');
+
+// Détecter si le texte est arabe
+const arabicPattern = /[\u0600-\u06FF]/;
+
+function showNextPhrase() {
+  slide.style.opacity = 0;
+  setTimeout(()=>{
+    const phrase = phrases[current];
+    slide.innerText = phrase;
+
+    // Appliquer RTL uniquement pour l'arabe
+    if(arabicPattern.test(phrase)) {
+      slide.dir = 'rtl';
+      slide.style.textAlign = 'right';
+    } else {
+      slide.dir = 'ltr';
+      slide.style.textAlign = 'center';
+    }
+
+    slide.style.opacity = 1;
+    current = (current + 1) % phrases.length;
+  }, 1000);
+}
+
+// Afficher la première phrase
+const firstPhrase = phrases[current];
+slide.innerText = firstPhrase;
+if(arabicPattern.test(firstPhrase)) {
+  slide.dir = 'rtl';
+  slide.style.textAlign = 'right';
+} else {
+  slide.dir = 'ltr';
+  slide.style.textAlign = 'center';
+}
+slide.style.opacity = 1;
+current++;
+
+// Changer phrase toutes les 5 secondes
+const slideInterval = setInterval(showNextPhrase, 5000);
+
+// Confettis
+for(let i=0;i<150;i++){
+  const c=document.createElement('div');
+  c.className='confetti';
+  c.style.left=Math.random()*100+'%';
+  c.style.top=Math.random()*-50+'px';
+  c.style.setProperty('--hue', Math.floor(Math.random()*360));
+  c.style.animationDelay=Math.random()*2+'s';
+  c.style.width=3+Math.random()*6+'px';
+  c.style.height=6+Math.random()*12+'px';
+  overlay.appendChild(c);
+}
+
+// Fermer overlay au clic sur le bouton
+document.getElementById('closeBtn').addEventListener('click', ()=>{
+  overlay.style.display='none';
+  clearInterval(slideInterval);
+});
+</script>
+
+
 <section class="filters" id="filters" style="display:none; position: relative;">
   <!-- Recherche générale -->
   <div class="filter-group">
@@ -1241,19 +1376,7 @@ function setLang(lang) {
   currentLang = lang;
   displayCars(hpage);
  
-  const btn = document.getElementById('search-btn-float');
-    // Récupère la direction de la page : 'ltr' ou 'rtl'
-    const dir = document.documentElement.getAttribute('dir') || 'ltr';
 
-    if (currentLang === 'ar') {
-      // Pour RTL, bouton en bas à gauche
-      btn.style.right = 'auto';
-      btn.style.left = '20px';
-    } else {
-      // Pour LTR, bouton en bas à droite
-      btn.style.left = 'auto';
-      btn.style.right = '20px';
-    }
   document.documentElement.lang = lang;
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
   [
@@ -1450,7 +1573,7 @@ async function filtranonce() {
     const prixMax = document.getElementById("prix-max").value ? parseInt(document.getElementById("prix-max").value) : null;
     const puissanceMin = document.getElementById("puissance-min").value ? parseInt(document.getElementById("puissance-min").value) : null;
     const puissanceMax = document.getElementById("puissance-max").value ? parseInt(document.getElementById("puissance-max").value) : null;
-    //coment/("valeurs des filtre : "+ search+"/"+marque+"/"+modele+"/"+carburant+"/"+ville+"/"+anneeMin+"/"+anneeMax+"/"+kmMin+"/"+kmMax+"/"+prixMin+"/"+prixMax+"/"+puissanceMin+"/"+puissanceMax);
+    console.log("valeurs des filtre : "+ search+"/"+marque+"/"+modele+"/"+carburant+"/"+ville+"/"+anneeMin+"/"+anneeMax+"/"+kmMin+"/"+kmMax+"/"+prixMin+"/"+prixMax+"/"+puissanceMin+"/"+puissanceMax);
     // Filtrer
     const filteredCars = allCars.filter(car => {
         const carMarque = (car.marque || "").toLowerCase().trim();
@@ -1463,7 +1586,7 @@ async function filtranonce() {
         const carKm = car.kilometrage ? parseInt(car.kilometrage) : null;
         const carPrix = car.prix ? parseInt(car.prix) : null;
         const carPuissance = car.puissance ? parseInt(car.puissance) : null;
-        //coment/("valeurs cars : "+carMarque+"/"+carModele+"/"+carVille+"/"+ville+"/"+carCarburant+"/"+carDescription+"/"+carAnnee+"/"+carKm+"/"+carPrix+"/"+carPuissance);
+        console.log("valeurs cars : "+carMarque+"/"+carModele+"/"+carVille+"/"+ville+"/"+carCarburant+"/"+carDescription+"/"+carAnnee+"/"+carKm+"/"+carPrix+"/"+carPuissance);
         return (
             (!search || carMarque.includes(search) || carModele.includes(search) || carVille.includes(search) || carDescription.includes(search)) &&
             (!marque || carMarque === marque) &&
