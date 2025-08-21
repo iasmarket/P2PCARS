@@ -611,33 +611,6 @@
   </script>
 
   <script>
-    document.getElementById('tab-negoce').addEventListener('click', async function() {
-    // Récupère le userId depuis l'attribut data-userid
-    const userId = this.getAttribute('data-userid');
-
-    try {
-        // Envoie du userId via POST (ou GET selon ton API)
-        const response = await fetch('https://apicars.p2p-cars.com/api/userforumes', {
-            method: 'POST', // ou 'GET'
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userEmail }) // pour POST
-        });
-
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Réponse de l\'API:', data);
-        // Ici tu peux faire ce que tu veux avec les données
-    } catch (error) {
-        console.error('Erreur lors de l\'appel API:', error);
-    }
-});
-
-
 document.getElementById('tab-negoce').addEventListener('click', async function() {
     // Récupère le userId depuis l'attribut data-userid
     const userId = userEmail;
@@ -699,11 +672,37 @@ function afficherForums(data) {
         const textarea = document.createElement("textarea");
         const sendBtn = document.createElement("button");
         sendBtn.textContent = "Envoyer";
-        sendBtn.onclick = () => {
+        sendBtn.onclick = async () => {
             const msg = textarea.value.trim();
             if (msg) {
                 const newMsg = document.createElement("div");
                 newMsg.textContent = msg;
+                const email = localStorage.getItem('userEmail');
+                
+                
+                const dataf = {
+                    Ref: forum.title,
+                    email: email,
+                    message: msg
+                };
+                try {
+                    const response = await fetch('https://apicars.p2p-cars.com/api/msgsellr', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dataf)
+                    });
+                    if (response.ok) {
+                        alert("Message envoyé !");
+                        modal.style.display = 'none';
+                    } else {
+                        const errorData = await response.json();
+                        alert("Erreur lors de l'envoi : " + (errorData.message || response.status));
+                    }
+                } catch (error) {
+                    alert("Impossible d'envoyer le message. Vérifiez votre connexion.");
+                }
                 discussion.appendChild(newMsg);
                 textarea.value = "";
             }
