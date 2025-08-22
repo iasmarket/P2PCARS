@@ -277,7 +277,7 @@
         <button role="tab" id="tab-demandes" aria-controls="panel-demandes" aria-selected="true"></button>
         <button role="tab" id="tab-negoce" aria-controls="panel-negoce" aria-selected="false" tabindex="-1"></button>
         <button role="tab" id="tab-infopers" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
-        <button role="tab" id="tabcontactnous" aria-controls="panel-contact" aria-selected="false" tabindex="-1"></button>
+        <button role="tab" id="tabcontactnous" aria-controls="panel-contactnous" aria-selected="false" tabindex="-1"></button>
       </div>
 
 
@@ -298,8 +298,7 @@
         </section>
 
         <section id="panel-contact" role="tabpanel" aria-labelledby="tab-infopers" hidden>
-          <h2>Contact</h2>
-          <p>Écrivez-nous à <a href="mailto:contact@example.com">contact@example.com</a> ou via les réseaux sociaux.</p>
+
         </section>
       </div>
     </div>
@@ -681,13 +680,12 @@ function afficherForums(data) {
                 
                 
                 const dataf = {
-                    Ref: forum.title,
+                    Ref: forum.title ,
                     email: email,
                     poffre:"-",
                     message: msg
                 };
                 try {
-                    
                     const response = await fetch('https://apicars.p2p-cars.com/api/msgsellr', {
                         method: 'POST',
                         headers: {
@@ -697,7 +695,7 @@ function afficherForums(data) {
                     });
                     if (response.ok) {
                         alert("Message envoyé !");
-                       
+                        
                     } else {
                         const errorData = await response.json();
                         alert("Erreur lors de l'envoi : " + (errorData.message || response.status));
@@ -709,6 +707,7 @@ function afficherForums(data) {
                 textarea.value = "";
             }
         };
+        
         messageDiv.appendChild(textarea);
         messageDiv.appendChild(sendBtn);
 
@@ -773,14 +772,58 @@ if (forum.voiture) {
     panel.hidden = false; // afficher la section
 }
 
-// Appel après fetch
-// fetch("url_du_serveur")
-//   .then(res => res.json())
-//   .then(data => afficherForums(data));
 
-//afficherForums(forumsData); // test avec données exemple
+document.getElementById('tab-infopers').addEventListener('click', async function() {
+  const userId = userEmail; // supposons que userEmail contient déjà l'email de l'utilisateur
+
+  try {
+    // Requête vers l'API
+    const response = await fetch("https://apicars.p2p-cars.com/api/fusers", {
+      method: "POST", // ou GET selon ton API
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userId })
+    });
+
+    if (!response.ok) throw new Error("Erreur API");
+
+    const data = await response.json();
+
+    // Injection dans le HTML
+    document.getElementById("panel-contact").innerHTML = `
+      <div style="display: grid; grid-template-columns: 1fr 200px; gap: 20px; padding: 20px; background:#f9f9f9; border-radius: 8px;">
+        
+        <!-- Colonne gauche -->
+        <div>
+          <p><strong>ID (Email) :</strong> ${data.id || ""}</p>
+          <p><strong>Nom complet :</strong> ${data.nom || ""}</p>
+          <p><strong>N° CIN :</strong> ${data.cin || ""}</p>
+          <p><strong>Téléphone :</strong> ${data.telephone || ""}</p>
+          <p><strong>Publication activées :</strong> ${data.appels || ""}</p>
+          <p><strong>Évaluation :</strong> ${data.comport || ""}</p>
+          <p><strong>Mot de passe :</strong> ${data.passwords || ""}</p>
+        </div>
+
+        <!-- Colonne droite (image CIN) -->
+        <div>
+          ${data.imgcin ? `<img src="${data.imgcin}" alt="Image CIN" style="max-width:100%; border:1px solid #ccc; border-radius: 8px;">` : "Pas d'image CIN"}
+        </div>
+      </div>
+    `;
+
+    // Afficher la section
+    document.getElementById("panel-contact").hidden = false;
+
+  } catch (err) {
+    console.error("Erreur :", err);
+    document.getElementById("panel-contact").innerHTML = `<p style="color:red;">Impossible de charger les infos utilisateur.</p>`;
+  }
+});
+
+
+
+
+
+
 </script>
 </body>
 </html>
-
-
