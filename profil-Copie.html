@@ -309,11 +309,19 @@
 
   <!-- Script onglets -->
   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const panel = document.getElementById('panel-contact');
+  if (!panel) return console.error("panel-contact introuvable");
+
+  // ton code qui modifie panel.hidden ici
+});
+
     const userEmail = localStorage.getItem('userEmail');
     (function () {
       const tablist = document.querySelector('[role="tablist"]');
       const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
-      const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+      const panels = tabs.map(t => document.getElementById(t.getAttribute('aria-controls'))).filter(p => p);
+
 
       function activateTab(tab, focus = true) {
         tabs.forEach(t => {
@@ -778,7 +786,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
   console.log("[Frontend] Click sur 'Infos personnelles', envoi de la requête API");
 
   try {
-    const response = await fetch('https://apicars.p2p-cars.com/api/api/fusers', {
+    const response = await fetch('https://apicars.p2p-cars.com/api/fusers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: userEmail })
