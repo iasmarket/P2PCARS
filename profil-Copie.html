@@ -781,8 +781,8 @@ if (forum.voiture) {
 }
 
 
-document.getElementById('tab-infopers').addEventListener('click', async function() {
-     
+  document.getElementById('tab-infopers').addEventListener('click', async function() {
+  
       if (!userEmail) return alert("Veuillez entrer votre email");
 
       console.log("[Frontend] Click sur 'Afficher infos', email :", userEmail);
@@ -795,13 +795,12 @@ document.getElementById('tab-infopers').addEventListener('click', async function
         });
 
         console.log("[Frontend] Réponse HTTP :", response.status);
-
         if (!response.ok) throw new Error("Erreur serveur: " + response.status);
 
         const data = await response.json();
         console.log("[Frontend] JSON reçu :", data);
 
-        // Construire HTML pour les images CIN
+        // Images CIN
         let imgHtml = `<p><em>Aucune image CIN disponible</em></p>`;
         if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
           imgHtml = `<p><strong>Carte CIN :</strong></p>` + data.imgcin.map((url, i) => {
@@ -810,7 +809,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
           }).join('');
         }
 
-        // Construire HTML pour les informations utilisateur
+        // Infos utilisateur
         const html = `
           <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap: wrap;">
             <div style="flex:1; min-width:250px;">
@@ -844,7 +843,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
         panel.hidden = false;
       }
     });
+
 </script>
 </body>
 </html>
-
