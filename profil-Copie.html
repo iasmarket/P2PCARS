@@ -783,8 +783,6 @@ if (forum.voiture) {
 
 
 document.getElementById('tab-infopers').addEventListener('click', async function() {
-  console.log("[Frontend] Click sur 'Infos personnelles', envoi de la requête API");
-
   try {
     const response = await fetch('https://apicars.p2p-cars.com/api/fusers', {
       method: 'POST',
@@ -793,26 +791,22 @@ document.getElementById('tab-infopers').addEventListener('click', async function
     });
 
     if (!response.ok) throw new Error("Erreur serveur: " + response.status);
-
     const data = await response.json();
-    console.log("[Frontend] Réponse API reçue :", data);
 
-    // Images CIN sécurisées
     let imgHtml = `<p><em>Aucune image de CIN disponible</em></p>`;
     if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-      imgHtml = `<p><strong>Carte CIN :</strong></p>` + data.imgcin.map((file, i) => {
-        // Nettoyage du nom de fichier
-        const safeFile = encodeURIComponent(file.trim());
-        return `
-          <img src="/api/cin-secure/${safeFile}" 
-               alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-               style="max-width:100%; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
-        `;
-      }).join('');
+      const urls = await Promise.all(
+        data.imgcin.map(async file => await getCinImage(file))
+      );
+
+      imgHtml = `
+        <p><strong>Carte CIN :</strong></p>
+        ${urls.map((url, i) => url ? `<img src="${url}" alt="CIN ${i===0?'Recto':'Verso'}" style="max-width:100%; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">` : '').join('')}
+      `;
     }
 
-    // Infos utilisateur
-    const html = `
+    const panel = document.getElementById('panel-contact');
+    panel.innerHTML = `
       <div style="display:flex; gap:20px; align-items:flex-start;">
         <div style="flex:1;">
           <p><strong>ID (Email):</strong> ${data.id || ""}</p>
@@ -825,26 +819,40 @@ document.getElementById('tab-infopers').addEventListener('click', async function
           <p><strong>Date d’entrée:</strong> ${data.datentre || ""}</p>
           <p><strong>Dernière visite:</strong> ${data.datdernvisit || ""}</p>
           <p><strong>Nombre de visites:</strong> ${data.nbrvisit || ""}</p>
-          <p><strong>Négoce:</strong> ${data.négoce || ""}</p>
+          <p><strong>Négoce:</strong> ${data["négoce"] || ""}</p>
         </div>
         <div style="flex:1; text-align:center;">
           ${imgHtml}
         </div>
       </div>
     `;
-
-    const panel = document.getElementById('panel-contact');
-    panel.innerHTML = html;
     panel.hidden = false;
-    console.log("[Frontend] Infos affichées dans le panel-contact");
 
   } catch (error) {
-    console.error("[Frontend] Erreur lors du fetch :", error);
+    console.error(error);
     const panel = document.getElementById('panel-contact');
     panel.innerHTML = `<p style="color:red;">Impossible de charger les informations.</p>`;
     panel.hidden = false;
   }
 });
+
+
+
+async function getCinImage(filename) {
+  try {
+    const response = await fetch(`/api/cin-secure/${filename}`, {
+      method: "POST"
+    });
+
+    if (!response.ok) throw new Error("Image introuvable : " + response.status);
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob); // URL temporaire pour <img>
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
 
 
 
