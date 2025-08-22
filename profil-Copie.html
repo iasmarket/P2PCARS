@@ -798,17 +798,18 @@ document.getElementById('tab-infopers').addEventListener('click', async function
     console.log("[Frontend] Réponse API reçue :", data);
 
     // Images CIN
-    let imgHtml = `<p><em>Aucune image de CIN disponible</em></p>`;
-    if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-      imgHtml = `
-        <p><strong>Carte CIN :</strong></p>
-        ${data.imgcin.map((url, i) => `
-          <img src="${url}" 
-               alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-               style="max-width:100%; margin-bottom: 10px; border:1px solid #ccc; border-radius:6px;">
-        `).join("")}
-      `;
-    }
+let imgHtml = `<p><em>Aucune image de CIN disponible</em></p>`;
+if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
+  imgHtml = `
+    <p><strong>Carte CIN :</strong></p>
+    ${data.imgcin.map((file, i) => `
+      <img src="/api/cin-secure/${file}" 
+           alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
+           style="max-width:100%; margin-bottom: 10px; border:1px solid #ccc; border-radius:6px;">
+    `).join("")}
+  `;
+}
+
 
     // Infos utilisateur
     const html = `
