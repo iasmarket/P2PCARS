@@ -797,24 +797,24 @@ document.getElementById('tab-infopers').addEventListener('click', async function
     const data = await response.json();
     console.log("[Frontend] Réponse API reçue :", data);
 
-    // Images CIN
-let imgHtml = `<p><em>Aucune image de CIN disponible</em></p>`;
-if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-  imgHtml = `
-    <p><strong>Carte CIN :</strong></p>
-    ${data.imgcin.map((file, i) => `
-      <img src="/api/cin-secure/${file}" 
-           alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-           style="max-width:100%; margin-bottom: 10px; border:1px solid #ccc; border-radius:6px;">
-    `).join("")}
-  `;
-}
-
+    // Images CIN sécurisées
+    let imgHtml = `<p><em>Aucune image de CIN disponible</em></p>`;
+    if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
+      imgHtml = `<p><strong>Carte CIN :</strong></p>` + data.imgcin.map((file, i) => {
+        // Nettoyage du nom de fichier
+        const safeFile = encodeURIComponent(file.trim());
+        return `
+          <img src="/api/cin-secure/${safeFile}" 
+               alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
+               style="max-width:100%; margin-bottom:10px; border:1px solid #ccc; border-radius:6px;">
+        `;
+      }).join('');
+    }
 
     // Infos utilisateur
     const html = `
-      <div style="display: flex; gap: 20px; align-items: flex-start;">
-        <div style="flex: 1;">
+      <div style="display:flex; gap:20px; align-items:flex-start;">
+        <div style="flex:1;">
           <p><strong>ID (Email):</strong> ${data.id || ""}</p>
           <p><strong>Nom complet:</strong> ${data.nom || ""}</p>
           <p><strong>N° CIN:</strong> ${data.cin || ""}</p>
@@ -825,9 +825,9 @@ if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
           <p><strong>Date d’entrée:</strong> ${data.datentre || ""}</p>
           <p><strong>Dernière visite:</strong> ${data.datdernvisit || ""}</p>
           <p><strong>Nombre de visites:</strong> ${data.nbrvisit || ""}</p>
-          <p><strong>Négoce:</strong> ${data["négoce"] || ""}</p>
+          <p><strong>Négoce:</strong> ${data.négoce || ""}</p>
         </div>
-        <div style="flex: 1; text-align: center;">
+        <div style="flex:1; text-align:center;">
           ${imgHtml}
         </div>
       </div>
