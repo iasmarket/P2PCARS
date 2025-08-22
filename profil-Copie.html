@@ -784,7 +784,11 @@ if (forum.voiture) {
 
 async function getCinImage(filename) {
   try {
-    const resp = await fetch(`/api/cin-secure/${filename}`, { method: 'POST' });
+    const resp = await fetch(`/api/cin-secure`, { 
+      method: 'POST' ,
+          headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cinemail: filename })
+    });
     if (!resp.ok) throw new Error("Image introuvable : " + resp.status);
     const blob = await resp.blob();
     return URL.createObjectURL(blob); // URL temporaire pour <img>
