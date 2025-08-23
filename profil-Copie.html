@@ -799,7 +799,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
 
     try {
       // --- Login pour obtenir JWT ---
-      const loginResponse = await fetch('https://apicars.p2p-cars.com/api/login', {
+      const loginResponse = await fetch('https://apicars.p2p-cars.com/api/Auht0', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: userEmail, password })
@@ -868,3 +868,4 @@ document.getElementById('tab-infopers').addEventListener('click', async function
 </script>
 </body>
 </html>
+
