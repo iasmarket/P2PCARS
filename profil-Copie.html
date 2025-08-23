@@ -820,22 +820,22 @@ document.getElementById('tab-infopers').addEventListener('click', async function
       });
       const data = await response.json();
 
-      // --- Images CIN en base64 (retour à la forme précédente = empilées) ---
+      // --- Images CIN en base64 ---
       let imgHtml = `<p><em>Aucune image CIN disponible</em></p>`;
       if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-        imgHtml = `<p><strong>Carte CIN :</strong></p>`;
+        imgHtml = `<p><strong>Carte CIN :</strong></p>
+                   <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">`;
         for (let i = 0; i < data.imgcin.length; i++) {
           const base64Res = await fetch(data.imgcin[i] + '/base64', {
             headers: { 'Authorization': 'Bearer ' + token }
           });
           if (base64Res.ok) {
             const { base64 } = await base64Res.json();
-            imgHtml += `<div style="margin-bottom:10px;">
-                          <img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-                               style="max-width:200px; display:block; margin:auto; border:1px solid #ccc; border-radius:8px;">
-                        </div>`;
+            imgHtml += `<img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
+                        style="max-width:350px; max-height:220px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`;
           }
         }
+        imgHtml += `</div>`;
       }
 
       // --- Étoiles d'évaluation ---
