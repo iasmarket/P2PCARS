@@ -823,16 +823,29 @@ document.getElementById('tab-infopers').addEventListener('click', async function
       // --- Images CIN en base64 ---
       let imgHtml = `<p><em>Aucune image CIN disponible</em></p>`;
       if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-        imgHtml = `<p><strong>Carte CIN :</strong></p>`;
+        imgHtml = `<p><strong>Carte CIN :</strong></p>
+                   <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">`;
         for (let i = 0; i < data.imgcin.length; i++) {
           const base64Res = await fetch(data.imgcin[i] + '/base64', {
             headers: { 'Authorization': 'Bearer ' + token }
           });
           if (base64Res.ok) {
             const { base64 } = await base64Res.json();
-            imgHtml += `<img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" style="max-width:200px; margin:5px;">`;
+            imgHtml += `<img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
+                        style="max-width:250px; max-height:160px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`;
           }
         }
+        imgHtml += `</div>`;
+      }
+
+      // --- Étoiles d'évaluation ---
+      let stars = "";
+      let points = parseInt(data.comport) || 0;
+      let fullStars = Math.floor(points / 5); // 5 points = 1 étoile
+      for (let i = 0; i < 5; i++) {
+        stars += i < fullStars 
+          ? "&#9733;"  // étoile pleine
+          : "&#9734;"; // étoile vide
       }
 
       // --- Affichage infos utilisateur ---
@@ -844,18 +857,49 @@ document.getElementById('tab-infopers').addEventListener('click', async function
             <p><strong>N° CIN:</strong> ${data.cin || ""}</p>
             <p><strong>Téléphone:</strong> ${data.telephone || ""}</p>
             <p><strong>Publications activées:</strong> ${data.appels || ""}</p>
-            <p><strong>Évaluation:</strong> ${data.comport || ""}</p>
-            <p><strong>Date d’entrée:</strong> ${data.datentre || ""}</p>
-            <p><strong>Dernière visite:</strong> ${data.datdernvisit || ""}</p>
-            <p><strong>Nombre de visites:</strong> ${data.nbrvisit || ""}</p>
-            <p><strong>Négoce:</strong> ${data.négoce || ""}</p>
+            <p><strong>Évaluation:</strong> <span style="font-size:20px; color:gold;">${stars}</span> (${points}/25)</p>
           </div>
           <div style="flex:1; min-width:250px; text-align:center;">
             ${imgHtml}
           </div>
         </div>
+        <div style="margin-top:20px; text-align:center;">
+          <button id="changePasswordBtn" style="padding:8px 15px; border:none; background:#007bff; color:white; border-radius:6px; cursor:pointer;">
+            Changer le mot de passe
+          </button>
+          <div id="passwordChangePanel" style="margin-top:15px; display:none;">
+            <input type="password" id="newPasswordInput" placeholder="Nouveau mot de passe" style="margin-right:10px;">
+            <button id="submitNewPassword">Valider</button>
+          </div>
+        </div>
       `;
       panel.innerHTML = html;
+
+      // --- Gestion du bouton changement mot de passe ---
+      document.getElementById("changePasswordBtn").addEventListener("click", function() {
+        document.getElementById("passwordChangePanel").style.display = "block";
+      });
+
+      document.getElementById("submitNewPassword").addEventListener("click", async function() {
+        const newPassword = document.getElementById("newPasswordInput").value;
+        if (!newPassword) return alert("Veuillez entrer le nouveau mot de passe");
+
+        try {
+          const updateResponse = await fetch('https://apicars.p2p-cars.com/api/change-password', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ email: userEmail, newPassword })
+          });
+          if (!updateResponse.ok) throw new Error("Erreur modification: " + updateResponse.status);
+          alert("Mot de passe changé avec succès !");
+        } catch (err) {
+          console.error(err);
+          alert("Impossible de changer le mot de passe.");
+        }
+      });
 
     } catch (err) {
       console.error(err);
@@ -868,4 +912,3 @@ document.getElementById('tab-infopers').addEventListener('click', async function
 </script>
 </body>
 </html>
-
