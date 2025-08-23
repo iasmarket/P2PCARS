@@ -783,7 +783,7 @@ if (forum.voiture) {
 
 document.getElementById('tab-infopers').addEventListener('click', async function() {
   const panel = document.getElementById('panel-contact');
- 
+
   if (!userEmail) return alert("Veuillez entrer votre email");
 
   // Afficher le champ mot de passe
@@ -824,19 +824,31 @@ document.getElementById('tab-infopers').addEventListener('click', async function
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
-        }
+        },
+        body: JSON.stringify({ email: userEmail })
       });
 
       if (!response.ok) throw new Error("Erreur serveur: " + response.status);
       const data = await response.json();
       console.log("[Frontend] JSON reçu :", data);
 
-      // --- Construction images CIN ---
+      // --- Construction images CIN en base64 ---
       let imgHtml = `<p><em>Aucune image CIN disponible</em></p>`;
       if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-        imgHtml = `<p><strong>Carte CIN :</strong></p>` + data.imgcin.map((url, i) => {
-          return `<img src="${url}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" style="max-width:200px; margin:5px;">`;
-        }).join('');
+        imgHtml = `<p><strong>Carte CIN :</strong></p>`;
+        for (let i = 0; i < data.imgcin.length; i++) {
+          const url = data.imgcin[i];
+          // Fetch base64 via JWT
+          const imgResponse = await fetch(url + "/base64", {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          if (imgResponse.ok) {
+            const imgData = await imgResponse.json();
+            imgHtml += `<img src="${imgData.base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" style="max-width:200px; margin:5px;">`;
+          } else {
+            console.warn("[Frontend] Impossible de charger l'image :", url);
+          }
+        }
       }
 
       // --- Construction infos utilisateur ---
@@ -868,6 +880,8 @@ document.getElementById('tab-infopers').addEventListener('click', async function
     }
   });
 });
+
+
 </script>
 </body>
 </html>
