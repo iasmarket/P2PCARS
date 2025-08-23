@@ -832,7 +832,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
           if (base64Res.ok) {
             const { base64 } = await base64Res.json();
             imgHtml += `<img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-                        style="max-width:440px; max-height:700px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`;
+                        style="max-width:440px; max-height:220px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`;
           }
         }
         imgHtml += `</div>`;
@@ -912,4 +912,5 @@ document.getElementById('tab-infopers').addEventListener('click', async function
 </script>
 </body>
 </html>
+
 
