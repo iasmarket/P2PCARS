@@ -942,33 +942,25 @@ document.getElementById('tab-infopers').addEventListener('click', async function
       const data = await response.json();
 
       // --- Images CIN en base64 ---
-      let imgHtml = `<p><em>Aucune image CIN disponible</em></p>`;
-      if (Array.isArray(data.imgcin) && data.imgcin.length > 0) {
-        imgHtml = `<p><strong>Carte CIN :</strong></p>
-                   <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">`;
+      let images = ['',''];
+      if (Array.isArray(data.imgcin)) {
         for (let i = 0; i < data.imgcin.length; i++) {
-          const base64Res = await fetch(data.imgcin[i] + '/base64', {
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
+          const base64Res = await fetch(data.imgcin[i] + '/base64', { headers: { 'Authorization': 'Bearer ' + token } });
           if (base64Res.ok) {
             const { base64 } = await base64Res.json();
-            imgHtml += `<img src="${base64}" alt="CIN ${i === 0 ? 'Recto' : 'Verso'}" 
-                        style="max-width:440px; max-height:440px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`;
+            images[i] = base64;
           }
         }
-        imgHtml += `</div>`;
       }
 
       // --- Étoiles d'évaluation ---
-      let stars = "";
       let points = parseInt(data.comport) || 0;
       let fullStars = Math.floor(points / 5);
-      for (let i = 0; i < 5; i++) {
-        stars += i < fullStars ? "&#9733;" : "&#9734;";
-      }
+      let stars = "";
+      for (let i = 0; i < 5; i++) stars += i < fullStars ? "&#9733;" : "&#9734;";
 
-      // --- Affichage infos utilisateur dans zones de texte avec boutons ---
-      const html = `
+      // --- HTML final ---
+      panel.innerHTML = `
         <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap: wrap;">
           <div style="flex:1; min-width:250px;">
             ${createEditableField('Email', 'id', data.id)}
@@ -979,7 +971,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
             <p><strong>Évaluation:</strong> <span style="font-size:20px; color:gold;">${stars}</span> (${points}/25)</p>
           </div>
           <div style="flex:1; min-width:250px; text-align:center;">
-            ${imgHtml}
+            ${createEditableImages(images)}
           </div>
         </div>
         <div style="margin-top:20px; text-align:center;">
@@ -992,38 +984,31 @@ document.getElementById('tab-infopers').addEventListener('click', async function
           </div>
         </div>
       `;
-      panel.innerHTML = html;
 
-      // --- Gestion bouton changement mot de passe ---
-      document.getElementById("changePasswordBtn").addEventListener("click", function() {
+      // --- Gestion mot de passe ---
+      document.getElementById("changePasswordBtn").addEventListener("click", () => {
         document.getElementById("passwordChangePanel").style.display = "block";
       });
-
-      document.getElementById("submitNewPassword").addEventListener("click", async function() {
+      document.getElementById("submitNewPassword").addEventListener("click", async () => {
         const newPassword = document.getElementById("newPasswordInput").value;
         if (!newPassword) return alert("Veuillez entrer le nouveau mot de passe");
-
         try {
-          const updateResponse = await fetch('https://apicars.p2p-cars.com/api/change-password', {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({ email: userEmail, newPassword })
+          const res = await fetch('https://apicars.p2p-cars.com/api/change-password', {
+            method:'POST',
+            headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+            body:JSON.stringify({email:userEmail,newPassword})
           });
-          if (!updateResponse.ok) throw new Error("Erreur modification: " + updateResponse.status);
-          alert("Mot de passe changé avec succès !");
+          if(!res.ok) throw new Error(res.status);
+          alert("Mot de passe changé !");
           document.getElementById("passwordChangePanel").style.display = "none";
-
-        } catch (err) {
-          console.error(err);
-          alert("Impossible de changer le mot de passe.");
-        }
+        } catch(e) { console.error(e); alert("Impossible de changer le mot de passe."); }
       });
 
-      // --- Gestion boutons modifier/enregistrer/annuler ---
+      // --- Champs texte éditables ---
       setupEditableFields(token, data);
+
+      // --- Images CIN éditables ---
+      setupEditableImages(token, images);
 
     } catch (err) {
       console.error(err);
@@ -1032,7 +1017,7 @@ document.getElementById('tab-infopers').addEventListener('click', async function
   });
 });
 
-// --- Fonctions utilitaires ---
+// --- Champs texte ---
 function createEditableField(label, fieldId, value) {
   return `
     <div style="margin-bottom:10px;">
@@ -1049,51 +1034,94 @@ function createEditableField(label, fieldId, value) {
 
 function setupEditableFields(token, originalData) {
   ['id','nom','cin','telephone'].forEach(field => {
-    const input = document.getElementById(field + 'Input');
-    const editBtn = document.getElementById(field + 'EditBtn');
-    const saveBtn = document.getElementById(field + 'SaveBtn');
-    const cancelBtn = document.getElementById(field + 'CancelBtn');
+    const input = document.getElementById(field+'Input');
+    const editBtn = document.getElementById(field+'EditBtn');
+    const saveBtn = document.getElementById(field+'SaveBtn');
+    const cancelBtn = document.getElementById(field+'CancelBtn');
 
     editBtn.addEventListener('click', () => {
-      input.disabled = false;
-      editBtn.style.display = 'none';
-      saveBtn.style.display = 'inline-block';
-      cancelBtn.style.display = 'inline-block';
+      input.disabled=false; editBtn.style.display='none'; saveBtn.style.display='inline-block'; cancelBtn.style.display='inline-block';
     });
-
     cancelBtn.addEventListener('click', () => {
-      input.value = originalData[field] || '';
-      input.disabled = true;
-      editBtn.style.display = 'inline-block';
-      saveBtn.style.display = 'none';
-      cancelBtn.style.display = 'none';
+      input.value=originalData[field]||''; input.disabled=true; editBtn.style.display='inline-block'; saveBtn.style.display='none'; cancelBtn.style.display='none';
     });
-
     saveBtn.addEventListener('click', async () => {
-      const newValue = input.value;
+      const newValue=input.value;
       try {
-        const updateResponse = await fetch('https://apicars.p2p-cars.com/api/updatinfo', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({ email: userEmail, [field]: newValue })
+        const res=await fetch('https://apicars.p2p-cars.com/api/updatinfo',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+          body:JSON.stringify({email:userEmail,[field]:newValue})
         });
-        if (!updateResponse.ok) throw new Error("Erreur update: " + updateResponse.status);
-        originalData[field] = newValue;
-        input.disabled = true;
-        editBtn.style.display = 'inline-block';
-        saveBtn.style.display = 'none';
-        cancelBtn.style.display = 'none';
-        alert(`${field} mis à jour avec succès !`);
-      } catch (err) {
-        console.error(err);
-        alert("Impossible de mettre à jour " + field);
-      }
+        if(!res.ok) throw new Error(res.status);
+        originalData[field]=newValue; input.disabled=true; editBtn.style.display='inline-block'; saveBtn.style.display='none'; cancelBtn.style.display='none';
+        alert(`${field} mis à jour !`);
+      } catch(e) { console.error(e); alert("Impossible de mettre à jour "+field); }
     });
   });
 }
+
+// --- Images CIN ---
+function createEditableImages(imgArray) {
+  return `
+    <div id="cinImagesPanel">
+      <p><strong>Carte CIN :</strong></p>
+      <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+        ${imgArray.map((img,i)=>`<img id="cinImg${i}" src="${img}" alt="CIN ${i}" style="max-width:220px; max-height:220px; object-fit:contain; border:1px solid #ccc; border-radius:8px;">`).join('')}
+      </div>
+      <button id="editCINBtn">Modifier</button>
+      <div id="cinEditPanel" style="display:none; margin-top:10px;">
+        <input type="file" id="cinRectoInput" accept="image/*" style="margin-bottom:5px;"><br>
+        <input type="file" id="cinVersoInput" accept="image/*"><br>
+        <button id="saveCINBtn">Enregistrer</button>
+        <button id="cancelCINBtn">Annuler</button>
+      </div>
+    </div>
+  `;
+}
+
+function setupEditableImages(token, imgArray) {
+  const editBtn = document.getElementById('editCINBtn');
+  const editPanel = document.getElementById('cinEditPanel');
+  const saveBtn = document.getElementById('saveCINBtn');
+  const cancelBtn = document.getElementById('cancelCINBtn');
+
+  editBtn.addEventListener('click', () => { editBtn.style.display='none'; editPanel.style.display='block'; });
+  cancelBtn.addEventListener('click', () => { editPanel.style.display='none'; editBtn.style.display='inline-block'; });
+
+  saveBtn.addEventListener('click', async () => {
+    const recto = document.getElementById('cinRectoInput').files[0];
+    const verso = document.getElementById('cinVersoInput').files[0];
+    if(!recto && !verso) return alert("Veuillez sélectionner au moins une image");
+
+    const formData = new FormData();
+    formData.append('email', userEmail);
+    if(recto) formData.append('recto', recto);
+    if(verso) formData.append('verso', verso);
+
+    try {
+      const res = await fetch('https://apicars.p2p-cars.com/api/updateCIN',{method:'POST',headers:{'Authorization':'Bearer '+token},body:formData});
+      if(!res.ok) throw new Error(res.status);
+      alert("Images CIN mises à jour !");
+      editPanel.style.display='none'; editBtn.style.display='inline-block';
+
+      if(recto) document.getElementById('cinImg0').src = await fileToBase64(recto);
+      if(verso) document.getElementById('cinImg1').src = await fileToBase64(verso);
+
+    } catch(e){ console.error(e); alert("Impossible de mettre à jour les images CIN"); }
+  });
+}
+
+// --- Helper ---
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=e=>reject(e);
+    reader.readAsDataURL(file);
+  });
+}
+
 
 ////////////////////////////////////////////
 let chatInterval;
