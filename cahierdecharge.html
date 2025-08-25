@@ -811,58 +811,58 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     const userEmail = localStorage.getItem('userEmail');
     const userRef = localStorage.getItem('userRef');
 
+    let response;
+
     try {
         const pdf = new jsPDF('p', 'mm', 'a4');
 
-        // Ajouter logos
+        // Logos
         const logo1 = new Image();
         logo1.src = 'logo1.png';
         const logo2 = new Image();
         logo2.src = 'logo4.png';
-
-        await Promise.all([
-            new Promise(res => logo1.onload = res),
-            new Promise(res => logo2.onload = res)
-        ]);
-
+        await Promise.all([new Promise(r => logo1.onload = r), new Promise(r => logo2.onload = r)]);
         pdf.addImage(logo1, 'PNG', 10, 10, 40, 20);
         pdf.addImage(logo2, 'PNG', 150, 10, 40, 20);
 
-        // Titre
         pdf.setFontSize(18);
         pdf.setFont("helvetica", "bold");
         pdf.text("Cahier de charges - p2p-cars.com", 105, 40, { align: "center" });
 
-        // Infos utilisateur
         pdf.setFontSize(12);
         pdf.setFont("helvetica", "normal");
         pdf.text(`Référence : ${userRef}`, 10, 50);
         pdf.text(`Email : ${userEmail}`, 10, 58);
         pdf.text(`Date : ${new Date().toLocaleDateString()}`, 10, 66);
 
-        // Exemple tableau (autoTable)
-        const columns = ["Critère", "Valeur minimale", "Valeur maximale", "Commentaires"];
-        const rows = [
-            ["Puissance moteur (ch)", "100", "200", "Vérifier disponibilité"],
-            ["Couple moteur (Nm)", "150", "300", "Standard"]
-        ];
+        // Collecter les données du tableau critères techniques
+        const rows = [];
+        document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
+            const tds = tr.querySelectorAll('td');
+            rows.push([
+                tds[0].innerText,
+                tds[1].querySelector('input')?.value || '',
+                tds[2].querySelector('input')?.value || '',
+                tds[3].querySelector('input')?.value || ''
+            ]);
+        });
 
         pdf.autoTable({
-            head: [columns],
+            head: [["Critère", "Valeur minimale", "Valeur maximale", "Commentaires"]],
             body: rows,
             startY: 80,
             styles: { fontSize: 10 },
             headStyles: { fillColor: [26, 115, 232] }
         });
 
-        // Générer blob et envoyer
+        // Export PDF ou envoi serveur
         const pdfBlob = pdf.output('blob');
         const formData = new FormData();
         formData.append('file', pdfBlob, 'Cahier_de_Charges.pdf');
         formData.append('email', userEmail);
         formData.append('ref', userRef);
 
-        await fetch('https://apicars.p2p-cars.com/api/cahierdecharge', {
+        response = await fetch('https://apicars.p2p-cars.com/api/cahierdecharge', {
             method: 'POST',
             body: formData
         });
@@ -878,6 +878,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
     } catch (error) {
         console.error('Erreur PDF:', error);
+        if (response) console.error(response.statusText);
         alert('Erreur lors de la génération du PDF');
     }
 });
