@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cahier des Charges Interactif - Achat Véhicule</title>
+<style>
+    /* ============================
+       STYLES GÉNÉRAUX
+    ============================ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+        --primary-color: #020202;
+        --secondary-color: #19077c79;
+        --background-color: #f0f2f56c;
+        --card-background: #f6f6f777;
+        --text-color: #f6f8fa;
+        --header-color: #34495e;
+        --border-color: #e0e0e0;
+    }
+
+body {
+   background-image: url('arier.png');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+    h1 {
+        text-align: center;
+        color: var(--header-color);
+        font-size: 2.5em;
+        margin-bottom: 40px;
+    }
+    
+    h4 {
+        font-size: 1.1em;
+        color: var(--header-color);
+        margin-top: 15px;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ============================
+       STRUCTURE EN CARTES (CARDS)
+    ============================ */
+    .option-card {
+        background-color: var(--card-background);
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: rgb(252, 249, 249);
+        padding: 18px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .card-header h2 {
+        margin: 0;
+        font-size: 1.3em;
+    }
+
+    .card-total {
+        font-size: 1.1em;
+        font-weight: 700;
+        background-color: rgba(255,255,255,0.2);
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    /* ============================
+       OPTIONS (CHECKBOXES) & INPUTS
+    ============================ */
+    .option-item, .spec-item {
+        display: flex;
+        align-items: center;
+        background-color: #f9fafb;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .option-item:has(input:checked) {
+        border-color: var(--primary-color);
+        background-color: #eafaf1;
+    }
+
+    .option-item label, .spec-item label {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        cursor: pointer;
+        align-items: center;
+    }
+
+    .option-item input[type="checkbox"] {
+        display: none; /* On cache la checkbox par défaut pour la styliser */
+    }
+
+    .custom-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #bdc3c7;
+        border-radius: 5px;
+        margin-right: 12px;
+        display: inline-block;
+        position: relative;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    
+    .option-item input:checked + .custom-checkbox {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .option-item input:checked + .custom-checkbox::after {
+        content: '✔';
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 14px;
+    }
+
+    .item-name {
+        font-weight: 600;
+    }
+
+    .item-price {
+        color: var(--primary-color);
+        font-weight: 700;
+        background-color: #e0f2f1;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.9em;
+    }
+    
+    /* Styles pour les tables de critères */
+    .criteria-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .criteria-table th, .criteria-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .criteria-table tr:last-child td {
+        border-bottom: none;
+    }
+    .criteria-table input[type="text"], .criteria-table input[type="number"] {
+        width: 95%;
+        padding: 8px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: 'Inter', sans-serif;
+    }
+    .criteria-table input[type="text"]:focus, .criteria-table input[type="number"]:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 5px rgba(26, 188, 156, 0.3);
+    }
+
+    /* ============================
+       TOTAL GÉNÉRAL FLOTTANT
+    ============================ */
+    #grand-total-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--header-color);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        z-index: 1000;
+        text-align: center;
+    }
+    
+    #grand-total-container .total-title {
+        margin: 0 0 10px 0;
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+
+    #grand-total-container .total-amount {
+        font-size: 2.2em;
+        font-weight: 700;
+    }
+
+</style>
+</head>
+<body>
+
+
+<div id="header-logos" style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px;">
+    <img src="logo1.png" alt="Logo Société" style="height:60px;">
+    <img src="logo4.png" alt="P2P-Cars" style="height:60px;">
+</div>
+
+  <h1>Cahier des Charges - Achat Véhicule</h1>
+
+  <!-- ======================== SECTION 1 : OPTIONS (NON-PRICED) ======================== -->
+  <section class="option-card">
+    <div class="card-header">
+      <h2>1. Options du Véhicule (Vos Souhaits)</h2>
+    </div>
+    <div class="card-body">
+        <h4>Sécurité</h4>
+        <div class="grid-container">
+            <div class="spec-item"><label><input type="checkbox"> ABS</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Airbags frontaux</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Airbags latéraux</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Airbags rideaux</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Aide au stationnement avant/arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Caméra de recul</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Caméra 360°</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Détection angles morts</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Assistance freinage</label></div>
+            <div class="spec-item"><label><input type="checkbox"> ESP / Contrôle de stabilité</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Alarme antivol</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Régulateur de vitesse adaptatif</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Alerte franchissement de ligne</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système de maintien dans la voie</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Surveillance de la somnolence du conducteur</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Freinage automatique d’urgence</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Pré-collision avec détection piétons et cyclistes</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Détection d’obstacles à basse vitesse</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Assistance au démarrage en côte</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Aide au freinage en virage</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système d’alerte trafic transversal arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Verrouillage automatique des portes en roulant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Assistance au freinage d’urgence sur autoroute</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Détecteur de pression des pneus</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système d’appel d’urgence (eCall)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Airbags genoux conducteur / passager</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Protection des occupants enfants (Isofix / TopTether)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Assistance active aux feux de route / AHB</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système anti-retournement / Roll Stability Control</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Freinage intelligent en intersection</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Alerte distance de sécurité</label></div>
+
+        </div>
+        
+        <h4>Confort</h4>
+        <div class="grid-container">
+            
+            <div class="spec-item"><label><input type="checkbox"> Climatisation automatique</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sièges chauffants</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Volant chauffant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Toit ouvrant panoramique</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sièges ventilés</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Régulateur de vitesse</label></div>
+
+            <div class="spec-item"><label><input type="checkbox"> Accès et démarrage sans clé</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sièges électriques avec mémoire</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Support lombaire réglable</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Pare-brise chauffant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Rétroviseurs électriques et rabattables</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Banquette arrière rabattable</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Prises USB / recharge sans fil</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Éclairage intérieur ambiant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Volant réglable en hauteur et profondeur</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sièges massants</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Accoudoirs avant et arrière réglables</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Tablettes pour passagers arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Rideaux pare-soleil arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Commandes chauffage/climatisation arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Coffre à ouverture électrique</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Suspension adaptative / confort</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Fonction mémoire pour sièges et rétroviseurs</label></div>
+
+        </div>
+        
+        <h4>Multimédia & Connectivité</h4>
+        <div class="grid-container">
+            <div class="spec-item"><label><input type="checkbox"> GPS</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Bluetooth</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Apple CarPlay</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Android Auto</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système audio premium</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Écran tactile central</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Commandes au volant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Radio numérique / DAB</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Connexion Wi-Fi</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Recharge sans fil pour smartphone</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Reconnaissance vocale</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Affichage tête haute (HUD)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système de navigation 3D</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Streaming audio / vidéo</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Wi-Fi hotspot intégré</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Interface multimédia arrière pour passagers</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Intégration assistant vocal (Alexa, Google Assistant)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Mise à jour OTA du logiciel</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Multi-écrans / dual screen</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Connectivité smartphone avancée (apps, notifications)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Système de divertissement arrière (DVD / streaming)</label></div>
+        </div>
+        
+        <h4>Accessoires</h4>
+        <div class="grid-container">
+            <div class="spec-item"><label><input type="checkbox"> Tapis de sol</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Tapis coffre / protection coffre</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Barres de toit</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Coffre de toit</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Porte-vélos</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Porte-skis / porte-planches</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Housse de protection voiture</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Pare-soleil / film solaire</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Kit de sécurité (triangle, gilet, extincteur)</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Chargeur / adaptateur voiture</label></div>
+            <div class="spec-item"><label><input type="checkbox"> GPS supplémentaire / support téléphone</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Rétroviseurs supplémentaires / caméra de recul</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sièges enfant / rehausseurs</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Protection pare-chocs / bavettes</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Filet de coffre</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Couvre-volant</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Sac de rangement / organiseur coffre</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Housses sièges / protège-sièges</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Support tablette pour passagers arrière</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Lampe d’appoint / lampe de lecture</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Béquille ou cric amélioré</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Câbles de démarrage</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Roue de secours / kit réparation pneus</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Filet ou grille séparation pour animaux</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Housse pour roue de secours</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Protecteurs de seuils de portes</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Ventilateur portable / chauffage additionnel</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Support de vélo intérieur / porte-golf</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Kit nettoyage intérieur / extérieur</label></div>
+            <div class="spec-item"><label><input type="checkbox"> Boîte à gants supplémentaire</label></div>
+        </div>
+        <h4>Motorisation</h4>
+        <div class="grid-container">
+
+        <div class="spec-item"><label><input type="checkbox"> Essence</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Diesel</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Hybride</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Électrique</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Hybride rechargeable (PHEV)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Puissance (ch)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Couple (Nm)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 2X4 / Traction avant</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 4x4 / Transmission intégrale</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Manuelle</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Automatique</label></div>
+        <div class="spec-item"><label><input type="checkbox"> CVT / Transmission continue</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 1.0L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 1.2L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 1.4L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 1.6L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 1.8L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> 2.0L</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Consommation mixte (L/100 km ou kWh/100 km)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Autonomie électrique (km)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Émissions CO₂ (g/km)</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Turbo / Suralimentation</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Start & Stop</label></div>
+        <div class="spec-item"><label><input type="checkbox"> Mode Eco / Sport</label></div>
+
+      
+
+        </div>
+    </div>
+  </section>
+
+  <!-- ======================== SECTION 2 : CRITÈRES TECHNIQUES (NON-PRICED) ======================== -->
+  <section class="option-card">
+    <div class="card-header">
+        <h2>2. Critères Techniques</h2>
+    </div>
+    <div class="card-body">
+        <table class="criteria-table">
+            <thead>
+                <tr><th>Critère</th><th>Valeur minimale</th><th>Valeur maximale</th><th>Commentaires</th></tr>
+            </thead>
+            <tbody>
+               <tr><td>Puissance moteur (ch)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Couple moteur (Nm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>0 à 100 km/h (s)</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+                <tr><td>Vitesse maximale (km/h)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Consommation urbaine (L/100km)</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+                <tr><td>Consommation extra-urbaine (L/100km)</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+                <tr><td>Consommation mixte (L/100km)</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+                <tr><td>Émissions CO₂ (g/km)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Capacité coffre (L)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Réservoir carburant (L)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Longueur (mm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Largeur (mm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Hauteur (mm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Empattement (mm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Garde au sol (mm)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Poids à vide (kg)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Charge utile (kg)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Traction / Propulsion / 4x4</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Type de transmission</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Nombre de portes</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Nombre de sièges</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Type de carburant</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Suspension avant / arrière</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Freins avant / arrière</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Diamètre roues (pouces)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Pneus (dimensions)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Type de direction</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+                <tr><td>Rayon de braquage (m)</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+                <tr><td>Capacité remorquage (kg)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Volume habitacle (L)</td><td><input type="number"></td><td><input type="number"></td><td><input type="text"></td></tr>
+                <tr><td>Indice de sécurité NCAP</td><td><input type="number" step="0.1"></td><td><input type="number" step="0.1"></td><td><input type="text"></td></tr>
+
+            </tbody>
+        </table>
+    </div>
+  </section>
+  
+  <!-- NOTE: Les sections 3 (Esthétique) et 4 (Administratif) peuvent être ajoutées sur le même modèle que la section 2 pour ne pas surcharger la page. -->
+
+  <!-- ======================== SECTION 5 : SERVICES AVANT ACHAT (PRICED) ======================== -->
+  <section class="option-card" id="avant-achat">
+    <div class="card-header">
+      <h2>5. Services Avant Achat</h2>
+      <div class="card-total">Total: <span class="sub-total">0</span> MAD</div>
+    </div>
+    <div class="card-body grid-container">
+<!-- Services avant achat -->
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="500">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Inspection mécanique complète</span>
+    </div>
+    <span class="item-price">500 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="300">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Diagnostic électronique (OBD)</span>
+    </div>
+    <span class="item-price">300 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="0">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Essai routier</span>
+    </div>
+    <span class="item-price">Gratuit</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="400">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Contrôle historique du véhicule (accidents, entretiens...)</span>
+    </div>
+    <span class="item-price">400 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="200">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Vérification kilométrage réel</span>
+    </div>
+    <span class="item-price">200 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="250">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Contrôle carrosserie & peinture</span>
+    </div>
+    <span class="item-price">250 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="600">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Contrôle batterie (voiture électrique / hybride)</span>
+    </div>
+    <span class="item-price">600 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="350">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Vérification pneus et freins</span>
+    </div>
+    <span class="item-price">350 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="800">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Expertise indépendante (rapport officiel)</span>
+    </div>
+    <span class="item-price">800 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="1000">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Garantie mécanique 12 mois</span>
+    </div>
+    <span class="item-price">1000 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="200">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Assistance administrative (carte grise, immatriculation)</span>
+    </div>
+    <span class="item-price">200 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="0">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Service de financement (simulation crédit / leasing)</span>
+    </div>
+    <span class="item-price">Gratuit</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="150">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Service d’assurance auto (comparatif)</span>
+    </div>
+    <span class="item-price">150 MAD</span>
+  </label>
+</div>
+
+
+      <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="1000">
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Accompagnement & formalités</span>
+            </div>
+            <span class="item-price">1000 MAD</span>
+        </label>
+      </div>
+      <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="450">
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Nettoyage & préparation</span>
+            </div>
+            <span class="item-price">450 MAD</span>
+        </label>
+      </div>
+    </div>
+  </section>
+  
+  <!-- ======================== SECTION 6 : SERVICES APRÈS ACHAT (PRICED) ======================== -->
+  <section class="option-card" id="apres-achat">
+    <div class="card-header">
+      <h2>6. Services Après Achat</h2>
+      <div class="card-total">Total: <span class="sub-total">0</span> MAD</div>
+    </div>
+    <div class="card-body grid-container">
+      <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="800">
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Entretien préventif</span>
+            </div>
+            <span class="item-price">800 MAD</span>
+        </label>
+      </div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="1000">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Révision annuelle</span>
+    </div>
+    <span class="item-price">1000 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="600">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Changement huile & filtres</span>
+    </div>
+    <span class="item-price">600 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="1200">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Garantie prolongée 12 mois</span>
+    </div>
+    <span class="item-price">1200 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="400">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Assistance dépannage 24/7</span>
+    </div>
+    <span class="item-price">400 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="700">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Service lavage & detailing</span>
+    </div>
+    <span class="item-price">700 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="900">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Remplacement pneus</span>
+    </div>
+    <span class="item-price">900 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="1100">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Service climatisation (nettoyage + recharge gaz)</span>
+    </div>
+    <span class="item-price">1100 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="1500">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Installation accessoires (attelage, galerie, etc.)</span>
+    </div>
+    <span class="item-price">1500 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="500">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Mise à jour GPS & multimédia</span>
+    </div>
+    <span class="item-price">500 MAD</span>
+  </label>
+</div>
+
+<div class="option-item">
+  <label>
+    <div>
+      <input type="checkbox" class="option-checkbox" data-price="2000">
+      <span class="custom-checkbox"></span>
+      <span class="item-name">Contrat entretien annuel (pack complet)</span>
+    </div>
+    <span class="item-price">2000 MAD</span>
+  </label>
+</div>
+
+      <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="700">
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Suivi administratif & mutation</span>
+            </div>
+            <span class="item-price">700 MAD</span>
+        </label>
+      </div>
+       <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="3000">
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Assurance & assistance</span>
+            </div>
+            <span class="item-price">3000 MAD</span>
+        </label>
+      </div>
+
+    </div>
+  </section>
+  
+  <!-- ======================== SECTION 7 : FACTURATION (PRICED) ======================== -->
+   <section class="option-card" id="facturation">
+    <div class="card-header">
+      <h2>7. Facturation P2P-Cars</h2>
+      <div class="card-total">Total: <span class="sub-total">0</span> MAD</div>
+    </div>
+    <div class="card-body grid-container">
+      <div class="option-item">
+        <label>
+            <div>
+                <input type="checkbox" class="option-checkbox" data-price="2000"checked disabled>
+                <span class="custom-checkbox"></span>
+                <span class="item-name">Frais de service P2P-Cars</span>
+            </div>
+            <span class="item-price">2000 MAD</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================== TOTAL GÉNÉRAL FLOTTANT ======================== -->
+  <div id="grand-total-container">
+    <h3 class="total-title">Total des Frais</h3>
+    <div class="total-amount"><span id="grand-total">0</span> MAD</div>
+  </div>
+<div style="text-align:center; margin:30px 0;">
+    <button id="generate-pdf" style="padding:12px 20px; font-size:16px; background-color:#1abc9c; color:white; border:none; border-radius:8px; cursor:pointer;">
+        Imprimer / Export PDF
+    </button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const userEmail = localStorage.getItem('userEmail');
+/////////////////////////////////////
+document.getElementById('generate-pdf').addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf;
+    const userEmail = localStorage.getItem('userEmail'); // récupère l'email
+ 
+    try {
+        // Sélection de l'élément à convertir en PDF
+        const element = document.body;
+
+        // Générer le canvas
+        const canvas = await html2canvas(element, {useCORS: true, allowTaint: true});
+        const imgData = canvas.toDataURL('image/png');
+
+        // Créer le PDF
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+        // Convertir en Blob
+        const pdfBlob = pdf.output('blob');
+
+        // Préparer FormData pour fetch
+        const formData = new FormData();
+        formData.append('file', pdfBlob, 'Cahier_de_Charges.pdf');
+        formData.append('email', userEmail); // <-- ajoute l'email ici
+
+        // Envoi vers le serveur
+        const response = await fetch('https://apicars.p2p-cars.com/api/cahierdecharge', {
+            method: 'POST',
+            body: formData
+        });
+
+        if(response.ok){
+            const data = await response.json();
+            alert('PDF envoyé avec succès !');
+            console.log(data);
+        } else {
+            alert('Erreur lors de l\'envoi du PDF');
+            console.error(response.statusText);
+        }
+
+    } catch (error) {
+        console.error('Erreur PDF:', error);
+        alert('Erreur lors de la génération du PDF');
+    }
+});
+
+////////////////////////////////
+    // Sélectionne uniquement les cases à cocher qui ont un prix
+    const allPricedCheckboxes = document.querySelectorAll('.option-checkbox');
+
+    function calculateTotals() {
+        let grandTotal = 0;
+
+        // Parcourt chaque carte de section
+        document.querySelectorAll('.option-card').forEach(card => {
+            // Vérifie si la carte contient un élément pour le sous-total
+            const subTotalElement = card.querySelector('.sub-total');
+            if (subTotalElement) {
+                let sectionTotal = 0;
+                
+                // Trouve toutes les cases cochées DANS CETTE CARTE
+                card.querySelectorAll('.option-checkbox:checked').forEach(checkbox => {
+                    sectionTotal += parseFloat(checkbox.dataset.price || 0);
+                });
+
+                // Met à jour l'affichage du sous-total
+                subTotalElement.textContent = sectionTotal;
+
+                // Ajoute au total général
+                grandTotal += sectionTotal;
+            }
+        });
+
+        // Met à jour l'affichage du total général
+        document.getElementById('grand-total').textContent = grandTotal;
+    }
+
+    // Ajoute un écouteur d'événement à chaque case à cocher payante
+    allPricedCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', calculateTotals);
+    });
+
+    // Calcule les totaux une première fois au chargement
+    calculateTotals();
+});
+</script>
+
+</body>
+</html>
