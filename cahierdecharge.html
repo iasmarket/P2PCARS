@@ -821,9 +821,11 @@ body {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const userEmail = localStorage.getItem('userEmail');
+  const overlay = document.getElementById('loading-overlay'); 
+  overlay.style.display = 'none'; // ✅ Retirer overlay si exception
 /////////////////////////////////////
 document.getElementById('generate-pdf').addEventListener('click', async () => {
-      const overlay = document.getElementById('loading-overlay'); 
+      
 
     // ✅ Afficher overlay dès le clic
     overlay.style.display = 'flex';  
