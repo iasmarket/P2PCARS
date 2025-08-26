@@ -815,21 +815,24 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     try {
         const pdf = new jsPDF('p', 'mm', 'a4');
 
-        // Logos
+        // === LOGOS ===
         const logo1 = new Image();
         logo1.src = 'logo1.png';
         const logo2 = new Image();
         logo2.src = 'logo4.png';
-        await Promise.all([new Promise(r => logo1.onload = r), new Promise(r => logo2.onload = r)]);
+        await Promise.all([
+            new Promise(r => logo1.onload = r),
+            new Promise(r => logo2.onload = r)
+        ]);
         pdf.addImage(logo1, 'PNG', 10, 10, 40, 20);
         pdf.addImage(logo2, 'PNG', 150, 10, 40, 20);
 
-        // Titre
+        // === TITRE ===
         pdf.setFontSize(18);
         pdf.setFont("helvetica", "bold");
         pdf.text("Cahier de charges - p2p-cars.com", 105, 40, { align: "center" });
 
-        // Infos client
+        // === INFOS CLIENT ===
         pdf.setFontSize(12);
         pdf.setFont("helvetica", "normal");
         pdf.text(`Référence : ${userRef}`, 10, 50);
@@ -838,29 +841,24 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
         let yPosition = 75;
 
-        // 🔹 1. Toutes les options cochées (même sans prix)
-        const allSections = document.querySelectorAll('.option-card');
-        allSections.forEach(section => {
-            const sectionTitle = section.querySelector('.card-header h2')?.innerText;
-            const checkedItems = section.querySelectorAll('.option-checkbox:checked');
+        // Fonction utilitaire pour générer un tableau PDF à partir de cases cochées
+        function ajouterSection(sectionId, titre) {
+            const section = document.querySelector(sectionId);
+            if (!section) return;
 
+            const checkedItems = section.querySelectorAll('.option-checkbox:checked');
             if (checkedItems.length > 0) {
                 pdf.setFont("helvetica", "bold");
-                pdf.text(sectionTitle, 10, yPosition);
+                pdf.text(titre, 10, yPosition);
                 yPosition += 7;
 
-                pdf.setFont("helvetica", "normal");
                 const items = [];
                 checkedItems.forEach(checkbox => {
-                    const label = checkbox.closest('label');
-                    const itemName = label.querySelector('.item-name')?.innerText || 'Option';
-                    const inputField = label.querySelector('input[type="text"], input[type="number"]');
-                    const extraValue = inputField && inputField.value ? ` (${inputField.value})` : '';
-                    const itemPrice = checkbox.dataset.price && checkbox.dataset.price !== '0'
+                    const itemName = checkbox.closest('label').querySelector('.item-name')?.innerText || '';
+                    const itemPrice = checkbox.dataset.price && checkbox.dataset.price != '0'
                         ? `${checkbox.dataset.price} MAD`
                         : 'Gratuit';
-
-                    items.push([itemName + extraValue, itemPrice]);
+                    items.push([itemName, itemPrice]);
                 });
 
                 pdf.autoTable({
@@ -871,11 +869,17 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                     styles: { fontSize: 10 },
                     headStyles: { fillColor: [26, 115, 232] }
                 });
+
                 yPosition = pdf.lastAutoTable.finalY + 10;
             }
-        });
+        }
 
-        // 🔹 2. Critères techniques (toutes les données saisies)
+        // === SECTIONS COCHÉES ===
+        ajouterSection('#options-section', "Options");
+        ajouterSection('#services-section', "Services Avant Achat");
+        ajouterSection('#frais-section', "Frais de Facturation et Décommission");
+
+        // === CRITERES TECHNIQUES (seulement si rempli) ===
         const rows = [];
         document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
             const tds = tr.querySelectorAll('td');
@@ -903,15 +907,17 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                 styles: { fontSize: 10 },
                 headStyles: { fillColor: [26, 115, 232] }
             });
+
             yPosition = pdf.lastAutoTable.finalY + 10;
         }
 
-        // 🔹 3. Total général
+        // === TOTAL GENERAL ===
         const grandTotal = document.getElementById('grand-total').textContent || '0';
         pdf.setFont("helvetica", "bold");
-        pdf.text(`Total général : ${grandTotal} MAD`, 10, yPosition + 10);
+        pdf.setFontSize(14);
+        pdf.text(`Total HT à payer : ${grandTotal} MAD`, 10, yPosition + 15);
 
-        // 🔹 4. Envoi au serveur
+        // === ENVOI SERVEUR ===
         const pdfBlob = pdf.output('blob');
         const formData = new FormData();
         formData.append('file', pdfBlob, 'Cahier_de_Charges.pdf');
@@ -927,7 +933,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             const data = await response.json();
             alert('PDF envoyé avec succès !');
             console.log(data);
-            // 🔹 Redirection après succès
+            // 🔄 Retour à l'accueil
             window.location.href = 'https://p2p-cars.com';
         } else {
             alert('Erreur lors de l\'envoi du PDF');
