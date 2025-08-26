@@ -825,176 +825,80 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.style.display = 'none'; // ✅ Retirer overlay si exception
 /////////////////////////////////////
 document.getElementById('generate-pdf').addEventListener('click', async () => {
-      
-
-    // ✅ Afficher overlay dès le clic
-    overlay.style.display = 'flex';  
-
-    const { jsPDF } = window.jspdf;
-    const userEmail = localStorage.getItem('userEmail');
-    const userRef = localStorage.getItem('userRef');
+    document.getElementById("loading").style.display = "flex";
 
     try {
-        const pdf = new jsPDF('p', 'mm', 'a4');
+        // Génération du PDF complet
+        const fullPdfBlob = await generateFullPDF();
 
-        // === LOGOS ===
-        const logo1 = new Image();
-        logo1.src = 'logo1.png';
-        const logo2 = new Image();
-        logo2.src = 'logo4.png';
-        await Promise.all([
-            new Promise(r => logo1.onload = r),
-            new Promise(r => logo2.onload = r)
-        ]);
-        pdf.addImage(logo1, 'PNG', 10, 10, 40, 20);
-        pdf.addImage(logo2, 'PNG', 150, 10, 40, 20);
+        // Génération du PDF avec uniquement les options
+        const optionsPdfBlob = await generateOptionsPDF();
 
-        // === TITRE ===
-        pdf.setFontSize(18);
-        pdf.setFont("helvetica", "bold");
-        pdf.text("Cahier de charges - p2p-cars.com", 105, 40, { align: "center" });
+        // Récupération email et ref (depuis ton formulaire ou variables)
+        const userEmail = document.getElementById("userEmail").value || ""; 
+        const userRef = document.getElementById("userRef").value || ""; 
 
-        // === INFOS CLIENT ===
-        pdf.setFontSize(12);
-        pdf.setFont("helvetica", "normal");
-        pdf.text(`Référence : ${userRef}`, 10, 50);
-        pdf.text(`Email : ${userEmail}`, 10, 58);
-        pdf.text(`Date : ${new Date().toLocaleDateString()}`, 10, 66);
-
-        let yPosition = 75;
-
-        // === SECTIONS (options + services) ===
-        const allSections = document.querySelectorAll('.option-card');
-        allSections.forEach(section => {
-            const title = section.querySelector('.card-header h2')?.innerText?.trim();
-            if (!title) return;
-
-            let added = false;
-
-            // --- Cases à cocher avec prix (option-checkbox) ---
-            const checkedOptions = section.querySelectorAll('.option-checkbox:checked');
-            if (checkedOptions.length > 0) {
-                pdf.setFont("helvetica", "bold");
-                pdf.text(title, 10, yPosition);
-                yPosition += 7;
-
-                const items = [];
-                checkedOptions.forEach(cb => {
-                    const itemName = cb.closest('label')?.querySelector('.item-name')?.innerText || 'Option';
-                    const itemPrice = cb.dataset.price && cb.dataset.price !== "0"
-                        ? `${cb.dataset.price} MAD`
-                        : "Gratuit";
-                    items.push([itemName, itemPrice]);
-                });
-
-                pdf.autoTable({
-                    startY: yPosition,
-                    head: [['Option / Service', 'Prix']],
-                    body: items,
-                    theme: 'grid',
-                    styles: { fontSize: 10 },
-                    headStyles: { fillColor: [26, 115, 232] }
-                });
-
-                yPosition = pdf.lastAutoTable.finalY + 10;
-                added = true;
-            }
-
-            // --- Cases à cocher simples (spec-item sans prix) ---
-            const specChecked = section.querySelectorAll('.spec-item input[type="checkbox"]:checked');
-            if (specChecked.length > 0) {
-                if (!added) {
-                    pdf.setFont("helvetica", "bold");
-                    pdf.text(title, 10, yPosition);
-                    yPosition += 7;
-                }
-
-                const items = [];
-                specChecked.forEach(cb => {
-                    const itemName = cb.closest('label')?.innerText.trim() || 'Option';
-                    items.push([itemName]);
-                });
-
-                pdf.autoTable({
-                    startY: yPosition,
-                    head: [['Option choisie']],
-                    body: items,
-                    theme: 'grid',
-                    styles: { fontSize: 10 },
-                    headStyles: { fillColor: [26, 115, 232] }
-                });
-
-                yPosition = pdf.lastAutoTable.finalY + 10;
-            }
-        });
-
-        // === CRITERES TECHNIQUES ===
-        const rows = [];
-        document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
-            const tds = tr.querySelectorAll('td');
-            const values = [
-                tds[0].innerText,
-                tds[1].querySelector('input')?.value || '',
-                tds[2].querySelector('input')?.value || '',
-                tds[3].querySelector('input')?.value || ''
-            ];
-            if (values.slice(1).some(v => v !== '')) {
-                rows.push(values);
-            }
-        });
-
-        if (rows.length > 0) {
-            pdf.setFont("helvetica", "bold");
-            pdf.text("Critères Techniques remplis par le client", 10, yPosition);
-            yPosition += 7;
-
-            pdf.autoTable({
-                startY: yPosition,
-                head: [["Critère", "Valeur minimale", "Valeur maximale", "Commentaires"]],
-                body: rows,
-                theme: 'grid',
-                styles: { fontSize: 10 },
-                headStyles: { fillColor: [26, 115, 232] }
-            });
-
-            yPosition = pdf.lastAutoTable.finalY + 10;
-        }
-
-        // === TOTAL ===
-        const grandTotal = document.getElementById('grand-total').textContent || '0';
-        pdf.setFont("helvetica", "bold");
-        pdf.setFontSize(14);
-        pdf.text(`Total HT à payer : ${grandTotal} MAD`, 10, yPosition + 15);
-
-        // === ENVOI SERVEUR ===
-        const pdfBlob = pdf.output('blob');
+        // Construction du FormData
         const formData = new FormData();
-        formData.append('file', pdfBlob, 'Cahier_de_Charges.pdf');
+        formData.append('file1', fullPdfBlob, 'Cahier_de_Charges.pdf');
+        formData.append('file2', optionsPdfBlob, 'Cahier_Options.pdf');
         formData.append('email', userEmail);
         formData.append('ref', userRef);
 
-        const response = await fetch('https://apicars.p2p-cars.com/api/cahierdecharge', {
+        // Envoi au serveur
+        await fetch('/upload', {
             method: 'POST',
             body: formData
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            alert('PDF envoyé avec succès !');
-            console.log(data);
-            // Redirection vers l'accueil
-            window.location.href = 'https://p2p-cars.com';
-        } else {
-            alert('Erreur lors de l\'envoi du PDF');
-            console.error(response.statusText);
-        }
-
+        alert("Les deux PDF ont été envoyés !");
     } catch (error) {
-        console.error('Erreur PDF:', error);
-        alert('Erreur lors de la génération du PDF');
-        overlay.style.display = 'none'; // ✅ Retirer overlay si exception
+        console.error(error);
+        alert("Erreur lors de la génération/envoi des PDF");
+    } finally {
+        document.getElementById("loading").style.display = "none";
     }
 });
+
+
+// =======================
+// 📌 Génération PDF complet
+// =======================
+async function generateFullPDF() {
+    const element = document.getElementById("content"); // tout le contenu
+    const canvas = await html2canvas(element, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jspdf.jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    return pdf.output("blob");
+}
+
+// =======================
+// 📌 Génération PDF options uniquement
+// =======================
+async function generateOptionsPDF() {
+    // On crée un conteneur temporaire
+    const optionsSection = document.createElement("div");
+
+    // On prend uniquement les sections qui n'ont PAS de prix
+    const sections = document.querySelectorAll(".section:not(:has(.price-checkbox))");
+
+    sections.forEach(sec => optionsSection.appendChild(sec.cloneNode(true)));
+
+    const canvas = await html2canvas(optionsSection, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jspdf.jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    return pdf.output("blob");
+}
 
 ////////////////////////////////
     // Sélectionne uniquement les cases à cocher qui ont un prix
