@@ -823,23 +823,26 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
         pdf.addImage(logo1, 'PNG', 10, 10, 40, 20);
         pdf.addImage(logo2, 'PNG', 150, 10, 40, 20);
 
+        // Titre
         pdf.setFontSize(18);
         pdf.setFont("helvetica", "bold");
         pdf.text("Cahier de charges - p2p-cars.com", 105, 40, { align: "center" });
 
+        // Infos client
         pdf.setFontSize(12);
         pdf.setFont("helvetica", "normal");
         pdf.text(`Référence : ${userRef}`, 10, 50);
         pdf.text(`Email : ${userEmail}`, 10, 58);
         pdf.text(`Date : ${new Date().toLocaleDateString()}`, 10, 66);
 
-        let yPosition = 75; // Position verticale de départ pour le contenu
+        let yPosition = 75;
 
-        // 1️⃣ Options cochées (Services et autres)
+        // 🔹 1. Toutes les options cochées (même sans prix)
         const allSections = document.querySelectorAll('.option-card');
         allSections.forEach(section => {
             const sectionTitle = section.querySelector('.card-header h2')?.innerText;
             const checkedItems = section.querySelectorAll('.option-checkbox:checked');
+
             if (checkedItems.length > 0) {
                 pdf.setFont("helvetica", "bold");
                 pdf.text(sectionTitle, 10, yPosition);
@@ -848,9 +851,15 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                 pdf.setFont("helvetica", "normal");
                 const items = [];
                 checkedItems.forEach(checkbox => {
-                    const itemName = checkbox.closest('label').querySelector('.item-name')?.innerText || '';
-                    const itemPrice = checkbox.dataset.price && checkbox.dataset.price != '0' ? `${checkbox.dataset.price} MAD` : 'Gratuit';
-                    items.push([itemName, itemPrice]);
+                    const label = checkbox.closest('label');
+                    const itemName = label.querySelector('.item-name')?.innerText || 'Option';
+                    const inputField = label.querySelector('input[type="text"], input[type="number"]');
+                    const extraValue = inputField && inputField.value ? ` (${inputField.value})` : '';
+                    const itemPrice = checkbox.dataset.price && checkbox.dataset.price !== '0'
+                        ? `${checkbox.dataset.price} MAD`
+                        : 'Gratuit';
+
+                    items.push([itemName + extraValue, itemPrice]);
                 });
 
                 pdf.autoTable({
@@ -865,7 +874,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             }
         });
 
-        // 2️⃣ Critères techniques remplis
+        // 🔹 2. Critères techniques (toutes les données saisies)
         const rows = [];
         document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
             const tds = tr.querySelectorAll('td');
@@ -875,7 +884,6 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                 tds[2].querySelector('input')?.value || '',
                 tds[3].querySelector('input')?.value || ''
             ];
-            // On n'ajoute que si au moins une valeur est remplie
             if (values.slice(1).some(v => v !== '')) {
                 rows.push(values);
             }
@@ -897,12 +905,12 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             yPosition = pdf.lastAutoTable.finalY + 10;
         }
 
-        // 3️⃣ Total général
+        // 🔹 3. Total général
         const grandTotal = document.getElementById('grand-total').textContent || '0';
         pdf.setFont("helvetica", "bold");
         pdf.text(`Total général : ${grandTotal} MAD`, 10, yPosition + 10);
 
-        // Export ou envoi serveur
+        // 🔹 4. Envoi au serveur
         const pdfBlob = pdf.output('blob');
         const formData = new FormData();
         formData.append('file', pdfBlob, 'Cahier_de_Charges.pdf');
@@ -916,9 +924,10 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
         if (response.ok) {
             const data = await response.json();
-            window.location.href = 'https://p2p-cars.com';
             alert('PDF envoyé avec succès !');
             console.log(data);
+            // 🔹 Redirection après succès
+            window.location.href = 'https://p2p-cars.com';
         } else {
             alert('Erreur lors de l\'envoi du PDF');
             console.error(response.statusText);
