@@ -845,7 +845,8 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
         const addOptionsAndCriteria = (pdf, startY, includeServices = true, showPrices = true) => {
             let y = startY;
 
-            const allSections = document.querySelectorAll('.option-card');
+            // Itérer sur les sections dans l'ordre du DOM
+            const allSections = Array.from(document.querySelectorAll('.option-card'));
 
             allSections.forEach(section => {
                 const title = section.querySelector('.card-header h2')?.innerText?.trim();
@@ -856,7 +857,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
                 let added = false;
 
-                // Options avec prix
+                // Options avec prix (uniquement si showPrices)
                 const checkedOptions = section.querySelectorAll('.option-checkbox:checked');
                 if (checkedOptions.length > 0 && showPrices) {
                     pdf.setFont("helvetica", "bold");
@@ -910,7 +911,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                 }
             });
 
-            // Critères techniques
+            // Critères techniques (toujours à la fin)
             const rows = [];
             document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
                 const tds = tr.querySelectorAll('td');
@@ -942,7 +943,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             return y;
         };
 
-        // ===================== PDF 1 (complet) =====================
+        // ===================== PDF 1 (complet, ordre HTML) =====================
         const pdf1 = new jsPDF('p', 'mm', 'a4');
         pdf1.addImage(logo1, 'PNG', 10, 10, 40, 20);
         pdf1.addImage(logo2, 'PNG', 150, 10, 40, 20);
