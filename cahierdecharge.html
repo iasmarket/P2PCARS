@@ -802,11 +802,32 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
 
+<!-- Overlay de chargement -->
+<div id="loading-overlay" style="
+    display:none;
+    position:fixed;
+    top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,0.6);
+    color:#fff;
+    font-size:20px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;">
+    📄 Envoi du cahier de charge en cours... Merci de patienter.
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const userEmail = localStorage.getItem('userEmail');
 /////////////////////////////////////
 document.getElementById('generate-pdf').addEventListener('click', async () => {
+      const overlay = document.getElementById('loading-overlay'); 
+
+    // ✅ Afficher overlay dès le clic
+    overlay.style.display = 'flex';  
+
     const { jsPDF } = window.jspdf;
     const userEmail = localStorage.getItem('userEmail');
     const userRef = localStorage.getItem('userRef');
@@ -969,6 +990,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     } catch (error) {
         console.error('Erreur PDF:', error);
         alert('Erreur lors de la génération du PDF');
+        overlay.style.display = 'none'; // ✅ Retirer overlay si exception
     }
 });
 
