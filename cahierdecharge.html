@@ -841,23 +841,23 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
         let yPosition = 75;
 
-        // Fonction utilitaire pour générer un tableau PDF à partir de cases cochées
-        function ajouterSection(sectionId, titre) {
-            const section = document.querySelector(sectionId);
-            if (!section) return;
+        // === SECTIONS AVEC CHECKBOXES ===
+        const allSections = document.querySelectorAll('.option-card');
+        allSections.forEach(section => {
+            const title = section.querySelector('.card-header h2')?.innerText?.trim();
+            const checked = section.querySelectorAll('.option-checkbox:checked');
 
-            const checkedItems = section.querySelectorAll('.option-checkbox:checked');
-            if (checkedItems.length > 0) {
+            if (checked.length > 0) {
                 pdf.setFont("helvetica", "bold");
-                pdf.text(titre, 10, yPosition);
+                pdf.text(title, 10, yPosition);
                 yPosition += 7;
 
                 const items = [];
-                checkedItems.forEach(checkbox => {
-                    const itemName = checkbox.closest('label').querySelector('.item-name')?.innerText || '';
-                    const itemPrice = checkbox.dataset.price && checkbox.dataset.price != '0'
-                        ? `${checkbox.dataset.price} MAD`
-                        : 'Gratuit';
+                checked.forEach(cb => {
+                    const itemName = cb.closest('label')?.querySelector('.item-name')?.innerText || 'Option';
+                    const itemPrice = cb.dataset.price && cb.dataset.price !== "0"
+                        ? `${cb.dataset.price} MAD`
+                        : "Gratuit";
                     items.push([itemName, itemPrice]);
                 });
 
@@ -872,14 +872,9 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
                 yPosition = pdf.lastAutoTable.finalY + 10;
             }
-        }
+        });
 
-        // === SECTIONS COCHÉES ===
-        ajouterSection('#options-section', "Options");
-        ajouterSection('#services-section', "Services Avant Achat");
-        ajouterSection('#frais-section', "Frais de Facturation et Décommission");
-
-        // === CRITERES TECHNIQUES (seulement si rempli) ===
+        // === CRITERES TECHNIQUES ===
         const rows = [];
         document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
             const tds = tr.querySelectorAll('td');
@@ -911,7 +906,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             yPosition = pdf.lastAutoTable.finalY + 10;
         }
 
-        // === TOTAL GENERAL ===
+        // === TOTAL ===
         const grandTotal = document.getElementById('grand-total').textContent || '0';
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(14);
@@ -933,7 +928,6 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
             const data = await response.json();
             alert('PDF envoyé avec succès !');
             console.log(data);
-            // 🔄 Retour à l'accueil
             window.location.href = 'https://p2p-cars.com';
         } else {
             alert('Erreur lors de l\'envoi du PDF');
