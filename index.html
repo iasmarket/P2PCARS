@@ -1350,7 +1350,7 @@ document.getElementById('prev').addEventListener('click', prevPage);
 async function nextPage() {
     let currentPag = parseInt(document.querySelector("#page span").textContent, 10);
     const max = await initMaxPage();
-    if(currentPag === max - 1) return;
+    if(currentPag >= max - 1) return;
     currentPag++;
     document.getElementById("next").classList.toggle("hidden", currentPag === max - 1);
     document.getElementById("prev").classList.toggle("hidden", currentPag === 0);
