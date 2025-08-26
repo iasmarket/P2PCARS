@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.style.display = 'none'; // ✅ Retirer overlay si exception
 /////////////////////////////////////
 document.getElementById('generate-pdf').addEventListener('click', async () => {
-    document.getElementById("loading").style.display = "flex";
+    overlay.style.display = 'none'; // ✅ Retirer overlay si exception
 
     try {
         // Génération du PDF complet
@@ -855,8 +855,9 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
     } catch (error) {
         console.error(error);
         alert("Erreur lors de la génération/envoi des PDF");
+
     } finally {
-        document.getElementById("loading").style.display = "none";
+        overlay.style.display = 'none'; // ✅ Retirer overlay si exception
     }
 });
 
@@ -902,7 +903,8 @@ async function generateOptionsPDF() {
 
 ////////////////////////////////
     // Sélectionne uniquement les cases à cocher qui ont un prix
-    const allPricedCheckboxes = document.querySelectorAll('.option-checkbox');
+       // ✅ Afficher overlay dès le clic
+    overlay.style.display = 'flex';  
 
     function calculateTotals() {
         let grandTotal = 0;
