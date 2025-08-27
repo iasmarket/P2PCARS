@@ -847,70 +847,7 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
 
             const allSections = document.querySelectorAll('.option-card');
 
-            allSections.forEach(section => {
-                const title = section.querySelector('.card-header h2')?.innerText?.trim();
-                if (!title) return;
-
-                // Pour PDF options/critères, on exclut les sections services
-                if (!includeServices && (title.includes("Services") || title.includes("Facturation"))) return;
-
-                let added = false;
-
-                // Options avec prix
-                const checkedOptions = section.querySelectorAll('.option-checkbox:checked');
-                if (checkedOptions.length > 0 && showPrices) {
-                    pdf.setFont("helvetica", "bold");
-                    pdf.text(title, 10, y);
-                    y += 7;
-
-                    const items = [];
-                    checkedOptions.forEach(cb => {
-                        const itemName = cb.closest('label')?.querySelector('.item-name')?.innerText || 'Option';
-                        const itemPrice = cb.dataset.price && cb.dataset.price !== "0"
-                            ? `${cb.dataset.price} MAD`
-                            : "Gratuit";
-                        items.push([itemName, itemPrice]);
-                    });
-
-                    pdf.autoTable({
-                        startY: y,
-                        head: [['Option / Service', 'Prix']],
-                        body: items,
-                        theme: 'grid',
-                        styles: { fontSize: 10 },
-                        headStyles: { fillColor: [26, 115, 232] }
-                    });
-
-                    y = pdf.lastAutoTable.finalY + 10;
-                    added = true;
-                }
-
-                // Options sans prix (checkbox normales)
-                const specChecked = section.querySelectorAll('.spec-item input[type="checkbox"]:checked');
-                if (specChecked.length > 0) {
-                    if (!added) {
-                        pdf.setFont("helvetica", "bold");
-                        pdf.text(title, 10, y);
-                        y += 7;
-                    }
-                    const items = [];
-                    specChecked.forEach(cb => {
-                        const itemName = cb.closest('label')?.innerText.trim() || 'Option';
-                        items.push([itemName]);
-                    });
-                    pdf.autoTable({
-                        startY: y,
-                        head: [['Option choisie']],
-                        body: items,
-                        theme: 'grid',
-                        styles: { fontSize: 10 },
-                        headStyles: { fillColor: [26, 115, 232] }
-                    });
-                    y = pdf.lastAutoTable.finalY + 10;
-                }
-            });
-
-            // Critères techniques
+                        // Critères techniques
             const rows = [];
             document.querySelectorAll('.criteria-table tbody tr').forEach(tr => {
                 const tds = tr.querySelectorAll('td');
@@ -924,6 +861,71 @@ document.getElementById('generate-pdf').addEventListener('click', async () => {
                     rows.push(values);
                 }
             });
+            
+              allSections.forEach(section => {
+                    const title = section.querySelector('.card-header h2')?.innerText?.trim();
+                    if (!title) return;
+
+                    // Pour PDF options/critères, on exclut les sections services
+                    if (!includeServices && (title.includes("Services") || title.includes("Facturation"))) return;
+
+                    let added = false;
+
+                    // Options avec prix
+                    const checkedOptions = section.querySelectorAll('.option-checkbox:checked');
+                    if (checkedOptions.length > 0 && showPrices) {
+                        pdf.setFont("helvetica", "bold");
+                        pdf.text(title, 10, y);
+                        y += 7;
+
+                        const items = [];
+                        checkedOptions.forEach(cb => {
+                            const itemName = cb.closest('label')?.querySelector('.item-name')?.innerText || 'Option';
+                            const itemPrice = cb.dataset.price && cb.dataset.price !== "0"
+                                ? `${cb.dataset.price} MAD`
+                                : "Gratuit";
+                            items.push([itemName, itemPrice]);
+                        });
+
+                        pdf.autoTable({
+                            startY: y,
+                            head: [['Option / Service', 'Prix']],
+                            body: items,
+                            theme: 'grid',
+                            styles: { fontSize: 10 },
+                            headStyles: { fillColor: [26, 115, 232] }
+                        });
+
+                        y = pdf.lastAutoTable.finalY + 10;
+                        added = true;
+                    }
+
+                    // Options sans prix (checkbox normales)
+                    const specChecked = section.querySelectorAll('.spec-item input[type="checkbox"]:checked');
+                    if (specChecked.length > 0) {
+                        if (!added) {
+                            pdf.setFont("helvetica", "bold");
+                            pdf.text(title, 10, y);
+                            y += 7;
+                        }
+                        const items = [];
+                        specChecked.forEach(cb => {
+                            const itemName = cb.closest('label')?.innerText.trim() || 'Option';
+                            items.push([itemName]);
+                        });
+                        pdf.autoTable({
+                            startY: y,
+                            head: [['Option choisie']],
+                            body: items,
+                            theme: 'grid',
+                            styles: { fontSize: 10 },
+                            headStyles: { fillColor: [26, 115, 232] }
+                        });
+                        y = pdf.lastAutoTable.finalY + 10;
+                    }
+                });
+
+
             if (rows.length > 0) {
                 pdf.setFont("helvetica", "bold");
                 pdf.text("Critères Techniques remplis par le client", 10, y);
