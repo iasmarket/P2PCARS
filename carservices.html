@@ -223,6 +223,9 @@
     <select name="transmission" id="transmission-v" required></select>
     <label id="lbl-description-v"></label>
     <textarea name="description" required></textarea>
+        <label id="lbl-ville-v"></label>
+    <select name="ville" id="ville-v" required>
+    <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-v"></label>
     <input name="email" type="email" required autocomplete="off">
    
@@ -271,6 +274,9 @@
     <select name="transmission" id="transmission-a" required></select>
     <label id="lbl-description-a"></label>
     <textarea name="description" required></textarea>
+        <label id="lbl-ville-a"></label>
+    <select name="ville" id="ville-a" required>
+    <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-a"></label>
     <input name="email" type="email" required autocomplete="off">
     
@@ -301,6 +307,9 @@
     <select name="transmission" id="transmission-c" required></select>
     <label id="lbl-description-c"></label>
     <textarea name="description" required></textarea>
+            <label id="lbl-ville-c"></label>
+    <select name="ville" id="ville-c" required>
+    <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-c"></label>
     <input name="email" type="email" required autocomplete="off">
     
@@ -445,6 +454,12 @@ const allCarModels = {
 "Isdera": ["Autobahnkurier 116i", "Commendatore 112i", "Imperator 108i", "Spyder 036i"],
 "Isuzu": ["117 Coupé", "Amigo", "Ascender", "Aska", "Axiom", "Bellett", "Bighorn", "Como", "D-Max", "Fargo", "Faster", "Florian", "Gemini", "Hombre", "i-Series", "Impulse", "KB", "Midi", "MU", "MU-X", "Oasis", "Panther", "Piazza", "Pickup", "Rodeo", "Stylus", "Trooper", "VehiCROSS", "Vertex", "Wasp", "Wizard"]
 };
+const allVilles = [
+  "Achbarou","Afourar","Agadir","Agdz","Aghbala","Aghla Oudrar","Agouraï","Aguelmous","Ahfir","Ahouli","Aïn Beni Mathar","Aïn Cheggag","Aïn Dorij","Aïn El Aouda","Aïn Erreggada","Aïn Harrouda","Aïn Jemaa","Aïn Karma","Aïn Leuh","Aïn Taoujdate","Ajdir (Al Hoceïma)","Ajdir (Taza)","Akchour","Akka","Aklim","Aknoul","Al Aaroui","Al Hoceïma","Aligh n'Targa","Alnif","Amalou Ighriben","Amizmiz","Aoufous","Aoulouz","Aourir","Arbaoua","Arfoud","Assa","Assahrij","Assoul","Asilah","Azemmour","Azghar","Azilal","Azrou","Bab Berred","Bab Taza","Bejaâd","Ben Ahmed","Ben Taïeb","Ben Yakhlef","Beni Ammar","Beni Boughafer","Benslimane","Benguerir","Berkane","Berrechid","Biougra","Bir Gandouz","Bouchane","Bouarfa","Bouguedra","Bouizakarne","Boujdour","Boukidan","Boukmour","Boulemane","Bouzoug","Bouznika","Cala Iris","Casablanca","Chefchaouen","Chbika","Chichaoua","Chtouka","Dakhla","Dar Bouazza","Dar El Kebdani","Dar Glaoui","Dcheira El Jihadia","Demnate","Deroua","Douar Mers Lahjar","Drarga","El Aioun Sidi Mellouk","El Argoub","El Hajeb","El Jadida","El Kelaa des Sraghna","El Ksiba","El Marsa","Errachidia","Es-Semara","Essaouira","Fam El Hisn","Fask","Fenie","Fenie","Fès","Fnideq","Foum El Oued","Fquih Ben Salah","Figuig","Gleibat El Foula","Guelmim","Guercif","Harhoura","Hassi Berkane","Ich","Icht","Ifrane","Igherm","Ighounane","Imassine","Imilchil","Imlil","Imlili","Imintanoute","Imouzzer Ida Ou Tanane","Imouzzer Kandar","Inzegane","Itzer","Jerada","Jorf El Melha","Kelaat Mgouna","Kelaat Sraghna","Kénitra","Khemisset","Khénifra","Khouribga","Ksar El Kebir","Ksar Sghir","Ksar d'Aït-ben-Haddou","Laâyoune","Lakouablia","Larache","Lqliaa","Maâziz","Marrakech","Martil","Meknès","Mers El Kheir","Midelt","Mohammedia","Moulay Abdellah","Moulay Ali Cherif","Moulay Bousselham","Moulay Yacoub","Msemrir","M'diq","Nador","Nouaceur","Ouarzazate","Oued Zem","Ouezzane","Ouazzane","Oued Laou","Oulad Ayad","Oulad Berhil","Oulad M'Barek","Oulad Zbair","Ouled Teima","Ouislane","Oujda","Ounagha","Rabat","Ras El Ma","Ras Kebdana","Rissani","Safi","Salé","Sebt El Guerdane","Sefrou","Settat","Sidi Allal El Bahraoui","Sidi Bennour","Sidi Bouknadel","Sidi Bousber","Sidi Hrazem","Sidi Ifni","Sidi Kacem","Sidi Lamine","Sidi Rahal","Sidi Slimane","Sidi Taibi","Sidi Yahya El Gharb","Sidi Zouine","Skhirat","Skhour Rehamna","Souira Guedima","Souk El Arbaa","Tafetachte","Tahannaout","Tahla","Taliouine","Talsint","Tan-Tan","Tan-Tan Plage","Tanger","Taounate","Taourirt","Tarfaya","Taroudant","Tata","Taza","Taznakht","Témara","Tétouan","Tinmel","Tinghir","Tiflet","Tiznit","Youssoufia","Zaouiat Cheikh","Zaïo","Zag","Zagora","Zoumi","Zrarda"
+];
+
+
+
 
 const translations = {
   fr: { /* ... comme dans ton code ... */ 
@@ -455,6 +470,7 @@ const translations = {
     'titre-chercher': "Demander de chercher une voiture",
     'intro-chercher': "Ici, vous pouvez demander à la société de chercher et acheter une voiture selon vos critères. Toutes les informations personnelles sont sécurisées et ne seront jamais partagées.",
     'lbl-marque-v': "Marque :",
+       'lbl-ville-v':"ville",
     'lbl-modele-v': "Modèle :",
     'lbl-annee-v': "Année :",
     'lbl-puissancefiscal-v':"Puissance fiscale :",
@@ -471,6 +487,7 @@ const translations = {
     'lbl-images-v': "Images voiture (max 10) :",
     'btn-submit-v': "Envoyer",
     'lbl-marque-a': "Marque :",
+       'lbl-ville-a':"ville",
     'lbl-modele-a': "Modèle :",
     'lbl-annee-a': "Année :",
     'lbl-puissancefiscal-a':"Puissance fiscale :",
@@ -485,6 +502,7 @@ const translations = {
     'lbl-cin-img-a': "Photo recto/verso CIN :",
     'btn-submit-a': "Envoyer",
     'lbl-marque-c': "Marque :",
+   'lbl-ville-c':"ville",
     'lbl-modele-c': "Modèle :",
     'lbl-annee-c': "Année :",
     'lbl-puissancefiscal-c':"Puissance fiscale :",
@@ -517,6 +535,7 @@ const translations = {
     'titre-chercher': "Ask to search for a car",
     'intro-chercher': "Here you can request the company to search and buy a car based on your criteria. Your personal info is secure and will never be shared.",
     'lbl-marque-v': "Brand:",
+       'lbl-ville-v':"city",
     'lbl-modele-v': "Model:",
     'lbl-annee-v': "Year:",
     'lbl-puissancefiscal-v':"Fiscal horsepower :",
@@ -533,6 +552,7 @@ const translations = {
     'lbl-images-v': "Car images (max 10):",
     'btn-submit-v': "Send",
     'lbl-marque-a': "Brand:",
+      'lbl-ville-a':"city",
     'lbl-modele-a': "Model:",
     'lbl-annee-a': "Year:",
     'lbl-puissancefiscal-a':"Fiscal horsepower :",
@@ -547,6 +567,7 @@ const translations = {
     'lbl-cin-img-a': "CIN photo (front/back):",
     'btn-submit-a': "Send",
     'lbl-marque-c': "Brand:",
+      'lbl-ville-c':"city",
     'lbl-modele-c': "Model:",
     'lbl-annee-c': "Year:",
     'lbl-puissancefiscal-c':"Fiscal horsepower :",
@@ -579,6 +600,7 @@ const translations = {
     'titre-chercher': "طلب البحث عن سيارة",
     'intro-chercher': "هنا يمكنك طلب الشركة للبحث وشراء سيارة حسب معاييرك. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
     'lbl-marque-v': "الماركة:",
+    'lbl-ville-v':"المدينة",
     'lbl-modele-v': "الموديل:",
     'lbl-annee-v': "السنة:",
     'lbl-puissancefiscal-v':"القوة الجبائية:",
@@ -595,6 +617,7 @@ const translations = {
     'lbl-images-v': "صور السيارة (10 كحد أقصى):",
     'btn-submit-v': "إرسال",
     'lbl-marque-a': "الماركة:",
+       'lbl-ville-a':"المدينة",
     'lbl-modele-a': "الموديل:",
     'lbl-annee-a': "السنة:",
     'lbl-puissancefiscal-a':"القوة الجبائية:",
@@ -609,6 +632,7 @@ const translations = {
     'lbl-cin-img-a': "صورة التعريف (أمامية/خلفية):",
     'btn-submit-a': "إرسال",
     'lbl-marque-c': "الماركة:",
+       'lbl-ville-c':"المدينة",
     'lbl-modele-c': "الموديل:",
     'lbl-annee-c': "السنة:",
     'lbl-puissancefiscal-c':"القوة الجبائية:",
@@ -643,9 +667,9 @@ function setLang(lang) {
   document.body.style.direction = (lang === 'ar' ? 'rtl' : 'ltr');
   [
     'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
-    'lbl-marque-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
-    'lbl-marque-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','btn-submit-a',
-    'lbl-marque-c','lbl-modele-c','lbl-annee-c','lbl-puissancefiscal-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-cin-img-c','btn-submit-c',
+    'lbl-marque-v'   ,'lbl-ville-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
+    'lbl-marque-a',   'lbl-ville-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','btn-submit-a',
+    'lbl-marque-c',   'lbl-ville-c','lbl-modele-c','lbl-annee-c','lbl-puissancefiscal-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-cin-img-c','btn-submit-c',
     't-vendre','t-achat','t-chercher','lbl-cartegrise-recto-v', 'lbl-cartegrise-verso-v'
   ].forEach(id=>{
     let el = document.getElementById(id);
@@ -677,6 +701,20 @@ function fillBrandSelects() {
     sel.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>` + marques.map(m=>`<option value="${m}">${m}</option>`).join('');
   });
 }
+
+const selectVillec = document.getElementById("ville-c");
+const selectVillea = document.getElementById("ville-a");
+const selectVillev = document.getElementById("ville-v");
+// Ajouter chaque ville comme <option>
+allVilles.forEach(ville => {
+  const option = document.createElement("option");
+  option.value = ville;
+  option.textContent = ville;
+  selectVillea.appendChild(option);
+  selectVillec.appendChild(option);
+  selectVillev.appendChild(option);
+});
+
 function fillModelSelect(modelId, marque) {
   let modeleSel = document.getElementById(modelId);
   modeleSel.innerHTML = `<option value="">${translations[currentLang]['choisir']}</option>`;
