@@ -525,27 +525,7 @@
   </div>
   <img src="logo4.png" alt="Logo plateforme">
 </header>
-<div id="serverTopBar">
-  <p>Nos serveurs fonctionnent de 9h à 22h. Merci pour votre patience. Vous pouvez consulter toutes les informations, mais les négociations et les demandes sont suspendues pendant cette période.</p>
-  <p>الخوادم تعمل من الساعة 9 صباحًا حتى 10 مساءً. شكرًا لصبركم. يمكنكم الاطلاع على جميع المعلومات، ولكن المفاوضات والطلبات معلقة خلال هذا الوقت.</p>
-  <p>Our servers operate from 9 AM to 10 PM. Thank you for your patience. You can view all information, but negotiations and requests are suspended during this time.</p>
-</div>
-<script>
-  function checkServerTime() {
-    const now = new Date();
-    const hour = now.getHours();
 
-    // Afficher entre 22h et 9h
-    if (hour >= 3 || hour < 7) {
-      document.getElementById('serverTopBar').style.display = 'block';
-    } else {
-      document.getElementById('serverTopBar').style.display = 'none';
-    }
-  }
-
-  checkServerTime();
-  setInterval(checkServerTime, 60000);
-</script>
 
 
 <div class="navbar">
