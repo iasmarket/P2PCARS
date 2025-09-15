@@ -225,7 +225,13 @@
     <textarea name="description" required></textarea>
     <label id="lbl-email-v"></label>
     <input name="email" type="email" required autocomplete="off">
-   
+    <label id="lbl-phone-v"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-v"></label>
+    <input name="cin" type="text" required>
+    <!-- Photo recto/verso CIN -->
+    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
     <!-- Carte grise recto / verso -->
     <div id="div-cartegrise">
       <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
@@ -273,7 +279,12 @@
     <textarea name="description" required></textarea>
     <label id="lbl-email-a"></label>
     <input name="email" type="email" required autocomplete="off">
-    
+    <label id="lbl-phone-a"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-a"></label>
+    <input name="cin" type="text" required>
+    <label id="lbl-cin-img-a"></label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
     <button type="submit" id="btn-submit-a"></button>
   </form>
   <div id="result-achat"></div>
@@ -303,7 +314,12 @@
     <textarea name="description" required></textarea>
     <label id="lbl-email-c"></label>
     <input name="email" type="email" required autocomplete="off">
-    
+    <label id="lbl-phone-c"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-c"></label>
+    <input name="cin" type="text" required>
+    <label id="lbl-cin-img-c"></label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
     <button type="submit" id="btn-submit-c"></button>
   </form>
   <div id="result-chercher"></div>
@@ -314,17 +330,6 @@
 </footer>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  window.addEventListener('DOMContentLoaded', () => {
-
-  // Récupérer les infos sauvegardées
-  const savedEmail = localStorage.getItem('p2p_email');
-
-
-  // Pré-remplir les champs si disponibles
-  if (savedEmail) emailInput.value = savedEmail;
-
-});
-
 document.getElementById("checkbox-procuration").addEventListener("change", function () {
   const blocProcuration = document.getElementById("div-procuration");
   const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
@@ -734,64 +739,7 @@ document.getElementById('annonceForm').addEventListener('submit', async function
   try {
     const response = await fetch('https://apicars.p2p-cars.com/api/annonce', { method:'POST', body:data });
     if (response.ok) {
-      const data = await response.json();   // <-- 🔹 conversion
-      const ref = data.message;             // <-- 🔹 ta référence unique 
-      // Supprime l'ancien message
-      document.getElementById('result-vendre').textContent = "";
-
-      // Messages selon la langue
-      let mainMsg, subMsg;
-      if (currentLang === "ar") {
-        mainMsg = "✅ تم تسجيل طلبك بنجاح. الرجاء الدخول إلى مساحتك الخاصة لإدارة طلباتك.";
-        subMsg = "هل ترغب في ملء دفتر الشروط؟";
-      } else if (currentLang === "en") {
-        mainMsg = "✅ Your request has been successfully registered. Please access your private space to manage your requests.";
-        subMsg = "Do you want to fill in a requirements sheet?";
-      } else {
-        mainMsg = "✅ Votre demande est bien enregistrée. Veuillez accéder à votre espace privé pour gérer vos demandes.";
-        subMsg = "Voulez-vous remplir un cahier de charges ?";
-      }
-
-      // Créer la boîte de dialogue
-      const dialogBox = document.createElement("div");
-      dialogBox.innerHTML = `
-        <div id="custom-dialog" style="
-          position: fixed;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          background: #082750;
-          padding: 20px;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          width: 90%;
-          max-width: 400px;
-          text-align: center;
-          z-index: 9999;
-          font-family: Arial, sans-serif;
-        ">
-          <p style="margin-bottom: 15px; font-size: 16px;">${mainMsg}</p>
-          <hr style="margin: 15px 0;">
-          <p style="color: #FFD700; font-weight: bold; font-size: 15px;">${subMsg}</p>
-          <div style="margin-top: 20px; display: flex; justify-content: space-around;">
-            <button id="btn-oui" style="padding: 10px 20px; border: none; border-radius: 6px; background: green; color: white; cursor: pointer;">${currentLang === "ar" ? "نعم" : (currentLang === "en" ? "Yes" : "Oui")}</button>
-            <button id="btn-non" style="padding: 10px 20px; border: none; border-radius: 6px; background: red; color: white; cursor: pointer;">${currentLang === "ar" ? "لا" : (currentLang === "en" ? "No" : "Non")}</button>
-          </div>
-        </div>
-      `;
-
-      // Ajouter au body
-      document.body.appendChild(dialogBox);
-
-      // Gestion des boutons
-      document.getElementById("btn-non").addEventListener("click", () => {
-        dialogBox.remove(); // fermer la boîte
-      });
-
-      document.getElementById("btn-oui").addEventListener("click", () => {
-        localStorage.setItem("userRef", ref);
-        window.location.href = "https://p2p-cars.com/cahierdecharge";
-      });
-      //document.getElementById('result-vendre').textContent = currentLang === "ar" ? "تم الإرسال! سنتواصل معك قريباً." : (currentLang === "en" ? "Ad sent! We'll contact you soon." : "Annonce envoyée ! Nous vous contacterons pour la mise en place du service.");
+      document.getElementById('result-vendre').textContent = currentLang === "ar" ? "تم الإرسال! سنتواصل معك قريباً." : (currentLang === "en" ? "Ad sent! We'll contact you soon." : "Annonce envoyée ! Nous vous contacterons pour la mise en place du service.");
       form.reset();
     } else {
       document.getElementById('result-vendre').textContent = "Erreur lors de l’envoi ("+response.status+").";
@@ -807,64 +755,7 @@ document.getElementById('achatForm').addEventListener('submit', async function(e
   try {
     const response = await fetch('https://apicars.p2p-cars.com/api/achat', { method:'POST', body:data });
     if (response.ok) {
-      const data = await response.json();   // <-- 🔹 conversion
-      const ref = data.message;             // <-- 🔹 ta référence unique 
-      // Supprime l'ancien message
-      document.getElementById('result-achat').textContent = "";
-
-      // Messages selon la langue
-      let mainMsg, subMsg;
-      if (currentLang === "ar") {
-        mainMsg = "✅ تم تسجيل طلبك بنجاح. الرجاء الدخول إلى مساحتك الخاصة لإدارة طلباتك.";
-        subMsg = "هل ترغب في ملء دفتر الشروط؟";
-      } else if (currentLang === "en") {
-        mainMsg = "✅ Your request has been successfully registered. Please access your private space to manage your requests.";
-        subMsg = "Do you want to fill in a requirements sheet?";
-      } else {
-        mainMsg = "✅ Votre demande est bien enregistrée. Veuillez accéder à votre espace privé pour gérer vos demandes.";
-        subMsg = "Voulez-vous remplir un cahier de charges ?";
-      }
-
-      // Créer la boîte de dialogue
-      const dialogBox = document.createElement("div");
-      dialogBox.innerHTML = `
-        <div id="custom-dialog" style="
-          position: fixed;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          background: #082750;
-          padding: 20px;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          width: 90%;
-          max-width: 400px;
-          text-align: center;
-          z-index: 9999;
-          font-family: Arial, sans-serif;
-        ">
-          <p style="margin-bottom: 15px; font-size: 16px;">${mainMsg}</p>
-          <hr style="margin: 15px 0;">
-          <p style="color: #FFD700; font-weight: bold; font-size: 15px;">${subMsg}</p>
-          <div style="margin-top: 20px; display: flex; justify-content: space-around;">
-            <button id="btn-oui" style="padding: 10px 20px; border: none; border-radius: 6px; background: green; color: white; cursor: pointer;">${currentLang === "ar" ? "نعم" : (currentLang === "en" ? "Yes" : "Oui")}</button>
-            <button id="btn-non" style="padding: 10px 20px; border: none; border-radius: 6px; background: red; color: white; cursor: pointer;">${currentLang === "ar" ? "لا" : (currentLang === "en" ? "No" : "Non")}</button>
-          </div>
-        </div>
-      `;
-
-      // Ajouter au body
-      document.body.appendChild(dialogBox);
-
-      // Gestion des boutons
-      document.getElementById("btn-non").addEventListener("click", () => {
-        dialogBox.remove(); // fermer la boîte
-      });
-
-      document.getElementById("btn-oui").addEventListener("click", () => {
-        localStorage.setItem("userRef", ref);
-        window.location.href = "https://p2p-cars.com/cahierdecharge";
-      });
-      //document.getElementById('result-achat').textContent = currentLang === "ar" ? "تم الإرسال! سنتواصل معك قريباً." : (currentLang === "en" ? "Request sent! We'll contact you soon." : "Demande envoyée ! Nous vous contacterons pour la mise en place du service.");
+      document.getElementById('result-achat').textContent = currentLang === "ar" ? "تم الإرسال! سنتواصل معك قريباً." : (currentLang === "en" ? "Request sent! We'll contact you soon." : "Demande envoyée ! Nous vous contacterons pour la mise en place du service.");
       form.reset();
     } else {
       document.getElementById('result-achat').textContent = "Erreur lors de l’envoi ("+response.status+").";
@@ -880,72 +771,15 @@ document.getElementById('chercherForm').addEventListener('submit', async functio
   try {
     const response = await fetch('https://apicars.p2p-cars.com/api/rechercher', { method:'POST', body:data });
     if (response.ok) {
-      const data = await response.json();   // <-- 🔹 conversion
-      const ref = data.message;             // <-- 🔹 ta référence unique 
-      // Supprime l'ancien message
-      document.getElementById('result-chercher').textContent = "";
-
-      // Messages selon la langue
-      let mainMsg, subMsg;
-      if (currentLang === "ar") {
-        mainMsg = "✅ تم تسجيل طلبك بنجاح. الرجاء الدخول إلى مساحتك الخاصة لإدارة طلباتك.";
-        subMsg = "هل ترغب في ملء دفتر الشروط؟";
-      } else if (currentLang === "en") {
-        mainMsg = "✅ Your request has been successfully registered. Please access your private space to manage your requests.";
-        subMsg = "Do you want to fill in a requirements sheet?";
-      } else {
-        mainMsg = "✅ Votre demande est bien enregistrée. Veuillez accéder à votre espace privé pour gérer vos demandes.";
-        subMsg = "Voulez-vous remplir un cahier de charges ?";
-      }
-
-      // Créer la boîte de dialogue
-      const dialogBox = document.createElement("div");
-      dialogBox.innerHTML = `
-        <div id="custom-dialog" style="
-          position: fixed;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          background: #082750;
-          padding: 20px;
-          border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          width: 90%;
-          max-width: 400px;
-          text-align: center;
-          z-index: 9999;
-          font-family: Arial, sans-serif;
-        ">
-          <p style="margin-bottom: 15px; font-size: 16px;">${mainMsg}</p>
-          <hr style="margin: 15px 0;">
-          <p style="color: #FFD700; font-weight: bold; font-size: 15px;">${subMsg}</p>
-          <div style="margin-top: 20px; display: flex; justify-content: space-around;">
-            <button id="btn-oui" style="padding: 10px 20px; border: none; border-radius: 6px; background: green; color: white; cursor: pointer;">${currentLang === "ar" ? "نعم" : (currentLang === "en" ? "Yes" : "Oui")}</button>
-            <button id="btn-non" style="padding: 10px 20px; border: none; border-radius: 6px; background: red; color: white; cursor: pointer;">${currentLang === "ar" ? "لا" : (currentLang === "en" ? "No" : "Non")}</button>
-          </div>
-        </div>
-      `;
-
-      // Ajouter au body
-      document.body.appendChild(dialogBox);
-
-      // Gestion des boutons
-      document.getElementById("btn-non").addEventListener("click", () => {
-        dialogBox.remove(); // fermer la boîte
-      });
-
-      document.getElementById("btn-oui").addEventListener("click", () => {
-        localStorage.setItem("userRef", ref);
-        window.location.href = "https://p2p-cars.com/cahierdecharge";
-      });
+      document.getElementById('result-chercher').textContent = currentLang === "ar" ? "تم الإرسال! سنتواصل معك قريباً." : (currentLang === "en" ? "Request sent! We'll contact you soon." : "Demande envoyée ! Nous vous contacterons pour la mise en place du service.");
       form.reset();
     } else {
-     // document.getElementById('result-chercher').textContent = "Erreur lors de l’envoi ("+response.status+").";
+      document.getElementById('result-chercher').textContent = "Erreur lors de l’envoi ("+response.status+").";
     }
   } catch (err) {
     document.getElementById('result-chercher').textContent = "Erreur réseau/CORS.";
   }
 });
-
 window.setLang = setLang;
 window.showForm = showForm;
 setLang('fr');
