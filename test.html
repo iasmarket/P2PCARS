@@ -224,7 +224,7 @@
     <label id="lbl-description-v"></label>
     <textarea name="description" required></textarea>
         <label id="lbl-ville-v"></label>
-    <select name="ville" id="ville-v" required>
+    <select name="ville" id="ville-vendre" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-v"></label>
     <input name="email" type="email" required autocomplete="off">
@@ -281,7 +281,7 @@
     <label id="lbl-description-a"></label>
     <textarea name="description" required></textarea>
         <label id="lbl-ville-a"></label>
-    <select name="ville" id="ville-a" required>
+    <select name="ville" id="ville-achat" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-a"></label>
     <input name="email" type="email" required autocomplete="off">
@@ -334,7 +334,7 @@
     <label id="lbl-description-c"></label>
     <textarea name="description" required></textarea>
             <label id="lbl-ville-c"></label>
-    <select name="ville" id="ville-c" required>
+    <select name="ville" id="ville-chercher" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-c"></label>
     <input name="email" type="email" required autocomplete="off">
@@ -745,18 +745,7 @@ function fillBrandSelects() {
   });
 }
 
-const selectVillec = document.getElementById("ville-c");
-const selectVillea = document.getElementById("ville-a");
-const selectVillev = document.getElementById("ville-v");
-// Ajouter chaque ville comme <option>
-allVilles.forEach(ville => {
-  const option = document.createElement("option");
-  option.value = ville;
-  option.textContent = ville;
-  selectVillea.appendChild(option);
-  selectVillec.appendChild(option);
-  selectVillev.appendChild(option);
-});
+
 
 function fillModelSelect(modelId, marque) {
   let modeleSel = document.getElementById(modelId);
@@ -803,7 +792,20 @@ function showForm(form) {
   });
   document.getElementById('form-'+form).classList.add('active');
   document.getElementById('btn-'+form).classList.add('active');
+
+  const selectVillec = document.getElementById("ville-"+form);
+
+// Ajouter chaque ville comme <option>
+allVilles.forEach(ville => {
+  const option = document.createElement("option");
+  option.value = ville;
+  option.textContent = ville;
+  
+  selectVillec.appendChild(option);
+ 
+});
 }
+showForm('vendre');
 document.getElementById('annonceForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const form = e.target;
