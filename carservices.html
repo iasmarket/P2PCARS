@@ -224,11 +224,17 @@
     <label id="lbl-description-v"></label>
     <textarea name="description" required></textarea>
         <label id="lbl-ville-v"></label>
-    <select name="ville" id="ville-v" required>
+    <select name="ville" id="ville-vendre" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-v"></label>
     <input name="email" type="email" required autocomplete="off">
-   
+       <label id="lbl-phone-v"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-v"></label>
+    <input name="cin" type="text" required>
+    <!-- Photo recto/verso CIN -->
+    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
     <!-- Carte grise recto / verso -->
     <div id="div-cartegrise">
       <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
@@ -237,9 +243,9 @@
     <!-- Procuration (facultatif) -->
     <label id="lbl-checkbox-procuration">
       <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
-      <input type="checkbox" id="checkbox-procuration">
+      <input type="checkbox" id="checkbox-procurationv">
     </label>
-    <div id="div-procuration" style="display:none;">
+    <div id="div-procurationv" style="display:none;">
       <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
       <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
     </div>
@@ -275,11 +281,18 @@
     <label id="lbl-description-a"></label>
     <textarea name="description" required></textarea>
         <label id="lbl-ville-a"></label>
-    <select name="ville" id="ville-a" required>
+    <select name="ville" id="ville-achat" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-a"></label>
     <input name="email" type="email" required autocomplete="off">
-    
+    <label id="lbl-phone-a"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-a"></label>
+    <input name="cin" type="text" required>
+    <!-- Photo recto/verso CIN -->
+    <label id="lbl-cin-img-a" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
+      
     <button type="submit" id="btn-submit-a"></button>
   </form>
   <div id="result-achat"></div>
@@ -308,11 +321,17 @@
     <label id="lbl-description-c"></label>
     <textarea name="description" required></textarea>
             <label id="lbl-ville-c"></label>
-    <select name="ville" id="ville-c" required>
+    <select name="ville" id="ville-chercher" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-c"></label>
     <input name="email" type="email" required autocomplete="off">
-    
+        <label id="lbl-phone-c"></label>
+    <input name="telephone" type="tel" required>
+    <label id="lbl-cin-c"></label>
+    <input name="cin" type="text" required>
+    <!-- Photo recto/verso CIN -->
+    <label id="lbl-cin-img-c" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
+    <input name="cin_img" type="file" accept="image/*" multiple required>
     <button type="submit" id="btn-submit-c"></button>
   </form>
   <div id="result-chercher"></div>
@@ -334,8 +353,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-document.getElementById("checkbox-procuration").addEventListener("change", function () {
-  const blocProcuration = document.getElementById("div-procuration");
+document.getElementById("checkbox-procurationv").addEventListener("change", function () {
+  const blocProcuration = document.getElementById("div-procurationv");
   const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
   if (this.checked) {
     blocProcuration.style.display = "block";
@@ -345,6 +364,7 @@ document.getElementById("checkbox-procuration").addEventListener("change", funct
     inputsProcuration.forEach(input => input.disabled = true);
   }
 });
+
 
 const allCarModels = {
 "Acura": ["CL", "CSX", "EL", "ILX", "Integra", "Legend", "MDX", "NSX", "RDX", "RL", "RLX", "RSX", "SLX", "TL", "TLX", "TSX", "Vigor", "ZDX"],
@@ -594,7 +614,7 @@ const translations = {
   },
   ar: { /* ... comme dans ton code ... */ 
     'titre-vendre': "إيداع إعلان سيارة",
-    'intro-vendre': "هنا يمكنك نشر إعلانك للعامة. لن يتم نشر المعلومات الشخصية (البريد، الهاتف، رقم التعريف) إلا إذا وردت في وصف المنتج.",
+    'intro-vendre': "هنا يمكنك نشر إعلانك للعامة. لن يتم نشر المعلومات الشخصية (البريد، الهاتف، رقم بطاقة التعريف الوطنية) إلا إذا وردت في وصف المنتج.",
     'titre-achat': "طلب شراء سيارة",
     'intro-achat': "هنا يمكنك طلب شراء سيارة محددة من الشركة. جميع معلوماتك الشخصية آمنة ولن تُشارك.",
     'titre-chercher': "طلب البحث عن سيارة",
@@ -611,8 +631,8 @@ const translations = {
     'lbl-description-v': "الوصف:",
     'lbl-email-v': "البريد الإلكتروني:",
     'lbl-phone-v': "رقم الهاتف:",
-    'lbl-cin-v': "رقم التعريف:",
-    'lbl-cin-img-v': "صورة التعريف (أمامية/خلفية):",
+    'lbl-cin-v': "رقم بطاقة التعريف الوطنية:",
+    'lbl-cin-img-v': "صورة بطاقة التعريف الوطنية (أمامية/خلفية):",
     'lbl-cartegrise-v': "بطاقة التسجيل:",
     'lbl-images-v': "صور السيارة (10 كحد أقصى):",
     'btn-submit-v': "إرسال",
@@ -628,8 +648,8 @@ const translations = {
     'lbl-description-a': "الوصف:",
     'lbl-email-a': "البريد الإلكتروني:",
     'lbl-phone-a': "رقم الهاتف:",
-    'lbl-cin-a': "رقم التعريف:",
-    'lbl-cin-img-a': "صورة التعريف (أمامية/خلفية):",
+    'lbl-cin-a': "رقم بطاقة التعريف الوطنية:",
+    'lbl-cin-img-a': "صورة بطاقة التعريف الوطنية (أمامية/خلفية):",
     'btn-submit-a': "إرسال",
     'lbl-marque-c': "الماركة:",
        'lbl-ville-c':"المدينة",
@@ -643,8 +663,8 @@ const translations = {
     'lbl-description-c': "الوصف:",
     'lbl-email-c': "البريد الإلكتروني:",
     'lbl-phone-c': "رقم الهاتف:",
-    'lbl-cin-c': "رقم التعريف:",
-    'lbl-cin-img-c': "صورة التعريف (أمامية/خلفية):",
+    'lbl-cin-c': "رقم بطاقة التعريف الوطنية:",
+    'lbl-cin-img-c': "صورة بطاقة التعريف الوطنية (أمامية/خلفية):",
     'btn-submit-c': "إرسال",
     't-vendre': "بيع سيارتك",
     't-achat': "طلب شراء",
@@ -668,7 +688,7 @@ function setLang(lang) {
   [
     'titre-vendre','intro-vendre','titre-achat','intro-achat','titre-chercher','intro-chercher',
     'lbl-marque-v'   ,'lbl-ville-v','lbl-modele-v','lbl-annee-v','lbl-puissancefiscal-v','lbl-prix-v','lbl-kilometrage-v','lbl-carburant-v','lbl-transmission-v','lbl-description-v','lbl-email-v','lbl-phone-v','lbl-cin-v','lbl-cin-img-v','lbl-cartegrise-v','lbl-procuration-v','lbl-images-v','btn-submit-v',
-    'lbl-marque-a',   'lbl-ville-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','btn-submit-a',
+    'lbl-marque-a',   'lbl-ville-a','lbl-modele-a','lbl-annee-a','lbl-puissancefiscal-a','lbl-prix-a','lbl-kilometrage-a','lbl-carburant-a','lbl-transmission-a','lbl-description-a','lbl-email-a','lbl-phone-a','lbl-cin-a','lbl-cin-img-a','lbl-cartegrise-a','lbl-procuration-a','btn-submit-a',
     'lbl-marque-c',   'lbl-ville-c','lbl-modele-c','lbl-annee-c','lbl-puissancefiscal-c','lbl-prix-c','lbl-kilometrage-c','lbl-carburant-c','lbl-transmission-c','lbl-description-c','lbl-email-c','lbl-phone-c','lbl-cin-c','lbl-cin-img-c','btn-submit-c',
     't-vendre','t-achat','t-chercher','lbl-cartegrise-recto-v', 'lbl-cartegrise-verso-v'
   ].forEach(id=>{
@@ -702,18 +722,7 @@ function fillBrandSelects() {
   });
 }
 
-const selectVillec = document.getElementById("ville-c");
-const selectVillea = document.getElementById("ville-a");
-const selectVillev = document.getElementById("ville-v");
-// Ajouter chaque ville comme <option>
-allVilles.forEach(ville => {
-  const option = document.createElement("option");
-  option.value = ville;
-  option.textContent = ville;
-  selectVillea.appendChild(option);
-  selectVillec.appendChild(option);
-  selectVillev.appendChild(option);
-});
+
 
 function fillModelSelect(modelId, marque) {
   let modeleSel = document.getElementById(modelId);
@@ -760,7 +769,20 @@ function showForm(form) {
   });
   document.getElementById('form-'+form).classList.add('active');
   document.getElementById('btn-'+form).classList.add('active');
+
+  const selectVillec = document.getElementById("ville-"+form);
+
+// Ajouter chaque ville comme <option>
+allVilles.forEach(ville => {
+  const option = document.createElement("option");
+  option.value = ville;
+  option.textContent = ville;
+  
+  selectVillec.appendChild(option);
+ 
+});
 }
+showForm('vendre');
 document.getElementById('annonceForm').addEventListener('submit', async function(e){
   e.preventDefault();
   const form = e.target;
