@@ -230,25 +230,7 @@
     <input name="email" type="email" required autocomplete="off">
        <label id="lbl-phone-v"></label>
     <input name="telephone" type="tel" required>
-    <label id="lbl-cin-v"></label>
-    <input name="cin" type="text" required>
-    <!-- Photo recto/verso CIN -->
-    <label id="lbl-cin-img-v" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
-    <!-- Carte grise recto / verso -->
-    <div id="div-cartegrise">
-      <label id="lbl-cartegrise-recto-v" data-i18n="label_cartegrise_recto">Carte grise (recto/verso) :</label>
-      <input name="cartegrise" type="file" accept="image/*" multiple required >
-    </div>
-    <!-- Procuration (facultatif) -->
-    <label id="lbl-checkbox-procuration">
-      <span data-i18n="label_checkbox_procuration">Procuration/ تفويض/وكالة / Authorization letter:</span>
-      <input type="checkbox" id="checkbox-procurationv">
-    </label>
-    <div id="div-procurationv" style="display:none;">
-      <label id="lbl-procuration-v" data-i18n="label_procuration">Procuration ) :</label>
-      <input name="procuration" type="file" accept="image/*" id="input-procuration-v" multiple>
-    </div>
+
     <!-- Images voiture -->
     <label id="lbl-images-v" data-i18n="label_images_voiture">Images voiture (max 10) :</label>
     <input name="images" type="file" accept="image/*" multiple required>
@@ -287,11 +269,7 @@
     <input name="email" type="email" required autocomplete="off">
     <label id="lbl-phone-a"></label>
     <input name="telephone" type="tel" required>
-    <label id="lbl-cin-a"></label>
-    <input name="cin" type="text" required>
-    <!-- Photo recto/verso CIN -->
-    <label id="lbl-cin-img-a" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
+
       
     <button type="submit" id="btn-submit-a"></button>
   </form>
@@ -320,18 +298,14 @@
     <select name="transmission" id="transmission-c" required></select>
     <label id="lbl-description-c"></label>
     <textarea name="description" required></textarea>
-            <label id="lbl-ville-c"></label>
+    <label id="lbl-ville-c"></label>
     <select name="ville" id="ville-chercher" required>
     <option value="">-- city/ville/المدينة --</option></select>
     <label id="lbl-email-c"></label>
     <input name="email" type="email" required autocomplete="off">
         <label id="lbl-phone-c"></label>
     <input name="telephone" type="tel" required>
-    <label id="lbl-cin-c"></label>
-    <input name="cin" type="text" required>
-    <!-- Photo recto/verso CIN -->
-    <label id="lbl-cin-img-c" data-i18n="label_cin_img">Photo recto/verso CIN :</label>
-    <input name="cin_img" type="file" accept="image/*" multiple required>
+
     <button type="submit" id="btn-submit-c"></button>
   </form>
   <div id="result-chercher"></div>
@@ -353,17 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-document.getElementById("checkbox-procurationv").addEventListener("change", function () {
-  const blocProcuration = document.getElementById("div-procurationv");
-  const inputsProcuration = blocProcuration.querySelectorAll("input, select, textarea");
-  if (this.checked) {
-    blocProcuration.style.display = "block";
-    inputsProcuration.forEach(input => input.disabled = false);
-  } else {
-    blocProcuration.style.display = "none";
-    inputsProcuration.forEach(input => input.disabled = true);
-  }
-});
+
 
 
 const allCarModels = {
