@@ -684,8 +684,27 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+<!-- Modale -->
+<div id="dialog" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:9999;">
+  <div style="background:#220c3dbe; padding:20px; border-radius:12px; min-width:300px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+    <h3 style="margin-top:0;">Connexion requise</h3>
+    
+    <label>Email / الإيميل  :</label><br>
+    <input type="email" id="emailInput" style="width:100%; padding:8px; margin:5px 0;"><br>
+
+    <label>Téléphone / الهاتف :</label><br>
+    <input type="tel" id="phoneInput" style="width:100%; padding:8px; margin:5px 0;"><br>
+    
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+      <button onclick="closeDialog()" style="padding:8px 14px; border:none; border-radius:6px; background:#ccc; cursor:pointer;">َAnnuler-إلغاء</button>
+      <button onclick="submitForm()" style="padding:8px 14px; border:none; border-radius:6px; background:#007bff; color:#fff; cursor:pointer;">Envoyer-إرسال</button>
+    </div>
+  </div>
+</div>
 
 <script>
+  closeDialog();
   // Bouton activer/désactiver les filtres
 const toggleBtn = document.getElementById("toggle-filters");
 const filtersSection = document.getElementById("filters");
@@ -885,7 +904,7 @@ const translations = {  fr: {
     'duplicate':"Waoo 😲😂 Impossible de commander la voiture qui t’appartient déjà !",
     'resauerreur':"Erreur du réseau, veuillez réessayer plus tard. Veuillez actualiser la page ou réessayer plus tard.",
     'commander':"En tant que titulaire du compte P2P-Cars associé à l’adresse e-mail :",
-    'noconect':'Vous n’êtes pas connecté. Veuillez vous connecter. <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">ici-هنا</a>',
+    'noconect':'Vous n’êtes pas connecté. Veuillez vous connecter. à https://p2p-cars.com/login <== ici-هنا',
     'engagement':", j’exprime ma volonté d’acheter ce véhicule.",
     'commanderB':"Commander",
     'AnnulerB':"Annuler",
@@ -1065,7 +1084,7 @@ const translations = {  fr: {
     'duplicate':"Waoo 😲😂 You can’t order the car you already own!",
     'resauerreur':"Network error, please try again later. Please refresh the page or try again later.",
     'commander':"As the holder of the P2P-Cars account associated with the email address: ",
-    'noconect':'You are not logged in. Please log in <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">here</a>',
+    'noconect':'You are not logged in. Please log in https://p2p-cars.com/login <== here',
     'engagement':", I express my intention to purchase this vehicle.",
     'commanderB':"Order",
     'AnnulerB':"Cancel",
@@ -1247,7 +1266,7 @@ const translations = {  fr: {
     'duplicate':"واو 😲😂 لا يمكنك طلب السيارة التي تملكها بالفعل!",
     'resauerreur':"خطأ في الشبكة، يرجى المحاولة لاحقًا. يرجى تحديث الصفحة أو المحاولة من جديد لاحقًا.",
     'commander':"بصفتي صاحب حساب P2P-Cars المرتبط بالبريد الإلكتروني:",
-    'noconect':'أنت لست مسجّل الدخول. يرجى تسجيل الدخول <a href="https://p2p-cars.com/login" style="font-weight:bold; color:red; text-decoration:none;">هنا</a>',
+    'noconect':'أنت لست مسجّل الدخول. يرجى تسجيل الدخول عبر https://p2p-cars.com/login <== هنا',
     'engagement':"، أعبّر عن رغبتي في شراء هذه السيارة.",
     'commanderB':"طلب الشراء",
     'AnnulerB':"إلغاء",
@@ -1268,6 +1287,7 @@ document.getElementById("lang-fr").addEventListener("click", ()=>setLang("fr"));
 document.getElementById("lang-en").addEventListener("click", ()=>setLang("en"));
 document.getElementById("lang-ar").addEventListener("click", ()=>setLang("ar"));
 let currentLang = "fr";
+let  comandedref="";
 function setLang(lang) {
   currentLang = lang;
   displayCars(hpage);
@@ -1736,7 +1756,8 @@ function openModal(car) {
   };
   confirmBtn.onclick = function() {
     if (userEmail === null){
-      alert("⚠️" + translations[currentLang]['noconect']);
+      comandedref=selectedRef;
+      askForCredentials();
       return;
     }
     fetch('https://apicars.p2p-cars.com/api/commande', {
@@ -1746,6 +1767,7 @@ function openModal(car) {
       },
       body: JSON.stringify({
         userEmail: userEmail,
+        phone :"-",
         selectedRef: selectedRef
       })
     })
@@ -1816,6 +1838,62 @@ function openModal(car) {
     navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
   });
 }
+
+function askForCredentials() {
+  document.getElementById("dialog").style.display = "flex";
+}
+// Fermer si on clique à l’extérieur
+window.addEventListener("click", function(event) {
+  const dialog = document.getElementById("dialog");
+  const content = document.getElementById("dialogContent");
+  if (event.target === dialog) {
+    closeDialog();
+  }
+});
+function closeDialog() {
+  document.getElementById("dialog").style.display = "none";
+}
+
+function submitForm() {
+  const email = document.getElementById("emailInput").value.trim();
+  const phone = document.getElementById("phoneInput").value.trim();
+
+  if (!email || !phone) {
+    alert("⚠️ Merci de remplir tous les champs !");
+    return;
+  }
+    fetch('https://apicars.p2p-cars.com/api/commande', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userEmail: userEmail,
+        phone:phone,
+        selectedRef: selectedRef
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        if (data.message === 'duplicate') {
+          alert(translations[currentLang]['duplicate']);
+          return;
+        } else {
+          alert("✅ " + translations[currentLang]['commandeeffect']);
+        }
+      } else {
+        alert("⚠️ " + (data.message || translations[currentLang]['resauerreur']));
+      }
+    })
+    .catch(error => {
+      alert("⚠️ " + translations[currentLang]['resauerreur']);
+    });
+  closeDialog();
+}
+
+
+
 setLang('fr');
 document.getElementById('btn').addEventListener('click', function() {
   window.location.href = 'https://p2p-cars.com/carservices';
