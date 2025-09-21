@@ -1868,9 +1868,9 @@ function submitForm() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        userEmail: userEmail,
+        userEmail: email,
         phone:phone,
-        selectedRef: selectedRef
+        selectedRef: comandedref
       })
     })
     .then(response => response.json())
